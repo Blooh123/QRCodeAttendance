@@ -63,13 +63,13 @@ if (!in_array($page, $allowed_pages)) {
         <header class="bg-white/80 backdrop-blur-sm shadow-lg w-full">
             <div class="max-w-7xl mx-auto p-4">
                 <div class="w-full flex items-center justify-between">
-                    <!-- <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4">
                         <img class="h-16 w-auto" src="<?php echo $imageSource4 ?>" alt="Logo" />
-                        <div class="hidden md:flex items-center gap-1">
+                        <!-- <div class="hidden md:flex items-center gap-1">
                             <span class="text-white text-4xl font-extrabold font-['Poppins'] text-stroke-2 [text-shadow:_0px_4px_0px_rgb(0_0_0_/_1.00)]">CONGRATS SA WALAY</span>
                             <span class="text-red-800 text-4xl font-extrabold font-['Poppins'] text-stroke-2 [text-shadow:_0px_4px_0px_rgb(0_0_0_/_1.00)]">SANCTIONS! 🥳🍆</span>
-                        </div>
-                    </div> -->
+                        </div> -->
+                    </div>
                     
                     <!-- Mobile Menu Button -->
                     <button id="menuBtn" class="md:hidden text-[#515050] hover:text-[#a31d1d] transition-colors">
