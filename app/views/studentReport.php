@@ -100,7 +100,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
             </div>
             
             <!-- Desktop Table -->
-            <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+            <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-6">
                 <div class="overflow-x-auto glass-card">
                     <table class="min-w-full">
                         <thead class="bg-gray-50/50">
@@ -138,7 +138,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
             </div>
 
             <!-- Mobile Cards -->
-            <div class="md:hidden space-y-4">
+            <div class="md:hidden space-y-4 mt-6">
                 <?php if (empty($attendanceRecord)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                         No attendance records found.
@@ -166,7 +166,11 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                                 </div>
                                 <div>
                                     <p class="text-gray-500 font-medium">Time Out</p>
-                                    <p class="text-gray-800"><?= date('g:i A', strtotime($record['time_out'] ?? 'N/A')); ?></p>
+                                    <p class="text-gray-800">
+                                        <?= !empty($record['time_out']) 
+                                            ? date('g:i A', strtotime($record['time_out'])) 
+                                            : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
