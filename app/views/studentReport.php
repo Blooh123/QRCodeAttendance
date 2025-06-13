@@ -53,6 +53,16 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
             <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Sanctions Overview
             </h3>
+            <!-- Download Report Button -->
+            <div class="mt-6 flex justify-end">
+                <a href="<?php echo ROOT ?>download-report" 
+                   class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Download Report PDF
+                </a>
+            </div>
             <div class="space-y-4">
                 <?php if (empty($sanctionList)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
@@ -163,16 +173,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <?php endif; ?>
             </div>
 
-            <!-- Download Report Button -->
-            <div class="mt-6 flex justify-end">
-                <a href="<?php echo ROOT ?>download-report" 
-                   class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Download Report PDF
-                </a>
-            </div>
+            
         </div>
     </div>
 </body>
