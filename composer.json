@@ -4,10 +4,7 @@
         "ext-fileinfo": "*",
         "phpoffice/phpspreadsheet": "^4.0",
         "ext-pdo": "*",
-        "phpmailer/phpmailer": "*",
+        "phpmailer/phpmailer": "v6.10.0",
         "spipu/html2pdf": "^5.3"
-    },
-    "require": {
-        "spipu/html2pdf": "^5.3.3"
     }
 }
