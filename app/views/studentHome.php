@@ -81,7 +81,6 @@ if (!in_array($page, $allowed_pages)) {
             </div>
         </header>
 
-        <!-- Navigation Section -->
         <nav id="navMenu" class="w-full bg-white/80 backdrop-blur-sm shadow-lg transition-all duration-300 ease-in-out">
             <div class="max-w-7xl mx-auto p-4">
                 <div class="flex flex-col md:flex-row justify-center items-center gap-4">
@@ -115,10 +114,8 @@ if (!in_array($page, $allowed_pages)) {
         </nav>
     </div>
 
-    <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 mb-8">
         <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-[0_8px_32px_-4px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_48px_-8px_rgba(0,0,0,0.2)] transition-all duration-300 relative overflow-hidden">
-            <!-- Background Illustration -->
             <img 
                 class="absolute inset-0 w-full h-full object-contain opacity-20 pointer-events-none select-none z-0 scale-125"
                 src="<?php echo $imageSource2?>" 
@@ -147,14 +144,10 @@ if (!in_array($page, $allowed_pages)) {
 </div>
 
 <script>
-    // Disable right-click
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
-
-    // Disable F12, Ctrl+Shift+I, Ctrl+U
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12' ||
+    document.addEventListener('keydown', function(e) {if (e.key === 'F12' ||
             (e.ctrlKey && e.shiftKey && e.key === 'I') ||
             (e.ctrlKey && e.key === 'u')) {
             e.preventDefault();
@@ -165,7 +158,6 @@ if (!in_array($page, $allowed_pages)) {
     const navMenu = document.getElementById('navMenu');
     let isMenuOpen = false;
 
-    // Initially hide menu on mobile
     if (window.innerWidth < 768) {
         navMenu.style.maxHeight = '0';
         navMenu.style.overflow = 'hidden';
@@ -182,7 +174,6 @@ if (!in_array($page, $allowed_pages)) {
         }
     });
 
-    // Handle resize events
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 768) {
             navMenu.style.maxHeight = 'none';
