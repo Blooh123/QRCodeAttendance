@@ -120,7 +120,7 @@ if (!in_array($page, $allowed_pages)) {
                 
                 <nav class="flex items-center gap-8">
                     <a href="?page=studentProfile" 
-                       class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'studentProfile' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
+                       class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'StudentProfile' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
                         Profile
                     </a>
                     <a href="?page=StudentQRCode" 
@@ -157,7 +157,7 @@ if (!in_array($page, $allowed_pages)) {
                 <nav class="flex-1 flex flex-col gap-2 px-4 py-6">
                     <a href="?page=studentProfile"
                        class="mb-1 px-5 py-3 rounded-xl text-lg font-semibold transition-all duration-200
-                          <?php echo $page === 'studentProfile' 
+                          <?php echo $page === 'StudentProfile' 
                             ? 'bg-[#a31d1d] text-white shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black' 
                             : 'bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black'; ?>">
                         <div class="flex items-center gap-3">
