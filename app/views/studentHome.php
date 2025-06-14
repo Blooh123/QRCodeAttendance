@@ -155,7 +155,7 @@ if (!in_array($page, $allowed_pages)) {
             <!-- Navigation Links - Scrollable if needed -->
             <div class="nav-container">
                 <nav class="flex-1 flex flex-col gap-2 px-4 py-6">
-                    <a href="?page=studentProfile"
+                    <a href="?page=StudentProfile"
                        class="mb-1 px-5 py-3 rounded-xl text-lg font-semibold transition-all duration-200
                           <?php echo $page === 'StudentProfile' 
                             ? 'bg-[#a31d1d] text-white shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black' 
