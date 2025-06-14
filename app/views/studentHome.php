@@ -119,7 +119,7 @@ if (!in_array($page, $allowed_pages)) {
                 </div>
                 
                 <nav class="flex items-center gap-8">
-                    <a href="?page=studentProfile" 
+                    <a href="?page=StudentProfile" 
                        class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'StudentProfile' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
                         Profile
                     </a>
