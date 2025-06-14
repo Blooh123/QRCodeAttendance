@@ -62,7 +62,7 @@ require "../app/core/imageConfig.php";
 
     <!-- Main Glass Card Section -->
     <section class="flex-grow flex flex-col items-center justify-center text-center p-8 relative overflow-hidden">
-        <div class="main-glass max-w-3xl w-full mx-auto rounded-3xl shadow-2xl p-10 md:p-16 flex flex-col items-center justify-center relative floating">
+        <div class="main-glass max-w-3xl w-full mx-auto rounded-3xl shadow-2xl drop-shadow-2xl p-10 md:p-16 flex flex-col items-center justify-center relative floating">
             <!-- Decorative Illustration -->
             <img 
                 src="<?php echo $imageSource2 ?>" 
@@ -82,7 +82,7 @@ require "../app/core/imageConfig.php";
                     Experience seamless attendance tracking through secure QR code scanning.
                 </p>
                 <a href="<?php echo ROOT ?>login"
-                   class="inline-flex items-center bg-gradient-to-r from-[var(--maroon)] to-red-900 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 group text-lg md:text-xl mb-6">
+                   class="inline-flex items-center bg-gradient-to-r from-[var(--maroon)] to-red-900 text-white font-bold py-4 px-10 rounded-full shadow-lg drop-shadow-lg transition-all duration-300 hover:shadow-2xl hover:drop-shadow-2xl hover:scale-105 group text-lg md:text-xl mb-6">
                     Get Started
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
