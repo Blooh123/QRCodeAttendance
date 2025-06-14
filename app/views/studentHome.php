@@ -4,7 +4,7 @@
 global $imageSource, $imageSource4, $imageSource2;
 require_once '../app/core/imageConfig.php'; // Include your configuration file
 
-$page = $_GET['page'] ?? 'studentProfile'; // Default to 'studentProfile'
+$page = $_GET['page'] ?? 'StudentProfile'; // Default to 'studentProfile'
 $allowed_pages = ['StudentProfile', 'StudentQRCode', 'StudentReport'];
 
 // Prevent loading invalid files
