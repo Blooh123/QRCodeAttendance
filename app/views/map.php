@@ -86,7 +86,7 @@
             if (!map) {
                 map = L.map('map').setView(center, 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
                 assignGeofenceArea(geofenceCenter, geofenceRadius); // Draw geofence on first load
 
