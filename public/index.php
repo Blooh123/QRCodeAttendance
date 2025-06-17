@@ -69,6 +69,9 @@ $routes = [
     '/public/verify-otp' => '../app/Controller/VerifyOTP.php',
     '/public/download-report' => '../app/Controller/PDFgeneration.php',
 
+    // For prototype
+    '/public/map' => '../app/Controller/Geofencing.php',
+
     // localhost
     '/QRCodeAttendance/QRCodeAttendance/public/login' => '../app/Controller/LoginPage.php',
     '/QRCodeAttendance/QRCodeAttendance/public/logout' => '../app/Controller/Logout.php',
@@ -104,6 +107,9 @@ $routes = [
     '/QRCodeAttendance/QRCodeAttendance/public/forgot-password' => '../app/Controller/ForgotPassword.php',
     '/QRCodeAttendance/QRCodeAttendance/public/verify-otp' => '../app/Controller/VerifyOTP.php',
     '/QRCodeAttendance/QRCodeAttendance/public/download-report' => '../app/Controller/PDFgeneration.php',
+
+    // For prototype
+    '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
     
 
 
