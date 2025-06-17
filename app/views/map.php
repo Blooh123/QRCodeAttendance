@@ -28,7 +28,7 @@
     <script>
         let map, marker, circle, geofenceCircle;
         let geofenceCenter = [7.4474, 125.8025]; // Default center
-        let geofenceRadius = 500; // 500 meters
+        let geofenceRadius = 500; 
 
         function assignGeofenceArea(center, radius) {
             if (geofenceCircle) map.removeLayer(geofenceCircle);
@@ -38,8 +38,8 @@
                 fillColor: '#a7f3d0',
                 fillOpacity: 0.2
             }).addTo(map);
-            geofenceCenter = center; // Update the geofence center
-            geofenceRadius = radius; // Update the geofence radius
+            geofenceCenter = center; 
+            geofenceRadius = radius; 
         }
 
         function isInGeofence(userLatLng, center, radius) {
@@ -105,7 +105,7 @@
 
             marker = L.marker(center).addTo(map).bindPopup("You are here!").openPopup();
 
-            // Draw accuracy circle
+    
             circle = L.circle(center, {
                 radius: accuracy,
                 color: '#2563eb',
@@ -113,7 +113,7 @@
                 fillOpacity: 0.2
             }).addTo(map);
 
-            // Check if user is in geofence
+           
             const inCoverage = isInGeofence(center, geofenceCenter, geofenceRadius);
             showStatus(inCoverage);
         }
@@ -139,4 +139,3 @@
     </script>
 </body>
 </html>
-?>
