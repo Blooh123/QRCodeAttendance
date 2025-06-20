@@ -70,7 +70,7 @@ $routes = [
     // '/public/download-report' => '../app/Controller/PDFgeneration.php',
 
     //maintenance Mode
-        '/' => '../app/Controller/LandingPage.php',
+    '/' => '../app/Controller/MaintenanceController.php',
 
     '/public/login' => '../app/Controller/MaintenanceController.php',
     '/public/logout' => '../app/Controller/MaintenanceController.php',

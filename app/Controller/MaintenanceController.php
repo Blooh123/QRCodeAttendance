@@ -6,7 +6,7 @@ class MaintenanceController extends \Controller
 {
     public function index(): void
     {
-        $this->loadView('maintenance');
+        $this->loadView('maintenanceMode');
     }
 
    
