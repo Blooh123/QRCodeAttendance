@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #a31d1d 0%, #f8f9fa 100%);
+            /* Patterned background: subtle grid with maroon gradient overlay */
+            background-color: #f8f9fa;
+            background-image:
+                repeating-linear-gradient(135deg, #a31d1d22 0px, #a31d1d22 2px, transparent 2px, transparent 24px),
+                repeating-linear-gradient(45deg, #a31d1d11 0px, #a31d1d11 2px, transparent 2px, transparent 24px),
+                linear-gradient(135deg, #a31d1d 0%, #f8f9fa 100%);
             min-height: 100vh;
             font-family: 'Poppins', Arial, Helvetica, sans-serif;
             overflow: hidden;
@@ -88,3 +92,4 @@
         }
     </script>
 </body>
+</html>
