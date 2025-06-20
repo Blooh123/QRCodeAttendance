@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            /* Patterned background: subtle grid with maroon gradient overlay */
             background-color: #f8f9fa;
             background-image:
                 repeating-linear-gradient(135deg, #a31d1d22 0px, #a31d1d22 2px, transparent 2px, transparent 24px),
@@ -35,7 +34,6 @@
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl px-10 py-12 max-w-lg w-full flex flex-col items-center">
-        <!-- Animated Gears -->
         <div class="flex justify-center mb-8 space-x-4">
             <svg class="gear w-16 h-16 text-[#a31d1d]" fill="none" viewBox="0 0 64 64" stroke="currentColor">
                 <circle cx="32" cy="32" r="24" stroke-width="6" />
@@ -46,7 +44,7 @@
                 <path d="M32 14v4M32 46v4M14 32h4M46 32h4M21.5 21.5l3 3M39.5 39.5l3 3M21.5 42.5l3-3M39.5 24.5l3-3" stroke-width="3"/>
             </svg>
         </div>
-        <!-- Bouncing QR Icon -->
+
         <div class="bounce mb-6">
             <svg class="w-16 h-16 mx-auto text-[#a31d1d]" fill="none" viewBox="0 0 48 48" stroke="currentColor">
                 <rect x="6" y="6" width="12" height="12" rx="2" stroke-width="3"/>
@@ -67,7 +65,6 @@
         <div id="message" class="mt-4 text-[#a31d1d] font-semibold text-center"></div>
     </div>
     <script>
-        // Interactive animation for Try Again button
         function animateMessage() {
             const msg = document.getElementById('message');
             msg.textContent = "Still under maintenance...";
