@@ -1,9 +1,9 @@
 const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("../app/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("../app/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("../app/models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("/public/assets/models/"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("/public/assets/models/"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/public/assets/models/"),
 ]).then(startVideo);
 
 function startVideo() {
