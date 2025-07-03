@@ -110,6 +110,8 @@ $routes = [
 
     // For prototype
     '/public/map' => '../app/Controller/Geofencing.php',
+    '/public/face-register' => '../app/Controller/RegisterUI.php',
+    '/public/face-recognize' => '../app/Controller/FaceRecognize.php',
 
     // localhost
     '/QRCodeAttendance/QRCodeAttendance/public/login' => '../app/Controller/LoginPage.php',
