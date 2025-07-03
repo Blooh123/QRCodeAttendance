@@ -15,6 +15,7 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptions() {
+  console.log("Fetching labels...");
   const res = await fetch('https://usep-qrattendance.site/public/assets/js/labels.php');
   const labels = await res.json();
 
@@ -26,6 +27,7 @@ async function getLabeledFaceDescriptions() {
         let found = false;
         for (const ext of extensions) {
           try {
+
             const img = await faceapi.fetchImage(`https://usep-qrattendance.site/public/assets/js/labels/${label}/${i}.${ext}`);
             const detections = await faceapi
               .detectSingleFace(img)
