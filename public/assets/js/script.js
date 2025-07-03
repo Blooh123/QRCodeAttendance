@@ -1,9 +1,9 @@
 const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("../app/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("../app/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("../app/models"),
 ]).then(startVideo);
 
 function startVideo() {
@@ -15,8 +15,7 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptions() {
-  console.log("Fetching labels...");
-  const res = await fetch('labels.php');
+  const res = await fetch('assets/js/labels.php');
   const labels = await res.json();
 
   return Promise.all(
@@ -27,8 +26,7 @@ async function getLabeledFaceDescriptions() {
         let found = false;
         for (const ext of extensions) {
           try {
-
-            const img = await faceapi.fetchImage(`labels/${label}/${i}.${ext}`);
+            const img = await faceapi.fetchImage(`assets/js/labels/${label}/${i}.${ext}`);
             const detections = await faceapi
               .detectSingleFace(img)
               .withFaceLandmarks()
