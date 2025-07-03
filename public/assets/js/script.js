@@ -1,9 +1,9 @@
 const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("../app/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("../app/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("../app/models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("https://usep-qrattendance.site/public/assets/js/models/"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("https://usep-qrattendance.site/public/assets/js/models/"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("https://usep-qrattendance.site/public/assets/js/models/"),
 ]).then(startVideo);
 
 function startVideo() {
