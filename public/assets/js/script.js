@@ -14,44 +14,44 @@ function startVideo() {
     .catch(err => console.error(err));
 }
 
-async function getLabeledFaceDescriptions() {
-  const res = await fetch('assets/js/labels.php');
-  const labels = await res.json();
+// async function getLabeledFaceDescriptions() {
+//   const res = await fetch('assets/js/labels.php');
+//   const labels = await res.json();
 
-  return Promise.all(
-    labels.map(async (label) => {
-      const descriptions = [];
-      for (let i = 1; i <= 10; i++) {
-        const extensions = ['jpg', 'jpeg', 'png'];
-        let found = false;
-        for (const ext of extensions) {
-          try {
-            const img = await faceapi.fetchImage(`assets/js/labels/${label}/${i}.${ext}`);
-            const detections = await faceapi
-              .detectSingleFace(img)
-              .withFaceLandmarks()
-              .withFaceDescriptor();
-            if (detections) {
-              descriptions.push(detections.descriptor);
-              found = true;
-              break;
-            }
-          } catch (e) {
-            // Image does not exist, try next extension
-          }
-        }
-        if (!found) {
-          console.warn(`No valid image found for ${label}/${i} (jpg, jpeg, png)`);
-        }
-      }
-      if (descriptions.length === 0) {
-        console.warn(`No valid images for label: ${label}`);
-        return null;
-      }
-      return new faceapi.LabeledFaceDescriptors(label, descriptions);
-    })
-  );
-}
+//   return Promise.all(
+//     labels.map(async (label) => {
+//       const descriptions = [];
+//       for (let i = 1; i <= 10; i++) {
+//         const extensions = ['jpg', 'jpeg', 'png'];
+//         let found = false;
+//         for (const ext of extensions) {
+//           try {
+//             const img = await faceapi.fetchImage(`assets/js/labels/${label}/${i}.${ext}`);
+//             const detections = await faceapi
+//               .detectSingleFace(img)
+//               .withFaceLandmarks()
+//               .withFaceDescriptor();
+//             if (detections) {
+//               descriptions.push(detections.descriptor);
+//               found = true;
+//               break;
+//             }
+//           } catch (e) {
+//             // Image does not exist, try next extension
+//           }
+//         }
+//         if (!found) {
+//           console.warn(`No valid image found for ${label}/${i} (jpg, jpeg, png)`);
+//         }
+//       }
+//       if (descriptions.length === 0) {
+//         console.warn(`No valid images for label: ${label}`);
+//         return null;
+//       }
+//       return new faceapi.LabeledFaceDescriptors(label, descriptions);
+//     })
+//   );
+// }
 
 video.addEventListener("play", async () => {
   
