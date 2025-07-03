@@ -16,7 +16,7 @@ function startVideo() {
 
 async function getLabeledFaceDescriptions() {
   // Use absolute path
-  const res = await fetch('public/assets/js/labels.php');
+  const res = await fetch('/assets/js/labels.php');
   const labels = await res.json();
 
   return Promise.all(
@@ -27,7 +27,7 @@ async function getLabeledFaceDescriptions() {
         let found = false;
         for (const ext of extensions) {
           try {
-            const img = await faceapi.fetchImage(`public/assets/js/labels/${label}/${i}.${ext}`);
+            const img = await faceapi.fetchImage(`/assets/js/labels/${label}/${i}.${ext}`);
             const detections = await faceapi
               .detectSingleFace(img)
               .withFaceLandmarks()
