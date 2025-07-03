@@ -16,7 +16,7 @@ function startVideo() {
 
 async function getLabeledFaceDescriptions() {
   // Use absolute path from the web root
-  const res = await fetch('https://usep-qrattendance.site/public/assets/js/labels.phpassets/js/labels.php');
+  const res = await fetch('/assets/js/labels.php');
   const labels = await res.json();
 
   return Promise.all(
@@ -28,7 +28,7 @@ async function getLabeledFaceDescriptions() {
         let found = false;
         for (const ext of extensions) {
           try {
-            const img = await faceapi.fetchImage(`https://usep-qrattendance.site/public/assets/js/labels/${label}/${i}.${ext}`);
+            const img = await faceapi.fetchImage(`/assets/js/labels/${label}/${i}.${ext}`);
             const detections = await faceapi
               .detectSingleFace(img)
               .withFaceLandmarks()
