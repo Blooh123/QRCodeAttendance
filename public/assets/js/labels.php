@@ -1,5 +1,5 @@
 <?php
-$labelsDir = __DIR__ . '/assets/js/labels';
+$labelsDir = __DIR__ . '/labels';
 $labels = [];
 if (is_dir($labelsDir)) {
     foreach (scandir($labelsDir) as $folder) {

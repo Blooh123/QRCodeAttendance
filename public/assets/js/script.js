@@ -1,9 +1,9 @@
 const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("/public/assets/models/"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("/public/assets/models/"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("/public/assets/models/"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("../app/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("../app/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("../app/models"),
 ]).then(startVideo);
 
 function startVideo() {
@@ -15,20 +15,20 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptions() {
-  // Use absolute path
-  const res = await fetch('/public/assets/js/labels.php');
+  // Use absolute path from the web root
+  const res = await fetch('assets/js/labels.php');
   const labels = await res.json();
 
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
-      // Try up to 10 images per label, and for each, check jpg, jpeg, png
+      // Try jpg, jpeg, png for each image index
       for (let i = 1; i <= 10; i++) {
         const extensions = ['jpg', 'jpeg', 'png'];
         let found = false;
         for (const ext of extensions) {
           try {
-            const img = await faceapi.fetchImage(`/public/assets/js/labels/${label}/${i}.${ext}`);
+            const img = await faceapi.fetchImage(`assets/js/labels/${label}/${i}.${ext}`);
             const detections = await faceapi
               .detectSingleFace(img)
               .withFaceLandmarks()
@@ -36,10 +36,10 @@ async function getLabeledFaceDescriptions() {
             if (detections) {
               descriptions.push(detections.descriptor);
               found = true;
-              break; // Stop checking other extensions for this index
+              break;
             }
           } catch (e) {
-            // Image does not exist or cannot be loaded, try next extension
+            // Image does not exist, try next extension
           }
         }
         if (!found) {
@@ -48,7 +48,7 @@ async function getLabeledFaceDescriptions() {
       }
       if (descriptions.length === 0) {
         console.warn(`No valid images for label: ${label}`);
-        return null; // Skip this label if no valid images
+        return null;
       }
       return new faceapi.LabeledFaceDescriptors(label, descriptions);
     })
