@@ -149,6 +149,8 @@ $routes = [
 
     // For prototype
     '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
+    '/QRCodeAttendance/QRCodeAttendance/public/face-register' => '../app/Controller/RegisterUI.php',
+    '/QRCodeAttendance/QRCodeAttendance/public/face-recognize' => '../app/Controller/FaceRecognize.php',
     
 
 
