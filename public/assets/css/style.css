@@ -8,7 +8,9 @@ body {
     align-items: center;
     justify-content: center;
 }
-
+video#video {
+  transform: scaleX(1); /* Not mirrored */
+}
 canvas {
     position: absolute;
 }
