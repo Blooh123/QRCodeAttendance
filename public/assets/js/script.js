@@ -22,7 +22,7 @@ async function getLabeledFaceDescriptions() {
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 3; i++) {
         const extensions = ['jpg', 'jpeg', 'png'];
         let found = false;
         for (const ext of extensions) {

@@ -20,7 +20,7 @@ registerBtn.addEventListener('click', async () => {
   }
   registerStatus.textContent = "Registering...";
   // Capture 5 images
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 3; i++) {
     // Wait for a short delay between captures
     await new Promise(res => setTimeout(res, 500));
     const canvas = document.createElement('canvas');
