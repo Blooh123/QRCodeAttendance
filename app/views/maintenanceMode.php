@@ -54,7 +54,7 @@
                 <rect x="30" y="30" width="6" height="6" rx="1" stroke-width="3"/>
             </svg>
         </div>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] mb-4 text-center">We'll Be Back Soon!</h1>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] mb-4 text-center">Building something awesome!</h1>
         <p class="text-gray-700 text-lg mb-6 text-center">
             The QRCode Attendance System is currently undergoing scheduled maintenance.<br>
             Please check back later. Thank you for your patience!

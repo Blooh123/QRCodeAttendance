@@ -2,17 +2,12 @@
 global $imageSource, $OSASLogo, $username;
 require_once "../app/core/imageConfig.php";
 
-// Determine which component to load
-$page = $_GET['page'] ?? 'Dashboard'; // Default to 'dashboard'
+$page = $_GET['page'] ?? 'Dashboard';
 $allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin'];
-
-// Prevent loading invalid files
 if (!in_array($page, $allowed_pages)) {
-    $page = 'Dashboard'; // Fallback to default
+    $page = 'Dashboard';
 }
-
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -65,7 +60,7 @@ if (!in_array($page, $allowed_pages)) {
             <img src="<?php echo $OSASLogo ?>" alt="Profile" class="h-12 w-12 rounded-full border-2 border-[#a31d1d] object-cover">
             <span class="font-bold text-[#515050] hidden md:inline"><?php echo $username ?></span>
             <a href="<?php echo ROOT ?>logout"
-               class="ml-2 px-5 py-2 rounded-xl text-lg font-semibold transition-all duration-200 bg-[#a31d1d] text-white hover:bg-[#8a1818] shadow outline outline-1 outline-black">
+               class="px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-[#a31d1d] text-white hover:bg-[#8a1818] ml-2">
                 Logout
             </a>
             <!-- Mobile menu button -->
@@ -78,22 +73,22 @@ if (!in_array($page, $allowed_pages)) {
     </div>
     <!-- Mobile Sidebar -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
-    <aside id="sidebarMenu" class="fixed z-50 left-0 top-0 h-full w-64 bg-white/95 backdrop-blur-lg shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out rounded-r-3xl">
-        <div class="flex items-center gap-4 px-6 py-6 border-b border-gray-200">
+    <aside id="sidebarMenu" class="fixed z-50 left-0 top-0 h-full w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out rounded-r-3xl">
+        <div class="flex items-center gap-4 px-6 py-6 border-b border-gray-200 bg-white">
             <img class="h-14 w-auto" src="<?php echo $imageSource ?>" alt="Logo" />
         </div>
-        <nav class="flex-1 flex flex-col gap-2 px-4 py-6">
+        <nav class="flex-1 flex flex-col gap-2 px-4 py-6 bg-white">
             <?php foreach ($navPages as $key => $label): ?>
                 <a href="?page=<?php echo $key; ?>"
-                   class="mb-1 px-5 py-3 rounded-xl text-lg font-semibold transition-all duration-200
+                   class="mb-1 px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black
                    <?php echo $page === $key
-                       ? 'bg-[#a31d1d] text-white shadow outline outline-1 outline-black'
-                       : 'bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white shadow outline outline-1 outline-black'; ?>">
+                       ? 'bg-[#a31d1d] text-white hover:bg-[#8a1818]'
+                       : 'bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white'; ?>">
                     <?php echo $label; ?>
                 </a>
             <?php endforeach; ?>
             <a href="<?php echo ROOT ?>logout"
-               class="mt-4 px-5 py-3 rounded-xl text-lg font-semibold transition-all duration-200 bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white shadow outline outline-1 outline-black">
+               class="mt-4 px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-[#a31d1d] text-white hover:bg-[#8a1818]">
                 Logout
             </a>
         </nav>
