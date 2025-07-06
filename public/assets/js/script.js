@@ -54,18 +54,37 @@ async function getLabeledFaceDescriptions() {
   );
 }
 
-video.addEventListener("play", async () => {
-  
+// Fetch the username stored in PHP session
+async function getUsernameFromSession() {
+  try {
+    const res = await fetch('../public/assets/js/session_user.php');
+    const data = await res.json();
+    return data.username;
+  } catch (e) {
+    console.error('Failed to fetch session username', e);
+    return null;
+  }
+}
 
+
+video.addEventListener("play", async () => {
   let labeledFaceDescriptors = await getLabeledFaceDescriptions();
   labeledFaceDescriptors = labeledFaceDescriptors.filter(d => d); // Remove nulls
-  const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors,0.5);
+  const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
 
   const canvas = faceapi.createCanvasFromMedia(video);
   document.body.append(canvas);
 
   const displaySize = { width: video.width, height: video.height };
   faceapi.matchDimensions(canvas, displaySize);
+
+  const username = await getUsernameFromSession();
+  console.log("Session username:", username);
+
+  if (!username) {
+    alert("No user session found.");
+    return;
+  }
 
   setInterval(async () => {
     const detections = await faceapi
@@ -80,6 +99,7 @@ video.addEventListener("play", async () => {
     const results = resizedDetections.map((d) => {
       return faceMatcher.findBestMatch(d.descriptor);
     });
+
     results.forEach((result, i) => {
       const box = resizedDetections[i].detection.box;
       const drawBox = new faceapi.draw.DrawBox(box, {
@@ -87,8 +107,62 @@ video.addEventListener("play", async () => {
       });
       drawBox.draw(canvas);
     });
+
+    if (results.length > 0) {
+      const matched = results.some(r => r.label === username);
+      if (matched) {
+          setStatus("✅ Face recognized!", "status-success");
+          video.classList.remove("scanning-border");
+        fetch('../public/assets/js/redirect.php', {
+          method: 'POST',
+          credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.redirect) {
+            window.location.href = data.redirect;
+          } else {
+            console.error('No redirect URL provided.');
+          }
+        })
+        .catch(err => {
+          console.error('Failed to set cookie and redirect:', err);
+        });
+      }else if (results.some(r => r.label !== "unknown")) {
+        setStatus("❌ Face not recognized", "status-failed");
+        video.classList.remove("scanning-border");
+        alert("Invalid Face");
+        window.location.reload();
+      } else {
+        setStatus("Detecting face…", "status-detecting");
+        video.classList.add("scanning-border");
+      }
+    }
+
   }, 100);
 });
+
+const statusEl = document.getElementById('status');
+
+
+function setStatus(message, statusClass) {
+  statusEl.textContent = message;
+  statusEl.className = `status-message ${statusClass}`;
+}
+
+// When starting scanning
+setStatus("Detecting face…", "status-detecting");
+video.classList.add("scanning-border");
+
+// When a match is found
+setStatus("✅ Face recognized!", "status-success");
+video.classList.remove("scanning-border");
+
+// When no match or failed
+setStatus("❌ Face not recognized", "status-failed");
+video.classList.remove("scanning-border");
+
+
 
 
 

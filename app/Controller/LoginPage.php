@@ -65,6 +65,7 @@ class LoginPage extends Controller
                 if (!$checkLogSession) {
                     $username = $validate['username'];
                     $authToken = bin2hex(random_bytes(32)); // Secure 64-character token
+                    $_SESSION['auth_token'] = $authToken;
 
                     // Call createSession() to generate a secure token
                     $userId = $validate['id'];
@@ -82,26 +83,36 @@ class LoginPage extends Controller
                         ]
                     ];
 
-                    // Set cookie expiration based on role
+                                            // Set cookie expiration based on role
                     $cookieExpiry = ($role == 'student') ? time() + (60 * 10) : time() + (60 * 60 * 24 * 2);
 
-                    setcookie(
-                        'user_data',
-                        json_encode($userSessions),
-                        $cookieExpiry, // 10 mins for students, 2 days for others
-                        '/',
-                        '',      // domain
-                        isset($_SERVER['HTTPS']), // secure flag
-                        true     // HttpOnly
-                    );
+
 
                     $uri = '';
                     // Redirect based on role
                     if ($role == 'admin') {
+                        setcookie(
+                            'user_data',
+                            json_encode($userSessions),
+                            $cookieExpiry, // 10 mins for students, 2 days for others
+                            '/',
+                            '',      // domain
+                            isset($_SERVER['HTTPS']), // secure flag
+                            true     // HttpOnly
+                        );
                         $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
-                        $uri = str_replace('/login', '/facilitator', $_SERVER['REQUEST_URI']);
+                        $uri = str_replace('/login', '/face-recognize', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'student') {
+                        setcookie(
+                            'user_data',
+                            json_encode($userSessions),
+                            $cookieExpiry, // 10 mins for students, 2 days for others
+                            '/',
+                            '',      // domain
+                            isset($_SERVER['HTTPS']), // secure flag
+                            true     // HttpOnly
+                        );
                         $uri = str_replace('/login', '/student', $_SERVER['REQUEST_URI']);
                     }
 
