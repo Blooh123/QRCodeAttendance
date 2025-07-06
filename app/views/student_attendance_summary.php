@@ -40,7 +40,7 @@ require "../app/core/imageConfig.php";
                 </div>
                 <div>
                     <h2 class="text-xl font-semibold text-gray-900">
-                        <?php echo htmlspecialchars($data['studentInfo']['f_name'] . ' ' . $data['studentInfo']['l_name']); ?>
+                        <?php echo htmlspecialchars($data['studentInfo']['name']); ?>
                     </h2>
                     <p class="text-gray-600">Student ID: <?php echo htmlspecialchars($data['studentInfo']['student_id']); ?></p>
                 </div>
@@ -80,7 +80,7 @@ require "../app/core/imageConfig.php";
                                         <?php echo htmlspecialchars($record['time_in']); ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <?php echo htmlspecialchars($record['time_out']); ?>
+                                        <?php echo$record['time_out'] ?? 'N/A'; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

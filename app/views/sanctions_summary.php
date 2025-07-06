@@ -139,7 +139,7 @@ global $imageSource, $imageSource2, $imageSource4;
                         if ($searchTerm) {
                             $filteredData = array_filter($data['sanctionSummary'], function($item) use ($searchTerm) {
                                 return strpos(strtolower($item['student_id']), $searchTerm) !== false ||
-                                       strpos(strtolower($item['f_name'] . ' ' . $item['l_name']), $searchTerm) !== false ||
+                                       strpos(strtolower($item['name']), $searchTerm) !== false ||
                                        strpos(strtolower($item['program']), $searchTerm) !== false;
                             });
                         }
@@ -158,7 +158,7 @@ global $imageSource, $imageSource2, $imageSource4;
                                     <?php echo htmlspecialchars($sanction['student_id']); ?>
                                 </td>
                                 <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <?php echo htmlspecialchars($sanction['f_name'] . ' ' . $sanction['l_name']); ?>
+                                    <?php echo htmlspecialchars($sanction['name']); ?>
                                 </td>
                                 <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <?php echo htmlspecialchars($sanction['program']); ?>
