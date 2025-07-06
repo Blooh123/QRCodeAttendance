@@ -71,30 +71,47 @@ global $numberOfStudents, $numberOfAttendance, $numberOfFaci, $listOfAttendance,
 <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Facilitators Status -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8">
-        <h2 class="text-3xl font-bold text-[#a31d1d] mb-4">Facilitators Status</h2>
-        <div class="space-y-4 max-h-64 overflow-y-auto hide-scrollbar">
+        <h2 class="text-3xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+            <i class="fas fa-users-cog text-[#a31d1d]"></i> Facilitators Status
+        </h2>
+        <div class="space-y-4 max-h-64 overflow-y-auto hide-scrollbar" id="faciStatusList">
             <?php foreach ($data['listOfFaci'] as $faci): ?>
-                <div class="bg-gray-100 p-4 rounded-lg shadow flex justify-between items-center">
-                    <span class="text-lg font-semibold text-[#515050]"><?php echo htmlspecialchars($faci[1])?></span>
+                <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex justify-between items-center border border-gray-200">
+                    <span class="text-lg font-semibold text-[#515050] flex items-center gap-2">
+                        <i class="fas fa-user-circle text-[#a31d1d]"></i>
+                        <?php echo htmlspecialchars($faci[1])?>
+                    </span>
                     <span class="text-lg font-bold <?php echo ($faci[4] === 'login' || $faci[4] === 'scanning') ? 'text-green-600' : 'text-red-600'; ?>">
                         <?php echo ucfirst($faci[4]) ?>
                     </span>
                 </div>
             <?php endforeach; ?>
         </div>
+        <!-- Facilitators Pagination -->
+        <div class="flex justify-center mt-4" id="faciPagination"></div>
     </div>
 
     <!-- Recent Attendance -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8">
-        <h2 class="text-3xl font-bold text-[#a31d1d] mb-4">Recent Attendance</h2>
-        <div class="space-y-4 max-h-64 overflow-y-auto hide-scrollbar">
+        <h2 class="text-3xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+            <i class="fas fa-clock text-[#a31d1d]"></i> Recent Attendance
+        </h2>
+        <div class="space-y-4 max-h-64 overflow-y-auto hide-scrollbar" id="attendanceList">
             <?php foreach ($data['listOfAttendance'] as $attendance):?>
-                <div class="bg-gray-100 p-4 rounded-lg shadow flex justify-between items-center">
-                    <span class="text-lg font-semibold text-[#515050]"><?php echo htmlspecialchars($attendance[1])?></span>
-                    <span class="text-lg font-semibold text-[#515050]"><?php echo htmlspecialchars($attendance[5])?></span>
+                <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex justify-between items-center border border-gray-200">
+                    <span class="text-lg font-semibold text-[#515050] flex items-center gap-2">
+                        <i class="fas fa-user text-[#a31d1d]"></i>
+                        <?php echo htmlspecialchars($attendance[1])?>
+                    </span>
+                    <span class="text-lg font-semibold text-[#515050] flex items-center gap-2">
+                        <i class="fas fa-calendar-alt text-[#a31d1d]"></i>
+                        <?php echo htmlspecialchars($attendance[5])?>
+                    </span>
                 </div>
             <?php endforeach?>
         </div>
+        <!-- Attendance Pagination -->
+        <div class="flex justify-center mt-4" id="attendancePagination"></div>
         <div class="flex justify-center mt-4">
             <a href="?page=Attendance" class="bg-[#a31d1d] text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
                 View More
@@ -102,5 +119,152 @@ global $numberOfStudents, $numberOfAttendance, $numberOfFaci, $listOfAttendance,
         </div>
     </div>
 </div>
+
+<script>
+/**
+ * Client-side pagination for dashboard lists with arrow navigation and compact page numbers
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    // Facilitators Pagination
+    const faciItems = Array.from(document.querySelectorAll('#faciStatusList > div'));
+    const faciPerPage = 5;
+    let faciCurrentPage = 1;
+    const faciPagination = document.getElementById('faciPagination');
+
+    function renderFaciPage(page) {
+        const totalPages = Math.ceil(faciItems.length / faciPerPage);
+        faciCurrentPage = page;
+        faciItems.forEach((item, idx) => {
+            item.style.display = (idx >= (page - 1) * faciPerPage && idx < page * faciPerPage) ? '' : 'none';
+        });
+        renderFaciPagination(page, totalPages);
+    }
+    function renderFaciPagination(page, totalPages) {
+        faciPagination.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        // Prev arrow
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition';
+        prevBtn.disabled = page === 1;
+        prevBtn.onclick = () => renderFaciPage(page - 1);
+        faciPagination.appendChild(prevBtn);
+
+        // Compact page numbers: show first, last, current, and neighbors
+        if (page > 2) {
+            addPageBtn(1, page);
+            if (page > 3) {
+                addEllipsis(faciPagination);
+            }
+        }
+        for (let i = Math.max(1, page - 1); i <= Math.min(totalPages, page + 1); i++) {
+            addPageBtn(i, page);
+        }
+        if (page < totalPages - 1) {
+            if (page < totalPages - 2) {
+                addEllipsis(faciPagination);
+            }
+            addPageBtn(totalPages, page);
+        }
+
+        // Next arrow
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition';
+        nextBtn.disabled = page === totalPages;
+        nextBtn.onclick = () => renderFaciPage(page + 1);
+        faciPagination.appendChild(nextBtn);
+
+        function addPageBtn(i, current) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold ' +
+                (i === current
+                    ? 'bg-[#a31d1d] text-white shadow'
+                    : 'bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition');
+            btn.onclick = () => renderFaciPage(i);
+            faciPagination.appendChild(btn);
+        }
+        function addEllipsis(container) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.className = 'mx-1 px-2 py-1 text-[#a31d1d] font-bold';
+            container.appendChild(span);
+        }
+    }
+    renderFaciPage(faciCurrentPage);
+
+    // Attendance Pagination
+    const attItems = Array.from(document.querySelectorAll('#attendanceList > div'));
+    const attPerPage = 5;
+    let attCurrentPage = 1;
+    const attPagination = document.getElementById('attendancePagination');
+
+    function renderAttPage(page) {
+        const totalPages = Math.ceil(attItems.length / attPerPage);
+        attCurrentPage = page;
+        attItems.forEach((item, idx) => {
+            item.style.display = (idx >= (page - 1) * attPerPage && idx < page * attPerPage) ? '' : 'none';
+        });
+        renderAttPagination(page, totalPages);
+    }
+    function renderAttPagination(page, totalPages) {
+        attPagination.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        // Prev arrow
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition';
+        prevBtn.disabled = page === 1;
+        prevBtn.onclick = () => renderAttPage(page - 1);
+        attPagination.appendChild(prevBtn);
+
+        // Compact page numbers: show first, last, current, and neighbors
+        if (page > 2) {
+            addPageBtn(1, page);
+            if (page > 3) {
+                addEllipsis(attPagination);
+            }
+        }
+        for (let i = Math.max(1, page - 1); i <= Math.min(totalPages, page + 1); i++) {
+            addPageBtn(i, page);
+        }
+        if (page < totalPages - 1) {
+            if (page < totalPages - 2) {
+                addEllipsis(attPagination);
+            }
+            addPageBtn(totalPages, page);
+        }
+
+        // Next arrow
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition';
+        nextBtn.disabled = page === totalPages;
+        nextBtn.onclick = () => renderAttPage(page + 1);
+        attPagination.appendChild(nextBtn);
+
+        function addPageBtn(i, current) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = 'mx-1 px-3 py-1 rounded-lg font-semibold ' +
+                (i === current
+                    ? 'bg-[#a31d1d] text-white shadow'
+                    : 'bg-white text-[#a31d1d] border border-[#a31d1d] hover:bg-[#a31d1d] hover:text-white transition');
+            btn.onclick = () => renderAttPage(i);
+            attPagination.appendChild(btn);
+        }
+        function addEllipsis(container) {
+            const span = document.createElement('span');
+            span.textContent = '...';
+            span.className = 'mx-1 px-2 py-1 text-[#a31d1d] font-bold';
+            container.appendChild(span);
+        }
+    }
+    renderAttPage(attCurrentPage);
+});
+</script>
 </body>
 </html>

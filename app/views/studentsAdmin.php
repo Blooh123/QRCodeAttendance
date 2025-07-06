@@ -122,6 +122,42 @@ if (empty($_SESSION['csrf_token'])) {
                 opacity: 1;
             }
         }
+        .search-animated-logo {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin-bottom: 10px;
+        }
+        .logo-circle {
+            width: 100%;
+            height: 100%;
+            border: 6px solid #a31d1d;
+            border-top: 6px solid #f8fafc;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(.68,-0.55,.27,1.55) infinite;
+            box-shadow: 0 0 30px 0 #a31d1d33;
+        }
+        .logo-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            height: 18px;
+            background: #a31d1d;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: bounce 1.2s infinite alternate;
+            box-shadow: 0 0 10px 2px #a31d1d44;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        @keyframes bounce {
+            0% { transform: translate(-50%, -50%) scale(1);}
+            60% { transform: translate(-50%, -60%) scale(1.15);}
+            100% { transform: translate(-50%, -50%) scale(1);}
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
@@ -129,17 +165,20 @@ if (empty($_SESSION['csrf_token'])) {
 <!-- Search Loading Overlay -->
 <div id="searchLoadingOverlay" class="search-loading-overlay">
     <div class="search-loading-container">
-        <div class="search-loading-spinner"></div>
-        <div class="search-loading-text">Hang on tight...</div>
+        <div class="search-animated-logo">
+            <div class="logo-circle"></div>
+            <div class="logo-dot"></div>
+        </div>
+        <div class="search-loading-text" id="searchLoadingText">Hang on tight...</div>
     </div>
 </div>
 
-<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
+<!-- <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
     <div class="flex items-center space-x-3">
         <i class="fas fa-user-graduate text-[#a31d1d] text-3xl"></i>
         <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
     </div>
-</header>
+</header> -->
 
 <div class="max-w-7xl mx-auto">
     <!-- Search and Filter Section -->
@@ -255,20 +294,45 @@ if (empty($_SESSION['csrf_token'])) {
     // Add loading screen functionality for search and filter
     document.addEventListener('DOMContentLoaded', function() {
         const searchLoadingOverlay = document.getElementById('searchLoadingOverlay');
-        
+        const searchLoadingText = document.getElementById('searchLoadingText');
+        let loadingInterval = null;
+        let loadingMessages = [
+            "Hang on tight...",
+            "Crunching the numbers...",
+            "Fetching student data...",
+            "Almost there...",
+            "Just a moment more..."
+        ];
+        let msgIndex = 0;
+
+        function startLoading() {
+            msgIndex = 0;
+            searchLoadingText.textContent = loadingMessages[msgIndex];
+            searchLoadingOverlay.style.display = 'flex';
+            loadingInterval = setInterval(() => {
+                msgIndex = (msgIndex + 1) % loadingMessages.length;
+                searchLoadingText.textContent = loadingMessages[msgIndex];
+            }, 1200);
+        }
+
+        function stopLoading() {
+            searchLoadingOverlay.style.display = 'none';
+            clearInterval(loadingInterval);
+        }
+
         // Show loading for search form
         document.querySelector('form[action*="adminHome"]').addEventListener('submit', function() {
-            searchLoadingOverlay.style.display = 'flex';
+            startLoading();
         });
 
         // Show loading for filter form
         document.querySelector('.filter-container').addEventListener('submit', function() {
-            searchLoadingOverlay.style.display = 'flex';
+            startLoading();
         });
 
         // Hide loading when page is fully loaded
         window.addEventListener('load', function() {
-            searchLoadingOverlay.style.display = 'none';
+            stopLoading();
         });
     });
 </script>

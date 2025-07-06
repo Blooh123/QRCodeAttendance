@@ -98,9 +98,7 @@ if (!in_array($page, $allowed_pages)) {
 <!-- Main Content -->
 <main class="flex flex-col items-center justify-start p-4 min-h-screen">
     <div class="admin-container w-full max-w-5xl bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg mt-8">
-        <div class="admin-header text-3xl font-extrabold text-[#a31d1d] mb-6 text-center">
-            <?php echo htmlspecialchars($page); ?>
-        </div>
+
         <div>
             <?php require "../app/Controller/{$page}.php"; ?>
         </div>
