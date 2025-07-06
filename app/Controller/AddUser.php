@@ -31,6 +31,7 @@ class AddUser extends \Controller
             }else{
                 // Insert the new user
                 if ($user->insertUser($id, $username, $confirmPassword,$role)) {
+                    $user->insertPersonalInformation($id, $_POST['fullname'], $_POST['email']);
                     echo "<script>alert('User added successfully!');</script>";
                 } else {
                     echo "<script>alert('Failed to add user.');</script>";

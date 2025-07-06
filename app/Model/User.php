@@ -64,6 +64,15 @@ class User
         ];
         return $this->query($query, $params);
     }
+    public function insertPersonalInformation($id, $name, $email): bool|array{
+        $query = "INSERT INTO user_personal_info (id, name, email) VALUES (:id, :name, :email)";
+        $params = [
+            ':id' => $id,
+            ':name' => $name,
+            ':email' => $email
+        ];
+        return $this->query($query, $params);
+    }
     public function updateUser($id, $username): bool|array
     {
         $query = "UPDATE users SET username = :username WHERE id = :id";

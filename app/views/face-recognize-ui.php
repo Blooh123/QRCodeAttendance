@@ -15,7 +15,6 @@
 </head>
 <body>
   <video id="video" width="600" height="450" autoplay></video>
-  <input type="text" id="username" placeholder="Enter your name" />
   <a href="face-register">register</a>
 </body>
 

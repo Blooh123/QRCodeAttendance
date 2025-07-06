@@ -38,12 +38,21 @@ require_once '../app/core/config.php';
             <form method="POST" class="p-4 md:p-5" action="<?php echo ROOT ?>add_user">
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
+                        <label for="fullname" class="block mb-2 text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" name="fullname" id="fullname" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Full name" required>
+
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" id="email" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Email address" required>
+
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" name="username" id="username" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="First name" required>
+                        <input type="text" name="username" id="username" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Username" required>
+
                         <label for="id" class="block mb-2 text-sm font-medium text-gray-700">ID</label>
                         <input type="text" name="id" id="id" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Enter unique ID" required>
+
                         <label for="Password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
                         <input type="password" name="Password" id="Password" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Password" required>
+
                         <label for="ConfirmPassword" class="block mb-2 text-sm font-medium text-gray-700">Confirm Password</label>
                         <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Confirm Password" required>
                     </div>
@@ -55,7 +64,6 @@ require_once '../app/core/config.php';
                             <option value="Facilitator">Facilitator</option>
                         </select>
                     </div>
-
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
