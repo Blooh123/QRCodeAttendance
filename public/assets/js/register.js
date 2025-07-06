@@ -29,7 +29,7 @@ registerBtn.addEventListener('click', async () => {
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL('image/jpeg');
     // Send to server
-    await fetch('register.php', {
+    await fetch('../app/Controller/register.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
