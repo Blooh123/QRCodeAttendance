@@ -2,8 +2,8 @@
 
 // Generate QR value containing student details
 $student_id = htmlspecialchars($studentData['student_id'] ?? 'N/A');
-$f_name = htmlspecialchars($studentData['f_name'] ?? 'N/A');
-$l_name = htmlspecialchars($studentData['l_name'] ?? 'N/A');
+$name = htmlspecialchars($studentData['name'] ?? 'N/A');
+// $l_name = htmlspecialchars($studentData['l_name'] ?? 'N/A');
 
 
 ?>
@@ -60,7 +60,7 @@ $l_name = htmlspecialchars($studentData['l_name'] ?? 'N/A');
                         <!-- Student Info -->
                         <div class="bg-white/80 backdrop-blur-sm px-6 py-3 rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mb-8 w-full md:w-auto">
                             <p class="text-lg font-bold text-gray-800">
-                                <?= "Name: $f_name $l_name" ?>
+                                <?= "Name: $name " ?>
                             </p>
                             <p class="text-lg font-bold text-gray-800">
                                 <?= "Student ID: $student_id" ?>

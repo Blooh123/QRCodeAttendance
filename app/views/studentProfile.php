@@ -100,7 +100,7 @@ require_once '../app/core/imageConfig.php';
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Full Name</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['f_name'].' '.$studentInfo['l_name'] ?? 'N/A'); ?></p>
+                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['name'] ?? 'N/A'); ?></p>
                         </div>
                         <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Email</p>
@@ -110,18 +110,18 @@ require_once '../app/core/imageConfig.php';
                             <p class="text-gray-500 font-medium">Student ID</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
                         </div>
-                        <div class="space-y-2">
+                        <!-- <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Contact</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['contact_num'] ?? 'N/A'); ?></p>
-                        </div>
+                        </div> -->
                         <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Program</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?></p>
                         </div>
-                        <div class="space-y-2">
+                        <!-- <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Section</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['section'] ?? 'N/A'); ?></p>
-                        </div>
+                        </div> -->
                         <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Year</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?></p>

@@ -165,7 +165,6 @@ if (empty($_SESSION['csrf_token'])) {
            class="block text-white bg-red-800 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             <i class="fas fa-user-graduate"></i> Add Student
         </a>
-
     </div>
 
 
@@ -186,7 +185,7 @@ if (empty($_SESSION['csrf_token'])) {
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-user-graduate text-red-800 text-2xl"></i>
                                 <h2 class="text-xl font-semibold text-gray-900">
-                                    <?php echo htmlspecialchars($student['f_name'] . ' ' . $student['l_name']); ?>
+                                    <?php echo htmlspecialchars($student['name']); ?>
                                 </h2>
                             </div>
 
@@ -194,7 +193,7 @@ if (empty($_SESSION['csrf_token'])) {
                             <p class="text-gray-700"><strong>Program:</strong> <?php echo htmlspecialchars($student['program']); ?></p>
                             <p class="text-gray-700"><strong>Year:</strong> <?php echo htmlspecialchars($student['acad_year']); ?></p>
                             <p class="text-gray-700"><strong>Email:</strong> <?php echo htmlspecialchars($student['email']); ?></p>
-                            <p class="text-gray-700"><strong>Contact No.:</strong> <?php echo htmlspecialchars($student['contact_num']); ?></p>
+                            <!-- <p class="text-gray-700"><strong>Contact No.:</strong> <?php echo htmlspecialchars($student['contact_num']); ?></p> -->
 
                             <div class="flex justify-between mt-4">
                                 <a href="<?php echo ROOT?>edit_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
