@@ -11,7 +11,7 @@ $imgNum = intval($data['imgNum']);
 $imgData = $data['imgData'];
 
 // Directory to save images
-$dir =  '../public/assets/js/labels/' . $username;
+$dir =  '../app/labels/' . $username;
 if (!is_dir($dir)) {
     if (!mkdir($dir, 0777, true)) {
         exit('Failed to create directory: ' . $dir);
