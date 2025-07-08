@@ -1,4 +1,5 @@
 <?php 
+session_start();
 
 class FaceRecognize extends \Controller {
     public function index(): void {
@@ -7,4 +8,6 @@ class FaceRecognize extends \Controller {
 }
 
 $faceRecognize = new FaceRecognize();  
-$faceRecognize->index();
+if(isset($_SESSION['username'])){
+    $faceRecognize->index();
+}

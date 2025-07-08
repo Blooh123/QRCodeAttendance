@@ -73,26 +73,20 @@ video.addEventListener("play", async () => {
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
 
   const canvas = faceapi.createCanvasFromMedia(video);
-  document.body.append(canvas);
+  const container = document.getElementById("video-container");
+  canvas.id = "overlay";
+  canvas.classList.add("absolute", "top-0", "left-0");
+  container.appendChild(canvas);
 
-// append canvas properly to #video-container
-const container = document.getElementById("video-container");
-canvas.id = "overlay";
-canvas.classList.add("absolute", "top-0", "left-0");
-container.appendChild(canvas);
+  const displaySize = {
+    width: video.videoWidth,
+    height: video.videoHeight
+  };
 
-// get actual video render size
-const displaySize = {
-  width: video.videoWidth,
-  height: video.videoHeight
-};
+  canvas.width = displaySize.width;
+  canvas.height = displaySize.height;
 
-// set canvas to match video display size
-canvas.width = displaySize.width;
-canvas.height = displaySize.height;
-
-faceapi.matchDimensions(canvas, displaySize);
-
+  faceapi.matchDimensions(canvas, displaySize);
 
   const username = await getUsernameFromSession();
   console.log("Session username:", username);
@@ -101,6 +95,8 @@ faceapi.matchDimensions(canvas, displaySize);
     alert("No user session found.");
     return;
   }
+
+  let redirected = false; // 🔷 flag to ensure redirect only happens once
 
   setInterval(async () => {
     const detections = await faceapi
@@ -126,25 +122,27 @@ faceapi.matchDimensions(canvas, displaySize);
 
     if (results.length > 0) {
       const matched = results.some(r => r.label === username);
-      if (matched) {
-          setStatus("✅ Face recognized!", "status-success");
-          video.classList.remove("scanning-border");
+      if (matched && !redirected) {  // 🔷 only if not already redirected
+        redirected = true;          // 🔷 set flag
+        setStatus("✅ Face recognized!", "status-success");
+        video.classList.remove("scanning-border");
+
         fetch('../public/assets/js/redirect.php', {
           method: 'POST',
           credentials: 'include'
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.redirect) {
-            window.location.href = data.redirect;
-          } else {
-            console.error('No redirect URL provided.');
-          }
-        })
-        .catch(err => {
-          console.error('Failed to set cookie and redirect:', err);
-        });
-      }else if (results.some(r => r.label !== "unknown")) {
+          .then(res => res.json())
+          .then(data => {
+            if (data.redirect) {
+              window.location.href = data.redirect;
+            } else {
+              console.error('No redirect URL provided.');
+            }
+          })
+          .catch(err => {
+            console.error('Failed to set cookie and redirect:', err);
+          });
+      } else if (results.some(r => r.label !== "unknown") && !matched) {
         setStatus("❌ Face not recognized", "status-failed");
         video.classList.remove("scanning-border");
         alert("Invalid Face");
@@ -157,6 +155,7 @@ faceapi.matchDimensions(canvas, displaySize);
 
   }, 100);
 });
+
 
 const statusEl = document.getElementById('status');
 
