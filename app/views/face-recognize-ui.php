@@ -6,111 +6,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Face Detection</title>
 
 <script defer src="<?= ROOT ?>assets/js/face-api.min.js"></script>
 <script defer src="<?= ROOT ?>assets/js/script.js"></script>
-<link rel="stylesheet" href="<?= ROOT ?>assets/css/style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f8f9fa;
-  color: #333;
-  text-align: center;
-  padding: 1rem;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background-color: #f8f9fa;
 }
-
-h1 {
-  font-size: 1.8rem;
-  color: #a31d1d;
-  margin-bottom: 1rem;
-}
-
-.status-message {
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  display: inline-block;
-}
-
-.status-detecting {
-  background-color: #eaf4fc;
-  color: #3498db;
-}
-
-.status-success {
-  background-color: #e8f8f1;
-  color: #27ae60;
-}
-
-.status-failed {
-  background-color: #fdecea;
-  color: #e74c3c;
-}
-
-#video-container {
-  position: relative;
-  max-width: 90%;
-  margin: auto;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-#video {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
 .scanning-border {
   animation: scanning 2s infinite;
 }
-
 @keyframes scanning {
-  0% { box-shadow: 0 0 15px #3498db; }
-  50% { box-shadow: 0 0 30px #3498db; }
-  100% { box-shadow: 0 0 15px #3498db; }
-}
-
-/* Responsive */
-@media (min-width: 768px) {
-  h1 {
-    font-size: 2rem;
-  }
-  .status-message {
-    font-size: 1.2rem;
-  }
-  #video-container {
-    max-width: 600px;
-  }
+  0% { box-shadow: 0 0 10px #3498db; }
+  50% { box-shadow: 0 0 20px #3498db; }
+  100% { box-shadow: 0 0 10px #3498db; }
 }
 </style>
 </head>
 
-<body>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
 
-<h1>👁 Face Detection</h1>
+  <h1 class="text-3xl font-bold text-[#a31d1d] mb-6">
+    👁 Face Detection
+  </h1>
 
-<div id="status" class="status-message status-detecting">
-  Detecting face…
-</div>
+  <div class="bg-white p-6 rounded-xl shadow-lg border border-black max-w-md w-full space-y-4">
+    <div id="video-container" class="rounded-lg overflow-hidden border-4 border-[#a31d1d] scanning-border">
+      <video id="video" autoplay muted playsinline width="600" height="450"></video>
+    </div>
 
-<div id="video-container" class="scanning-border">
-  <video id="video" autoplay muted playsinline></video>
-</div>
+    <div id="status" class="px-4 py-2 rounded-md bg-blue-100 text-blue-700 font-semibold">
+      Detecting face…
+    </div>
+
+  </div>
 
 </body>
 </html>
