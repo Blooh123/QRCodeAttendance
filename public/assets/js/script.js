@@ -75,8 +75,24 @@ video.addEventListener("play", async () => {
   const canvas = faceapi.createCanvasFromMedia(video);
   document.body.append(canvas);
 
-  const displaySize = { width: video.width, height: video.height };
-  faceapi.matchDimensions(canvas, displaySize);
+// append canvas properly to #video-container
+const container = document.getElementById("video-container");
+canvas.id = "overlay";
+canvas.classList.add("absolute", "top-0", "left-0");
+container.appendChild(canvas);
+
+// get actual video render size
+const displaySize = {
+  width: video.videoWidth,
+  height: video.videoHeight
+};
+
+// set canvas to match video display size
+canvas.width = displaySize.width;
+canvas.height = displaySize.height;
+
+faceapi.matchDimensions(canvas, displaySize);
+
 
   const username = await getUsernameFromSession();
   console.log("Session username:", username);

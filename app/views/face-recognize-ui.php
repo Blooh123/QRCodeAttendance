@@ -30,21 +30,21 @@ body {
 </style>
 </head>
 
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
 
   <h1 class="text-3xl font-bold text-[#a31d1d] mb-6">
     👁 Face Detection
   </h1>
 
   <div class="bg-white p-6 rounded-xl shadow-lg border border-black max-w-md w-full space-y-4">
-    <div id="video-container" class="rounded-lg overflow-hidden border-4 border-[#a31d1d] scanning-border">
+    <div id="video-container" class="relative rounded-lg overflow-hidden border-4 border-[#a31d1d] scanning-border">
       <video id="video" autoplay muted playsinline width="600" height="450"></video>
+      <!-- Canvas will be added here -->
     </div>
 
     <div id="status" class="px-4 py-2 rounded-md bg-blue-100 text-blue-700 font-semibold">
       Detecting face…
     </div>
-
   </div>
 
 </body>
