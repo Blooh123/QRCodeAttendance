@@ -83,7 +83,7 @@ class LoginPage extends Controller
                         ]
                     ];
 
-                                            // Set cookie expiration based on role
+                    // Set cookie expiration based on role
                     $cookieExpiry = ($role == 'student') ? time() + (60 * 10) : time() + (60 * 60 * 24 * 2);
 
 
@@ -100,9 +100,9 @@ class LoginPage extends Controller
                             isset($_SERVER['HTTPS']), // secure flag
                             true     // HttpOnly
                         );
-                        $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
+                        $uri = str_replace('/login2', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
-                        $uri = str_replace('/login', '/face-recognize', $_SERVER['REQUEST_URI']);
+                        $uri = str_replace('/login2', '/face-recognize', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'student') {
                         setcookie(
                             'user_data',
@@ -113,7 +113,7 @@ class LoginPage extends Controller
                             isset($_SERVER['HTTPS']), // secure flag
                             true     // HttpOnly
                         );
-                        $uri = str_replace('/login', '/student', $_SERVER['REQUEST_URI']);
+                        $uri = str_replace('/login2', '/student', $_SERVER['REQUEST_URI']);
                     }
 
                     header('Location: '. $uri);
