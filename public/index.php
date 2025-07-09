@@ -73,6 +73,8 @@ $routes = [
     '/' => '../app/Controller/MaintenanceController.php',
 
     '/public/login' => '../app/Controller/MaintenanceController.php',
+    //login2
+    '/public/login2' => '../app/Controller/LoginPage.php',
     // '/public/logout' => '../app/Controller/MaintenanceController.php',
     // '/public/logout2' => '../app/Controller/MaintenanceController.php',
     // '/public/adminHome' => '../app/Controller/MaintenanceController.php',
