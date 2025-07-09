@@ -35,31 +35,29 @@ $data = [
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if (!$attendance->getAttendanceDetails(0,$_POST['eventName'])){
 
-        // Ensure the values are arrays before converting to JSON
+        // Get arrays as received from form - no filtering or deduplication
         $programs = $_POST['program'] ?? [];
         $years = $_POST['year'] ?? [];
         $requiredAttendanceRecord = $_POST['required_attendance'] ?? [];
 
-        // Filter out empty year values and ensure they are properly formatted
-        $years = array_filter($years, function($year) {
-            return !empty($year) && $year !== '';
-        });
-
-        // Remove duplicate years and reindex array
-        $years = array_values(array_unique($years));
-
-        // If no years are selected, set a default empty array
-        if (empty($years)) {
-            $years = [];
-        }
-
-        // Ensure programs and years arrays are aligned
+        // Ensure both arrays are the same length (pad years with empty strings if needed)
         if (count($programs) > count($years)) {
-            // Pad years array with empty strings to match programs length
             $years = array_pad($years, count($programs), '');
         }
 
-        $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction']);
+
+        // Get geofence parameters (optional)
+        $latitude = !empty($_POST['latitude']) ? floatval($_POST['latitude']) : null;
+        $longitude = !empty($_POST['longitude']) ? floatval($_POST['longitude']) : null;
+        $radius = !empty($_POST['radius']) ? intval($_POST['radius']) : null;
+        
+        $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius);
+        $last_id = $attendance->getLastAttendanceId();
+        
+        foreach ($programs as $i => $program) {
+            $acad_year = $years[$i] ?? '';
+            $attendance->insertRequiredAttendee($last_id, $program, $acad_year);
+        }
         $_SESSION['success_message'] = 'Attendance successfully added!';
     }else{
         echo "<script>alert('Invalid event name. Event already exists!');</script>";

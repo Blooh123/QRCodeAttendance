@@ -7,6 +7,7 @@ require_once '../app/Model/QRCode.php';
 require_once '../app/Model/Student.php';
 require_once '../app/Model/User.php';
 require_once '../app/Model/ActivityLog.php';
+require_once '../app/Model/Attendances.php';
 use Controller;
 
 
@@ -16,12 +17,13 @@ use Model\ActivityLog;
 use Model\QRCode;
 use Model\Student;
 use Model\User;
+use Model\Attendances;
 
 session_start();
 class QRScanner extends Controller
 {
 
-    public function processScannedData($data, $attenId, $RequiredProgram, $year, $onTimeCheck,$confirm = false): void
+    public function processScannedData($data, $attenId, $requiredAttendees, $onTimeCheck, $confirm = false): void
     {
         global $EventName;
         $userSessions = json_decode($_COOKIE['user_data'], true);
@@ -42,8 +44,10 @@ class QRScanner extends Controller
 
                     // Convert BLOB to base64
                     $studentProfileBase64 = !empty($student['studentProfile']) ? base64_encode($student['studentProfile']) : null;
-                    $name = $student['f_name'].' '.$student['l_name'];
+                    $name = $student['name'];
                     $program = $student['program'];
+                    $acad_year = $student['acad_year'];
+                    
                     if (!$confirm) {
                         echo json_encode([
                             "status" => "success",
@@ -62,7 +66,7 @@ class QRScanner extends Controller
                         if (!empty($attendanceExists)) {
                             echo json_encode([
                                 "status" => "error",
-                                "student" => $studentId,
+                                "student" => $name,
                                 "message" => "Student has already scanned!"
                             ]);
                             exit;
@@ -74,7 +78,7 @@ class QRScanner extends Controller
                         if(empty($attendanceExists)){
                             echo json_encode([
                                 "status" => "error",
-                                "student" => $studentId,
+                                "student" => $name,
                                 "message" => "Student did not time in!"
                             ]);
                             exit;
@@ -83,7 +87,7 @@ class QRScanner extends Controller
                         if (!empty($attendanceExists1)) {
                             echo json_encode([
                                 "status" => "error",
-                                "student" => $studentId,
+                                "student" => $name,
                                 "message" => "Student has already scanned!"
                             ]);
                             exit;
@@ -92,81 +96,30 @@ class QRScanner extends Controller
 
                     }
 
+                    // Check if student is required to attend based on required_attendees table
+                    $isRequired = $this->checkStudentRequirement($attenId, $program, $acad_year);
 
-                    // Check program requirement
-                    if (in_array('AllStudents',$RequiredProgram)){
-                        try {
-                            if ($onTimeCheck == 0){
-                                $qrcode->recordAttendance($attenId, $studentId,);
-
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time in)',$EventName);
-                                echo json_encode([
-                                    "status" => "success",
-                                    "student" => $studentId,
-                                    "message" => "QR Code Scanned Successfully! (Time in)"
-                                ]);
-                            }else{
-                                $qrcode->recordAttendance2($attenId, $studentId,);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time out)',$EventName );
-                                echo json_encode([
-                                    "status" => "success",
-                                    "student" => $studentId,
-                                    "message" => "QR Code Scanned Successfully! (Time out)"
-                                ]);
-                            }
-
-                        } catch (Exception $e) {
-                            echo json_encode([
-                                "status" => "error",
-                                "message" => "Database error: " . $e->getMessage()
-                            ]);
-                        }
-                    } elseif (in_array($student['program'], $RequiredProgram) && in_array($student['acad_year'], $year)) {
-
+                    if ($isRequired) {
                         try {
                             if ($onTimeCheck == 0){
                                 $qrcode->recordAttendance($attenId, $studentId);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time in)',$EventName);
-                                echo json_encode([
-                                    "status" => "success",
-                                    "student" => $studentId,
-                                    "message" => "QR Code Scanned Successfully! (Time in)"
-                                ]);
-                            }else{
-                                $qrcode->recordAttendance2($attenId, $studentId,);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time out)',$EventName);
-                                echo json_encode([
-                                    "status" => "success",
-                                    "student" => $studentId,
-                                    "message" => "QR Code Scanned Successfully! (Time out)"
-                                ]);
-                            }
-                        } catch (Exception $e) {
-                            echo json_encode([
-                                "status" => "error",
-                                "message" => "Database error: " . $e->getMessage()
-                            ]);
-                        }
 
-                    }elseif (in_array($student['program'], $RequiredProgram) && in_array('',$year)){
-                        try {
-                            if ($onTimeCheck == 0){
-                                $qrcode->recordAttendance($attenId, $studentId,);
                                 $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time in)',$EventName);
                                 echo json_encode([
                                     "status" => "success",
-                                    "student" => $studentId,
+                                    "student" => $name,
                                     "message" => "QR Code Scanned Successfully! (Time in)"
                                 ]);
                             }else{
-                                $qrcode->recordAttendance2($attenId, $studentId,);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'], $_SESSION['username'] .' Scanned student: '. $studentId . ' (Time out)',$EventName);
+                                $qrcode->recordAttendance2($attenId, $studentId);
+                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time out)',$EventName );
                                 echo json_encode([
                                     "status" => "success",
-                                    "student" => $studentId,
+                                    "student" => $name,
                                     "message" => "QR Code Scanned Successfully! (Time out)"
                                 ]);
                             }
+
                         } catch (Exception $e) {
                             echo json_encode([
                                 "status" => "error",
@@ -176,11 +129,16 @@ class QRScanner extends Controller
                     } else {
                         echo json_encode([
                             "status" => "error",
-                            "student" => $studentId,
+                            "student" => $name,
                             "message" => "Student is not required to attend!"
                         ]);
                     }
 
+                } else {
+                    echo json_encode([
+                        "status" => "error",
+                        "message" => "Student data not found!"
+                    ]);
                 }
             } else {
                 echo json_encode([
@@ -195,6 +153,43 @@ class QRScanner extends Controller
             ]);
         }
         exit;
+    }
+
+    private function checkStudentRequirement($attenId, $studentProgram, $studentYear): bool
+    {
+        try {
+            $attendance = new Attendances();
+            
+            // Get required attendees for this attendance event
+            $requiredAttendees = $attendance->getRequiredAttendees($attenId);
+            
+            if (empty($requiredAttendees)) {
+                return false;
+            }
+            
+            foreach ($requiredAttendees as $requirement) {
+                $requiredProgram = $requirement['program'];
+                $requiredYear = $requirement['acad_year'];
+                
+                // Check if program matches
+                if ($requiredProgram === 'AllStudents' || $requiredProgram === $studentProgram) {
+                    // If year is empty/null, it means all years for this program
+                    if (empty($requiredYear) || $requiredYear === '' || $requiredYear === null) {
+                        return true;
+                    }
+                    // If year is specified, check if it matches
+                    if ($requiredYear === $studentYear) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        } catch (Exception $e) {
+            // Log the error and return false to prevent attendance recording
+            error_log("Error checking student requirement: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function updateStatus($username, $status): void
@@ -235,8 +230,6 @@ $AttendanceID = '';
 $EventName = 'No Event';
 $EventDate = 'No Date';
 $EventTime = 'No Time';
-$ProgramRequired = NULL;
-$YearRequired = NULL;
 $onTimeCheck = 0;
 $isOngoing = false;
 
@@ -252,8 +245,6 @@ foreach ($attendanceList as $attendance) {
         $EventTime = $dateTime->format('h:i A');
         $AttendanceID = htmlspecialchars($attendance['atten_id']);
         $isOngoing = true;
-        $ProgramRequired = json_decode($attendance['required_attendees'], true) ?? [];
-        $YearRequired = json_decode($attendance['acad_year']);
         $onTimeCheck = $attendance['atten_OnTimeCheck'];
         break;
     }
@@ -261,7 +252,15 @@ foreach ($attendanceList as $attendance) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['qrData']) && isset($_POST['atten_id'])) {
     $confirm = isset($_POST['confirm']) && $_POST['confirm'] === 'true';
-    $qrCodeScanner->processScannedData($_POST['qrData'], $_POST['atten_id'], $ProgramRequired, $YearRequired, $onTimeCheck, $confirm);
+    $fetchStudent = isset($_POST['fetchStudent']) && $_POST['fetchStudent'] === 'true';
+    
+    // If it's just fetching student data (not confirming attendance)
+    if ($fetchStudent) {
+        $qrCodeScanner->processScannedData($_POST['qrData'], $_POST['atten_id'], null, $onTimeCheck, false);
+    } else {
+        // If it's confirming attendance
+        $qrCodeScanner->processScannedData($_POST['qrData'], $_POST['atten_id'], null, $onTimeCheck, $confirm);
+    }
 }
 
 
@@ -271,8 +270,6 @@ $data = [
     "EventName" => $EventName,
     "EventDate" => $EventDate,
     "EventTime" => $EventTime,
-    "ProgramRequired" => $ProgramRequired,
-    "YearRequired" => $YearRequired,
     "isOngoing" => $isOngoing
 
 ];

@@ -16,7 +16,7 @@ class DeleteAttendance
             $attendance->deleteAttendance($attendanceID);
             $uri = str_replace('/delete_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
             header('Location: ' . $uri);
-            exit();
+
         }
     }
 }

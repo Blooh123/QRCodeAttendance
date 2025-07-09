@@ -93,7 +93,7 @@ class QRCode
 
     public function getStudentData($studentId): bool|array
     {
-        $query = 'SELECT f_name,l_name,studentProfile, program, acad_year FROM students WHERE student_id = ?';
+        $query = 'SELECT name, studentProfile, program, acad_year FROM students WHERE student_id = ?';
         return $this->query($query, [$studentId]);
     }
 
@@ -113,11 +113,23 @@ class QRCode
      */
     public function recordAttendance($attenId, $studentId): bool|array
     {
-        $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
-        $formattedTime = $date->format('h:i:s A'); // 12-hour format with AM/PM
+        try {
+            $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
+            $formattedTime = $date->format('h:i:s A'); // 12-hour format with AM/PM
 
-        $query = 'CALL sp_insert_attendance_record(?, ?, ?)';
-        return $this->query($query, [$attenId, $studentId, $formattedTime]);
+            $query = 'INSERT INTO attendance_record (atten_id, student_id, time_in) VALUES (?,?,?);';
+            $result = $this->query($query, [$attenId, $studentId, $formattedTime]);
+            
+            if ($result === false) {
+                error_log("Error in recordAttendance: Failed to insert attendance record");
+                return false;
+            }
+            
+            return $result;
+        } catch (Exception $e) {
+            error_log("Error in recordAttendance: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -125,11 +137,23 @@ class QRCode
      */
     public function recordAttendance2($attenId, $studentId): bool|array
     {
-        $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
-        $formattedTime = $date->format('h:i:s A'); // 12-hour format with AM/PM
+        try {
+            $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
+            $formattedTime = $date->format('h:i:s A'); // 12-hour format with AM/PM
 
-        $query = 'CALL sp_insert_attendance_record_TimeOut(?, ?, ?)';
-        return $this->query($query, [$attenId, $studentId, $formattedTime]);
+            $query = 'CALL sp_insert_attendance_record_TimeOut(?, ?, ?)';
+            $result = $this->query($query, [$attenId, $studentId, $formattedTime]);
+            
+            if ($result === false) {
+                error_log("Error in recordAttendance2: Failed to insert attendance record");
+                return false;
+            }
+            
+            return $result;
+        } catch (Exception $e) {
+            error_log("Error in recordAttendance2: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function insertQRCode($code, $student_id): bool|array

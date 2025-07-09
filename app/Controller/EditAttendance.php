@@ -46,8 +46,6 @@ $attendanceDetails = $attendances->getAttendanceDetails($_GET['id'], $_GET['even
 $activityLog = new ActivityLog();
 $activityListLog = $activityLog->getActivityLogForUser($_GET['eventName']);
 
-
-
 $buttonLabel = '';
 $buttonClass = '';
 $buttonAction = '';
@@ -70,9 +68,17 @@ if ($attendanceDetails['atten_status'] === 'not started') {
     $buttonAction = 'finished';
 }
 
-// Ensure required_attendees is a valid JSON string
-$requiredAttendees = json_decode($attendanceDetails['required_attendees'], true);
-$acad_year = json_decode($attendanceDetails['acad_year'], true);
+// Get required attendees from the new required_attendees table
+$requiredAttendeesData = $attendances->getRequiredAttendees($_GET['id']);
+
+// Separate programs and years into arrays for the view
+$requiredAttendees = [];
+$acad_year = [];
+
+foreach ($requiredAttendeesData as $requirement) {
+    $requiredAttendees[] = $requirement['program'];
+    $acad_year[] = $requirement['acad_year'];
+}
 
 $year = $student->getAllYear();
 $programList = $student->getAllProgram();
@@ -83,7 +89,7 @@ $data = [
     'buttonAction' => $buttonAction,
     'attendanceDetails' => $attendanceDetails,
     'requiredAttendees' => $requiredAttendees,
-    'acad_year'=>$acad_year,
+    'acad_year' => $acad_year,
     'year' => $year,
     'programList' => $programList,
     'activityListLog' => $activityListLog

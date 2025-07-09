@@ -24,7 +24,7 @@ if (!isset($_SESSION['username'], $_SESSION['role'], $_SESSION['user_id'], $_SES
     exit;
 }
 
-$cookieExpiry = time() + 60 * 10;
+$cookieExpiry = time() + 60 * 60 * 24 * 2; // 2 days
 
 setcookie(
     'user_data',

@@ -11,6 +11,8 @@ require_once '../app/core/config.php';
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -114,6 +116,66 @@ require_once '../app/core/config.php';
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
                        placeholder="Sanction" required>
             </div>
+            
+            <!-- Geofence Section -->
+            <div class="border-t pt-6 mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-map-marker-alt text-[#a31d1d] mr-2"></i>
+                    Geofence Settings (Optional)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-700">Latitude</label>
+                        <input type="number" name="latitude" id="latitude" step="0.000001"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
+                               placeholder="e.g., 7.4474">
+                    </div>
+                    <div>
+                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-700">Longitude</label>
+                        <input type="number" name="longitude" id="longitude" step="0.000001"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
+                               placeholder="e.g., 125.8025">
+                    </div>
+                    <div>
+                        <label for="radius" class="block mb-2 text-sm font-medium text-gray-700">Radius (meters)</label>
+                        <input type="number" name="radius" id="radius" min="50" max="5000"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
+                               placeholder="e.g., 500">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="button" onclick="getCurrentLocation()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        <i class="fas fa-location-arrow mr-2"></i>Use Current Location
+                    </button>
+                    <button type="button" onclick="openMapSelector()" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium ml-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        <i class="fas fa-map mr-2"></i>Select on Map
+                    </button>
+                </div>
+                <div class="mt-3 text-sm text-gray-600">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Leave empty to disable geofence restrictions for this attendance event.
+                </div>
+                
+                <!-- Map Preview Section -->
+                <div class="mt-6">
+                    <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-map text-blue-500 mr-2"></i>
+                        Location Preview
+                    </h4>
+                    <div id="map-preview" class="w-full h-64 rounded-lg border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
+                            <p>Enter coordinates above to see the location preview</p>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        This preview shows the geofence center location. The actual radius will be applied during attendance.
+                    </div>
+                </div>
+            </div>
             <div class="flex justify-end gap-4">
                 <a href="<?php echo ROOT?>adminHome?page=Attendance"
                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
@@ -176,6 +238,171 @@ require_once '../app/core/config.php';
         fieldSet.appendChild(yearDiv);
         container.appendChild(fieldSet);
     }
+    
+    // Map preview variables
+    let previewMap, previewMarker;
+    
+    // Initialize map preview
+    function initMapPreview() {
+        const mapContainer = document.getElementById('map-preview');
+        if (!mapContainer) return;
+        
+        // Clear existing content
+        mapContainer.innerHTML = '';
+        
+        // Initialize map with default center
+        const defaultCenter = [7.4474, 125.8025];
+        previewMap = L.map('map-preview').setView(defaultCenter, 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(previewMap);
+        
+        // Add default marker
+        previewMarker = L.marker(defaultCenter).addTo(previewMap);
+        previewMarker.bindPopup("Geofence Center").openPopup();
+    }
+    
+    // Update map preview with new coordinates
+    function updateMapPreview() {
+        const lat = parseFloat(document.getElementById('latitude').value);
+        const lng = parseFloat(document.getElementById('longitude').value);
+        
+        if (isNaN(lat) || isNaN(lng)) {
+            // Show placeholder if coordinates are invalid
+            const mapContainer = document.getElementById('map-preview');
+            mapContainer.innerHTML = `
+                <div class="text-center text-gray-500">
+                    <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
+                    <p>Enter coordinates above to see the location preview</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Initialize map if not already done
+        if (!previewMap) {
+            initMapPreview();
+        }
+        
+        const newCenter = [lat, lng];
+        previewMap.setView(newCenter, 15);
+        
+        // Update marker
+        if (previewMarker) {
+            previewMap.removeLayer(previewMarker);
+        }
+        previewMarker = L.marker(newCenter).addTo(previewMap);
+        previewMarker.bindPopup("Geofence Center").openPopup();
+    }
+    
+    // Geofence location functions
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                    if (!document.getElementById('radius').value) {
+                        document.getElementById('radius').value = '500';
+                    }
+                    updateMapPreview(); // Update map preview
+                    Swal.fire({
+                        title: 'Location Set!',
+                        text: 'Current location has been set as geofence center.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                function(error) {
+                    Swal.fire({
+                        title: 'Location Error',
+                        text: 'Unable to get your current location. Please enter coordinates manually.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            Swal.fire({
+                title: 'Not Supported',
+                text: 'Geolocation is not supported by your browser.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+    
+    function openMapSelector() {
+        // Open the map page in a new window/tab
+        const mapUrl = '<?php echo ROOT?>map';
+        const mapWindow = window.open(mapUrl, 'mapSelector', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        
+        // Listen for messages from the map window
+        window.addEventListener('message', function(event) {
+            if (event.origin !== window.location.origin) return;
+            
+            if (event.data.type === 'geofenceData') {
+                const data = event.data.geofence;
+                document.getElementById('latitude').value = data.center.latitude.toFixed(6);
+                document.getElementById('longitude').value = data.center.longitude.toFixed(6);
+                document.getElementById('radius').value = data.radius;
+                
+                updateMapPreview(); // Update map preview
+                
+                Swal.fire({
+                    title: 'Location Set!',
+                    text: 'Geofence location has been set from the map.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                
+                // Close the map window
+                if (mapWindow && !mapWindow.closed) {
+                    mapWindow.close();
+                }
+            }
+        });
+    }
+    
+    // Add event listeners for coordinate inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+        
+        if (latInput && lngInput) {
+            // Update map preview when coordinates are entered
+            latInput.addEventListener('input', function() {
+                if (latInput.value && lngInput.value) {
+                    updateMapPreview();
+                }
+            });
+            
+            lngInput.addEventListener('input', function() {
+                if (latInput.value && lngInput.value) {
+                    updateMapPreview();
+                }
+            });
+            
+            // Update map preview when coordinates lose focus (for better UX)
+            latInput.addEventListener('blur', function() {
+                if (latInput.value && lngInput.value) {
+                    updateMapPreview();
+                }
+            });
+            
+            lngInput.addEventListener('blur', function() {
+                if (latInput.value && lngInput.value) {
+                    updateMapPreview();
+                }
+            });
+        }
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

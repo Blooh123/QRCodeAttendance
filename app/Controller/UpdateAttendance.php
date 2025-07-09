@@ -100,8 +100,9 @@ class UpdateAttendance
                         $attendances = new Attendances();
                         $qrCode = new QRCode();
                         $attendanceDetails = $attendances->getAttendanceDetails($eventId, $eventName);
-                        $requiredAttendees = json_decode($attendanceDetails['required_attendees'], true);
-                        $acad_year = json_decode($attendanceDetails['acad_year'], true);
+                        
+                        // Get required attendees from the new required_attendees table
+                        $requiredAttendeesData = $attendances->getRequiredAttendees($eventId);
                         $requiredAttendance = json_decode($attendanceDetails['required_attenRecord'], true);
 
                         $studentList = $student->getAllStudent(); // Fetch students as associative arrays
@@ -110,14 +111,22 @@ class UpdateAttendance
                         $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
                         $formattedTime = $date->format('Y-m-d H:i:s'); // FULL Date and Time
 
-                        if (in_array('AllStudents', $requiredAttendees )) {
+                        // Check if AllStudents is required
+                        $hasAllStudents = false;
+                        foreach ($requiredAttendeesData as $requirement) {
+                            if ($requirement['program'] === 'AllStudents') {
+                                $hasAllStudents = true;
+                                break;
+                            }
+                        }
+
+                        if ($hasAllStudents) {
                             foreach ($studentList as $student) {
                                 $student_id = (string) $student['student_id'];
                                 if(in_array('time_out', $requiredAttendance)){
                                     if(in_array($student_id, $attendanceRecordList, true)){
                                         //check if naka time out
                                         if(!$qrCode->checkAttendance2($eventId, $student_id)){
-
                                             $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', $hours, $formattedTime);
                                         }
                                     }
@@ -126,9 +135,7 @@ class UpdateAttendance
                                     $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', $hours, $formattedTime);
                                 }
                             }
-
-                        }else{
-
+                        } else {
                             foreach ($studentList as $student) {
                                 $student_id = (string) $student['student_id'];
                                 $student_program = (string) $student['program'];
@@ -136,17 +143,19 @@ class UpdateAttendance
 
                                 $studentIsRequired = false;
 
+                                // Check if student is required based on required_attendees table
+                                foreach ($requiredAttendeesData as $requirement) {
+                                    $requiredProgram = $requirement['program'];
+                                    $requiredYear = $requirement['acad_year'];
 
-                                for ($i = 0; $i < count($requiredAttendees); $i++) {
-                                    $requiredProgram = (string) $requiredAttendees[$i];
-                                    $requiredYear = isset($acad_year[$i]) ? (string) $acad_year[$i] : '';
-
-                                    if ($student_program === $requiredProgram) { // Program Match
-                                        if ($requiredYear === $student_year) {
+                                    if ($student_program === $requiredProgram) {
+                                        // If year is empty/null, it means all years for this program
+                                        if (empty($requiredYear) || $requiredYear === '' || $requiredYear === null) {
                                             $studentIsRequired = true;
                                             break;
                                         }
-                                        if ($requiredYear === "") {
+                                        // If year is specified, check if it matches
+                                        if ($requiredYear === $student_year) {
                                             $studentIsRequired = true;
                                             break;
                                         }

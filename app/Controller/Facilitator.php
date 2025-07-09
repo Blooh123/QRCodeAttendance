@@ -65,7 +65,7 @@ $EventName = 'No Event';
 $EventDate = 'No Date';
 $EventTime = 'No Time';
 $EventID = '';
-$selectedProgram = '';
+$selectedProgram = [];
 $EventLocation = 'No Location';
 
 foreach ($attendanceList as $attendance) {
@@ -77,7 +77,14 @@ foreach ($attendanceList as $attendance) {
         } catch (\DateMalformedStringException $e) {
 
         }
-        $selectedProgram = $attendance['required_attendees'];
+        
+        // Get required attendees from the new required_attendees table
+        $requiredAttendeesData = $attendances->getRequiredAttendees($attendance['atten_id']);
+        $selectedProgram = [];
+        foreach ($requiredAttendeesData as $requirement) {
+            $selectedProgram[] = $requirement['program'];
+        }
+        
         $EventDate = $dateTime->format('F j, Y'); // Example: January 31, 2025
         $EventTime = $dateTime->format('h:i A');  // Example: 09:01 PM
         $EventID = $attendance['atten_id'];
@@ -100,13 +107,20 @@ $_SESSION['evnt_name'] = $EventName;
                 } catch (\DateMalformedStringException $e) {
 
                 }
-                $selectedProgram = json_decode($attendance['required_attendees'], true) ?? [];
+                
+                // Get required attendees from the new required_attendees table
+                $requiredAttendeesData = $attendances->getRequiredAttendees($attendance['atten_id']);
+                $selectedProgram = [];
+                foreach ($requiredAttendeesData as $requirement) {
+                    $selectedProgram[] = $requirement['program'];
+                }
+                
                 $EventDate = $dateTime->format('F j, Y'); // Example: January 31, 2025
                 $EventTime = $dateTime->format('h:i A');  // Example: 09:01 PM
                 $EventID = $attendance['atten_id'];
 
                 // Only fetch attendance records if a program is selected
-                if ($selectedProgram) {
+                if (!empty($selectedProgram)) {
                     $attendanceRecordList = $attendances->getAttendanceRecord($selectedProgram, $EventID, '%'.$_GET['student'].'%');
                 } else {
                     $attendanceRecordList = $attendances->getAttendanceRecord('AllStudents', $EventID,'%'.$_GET['student'].'%');

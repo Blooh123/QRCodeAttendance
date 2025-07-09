@@ -9,46 +9,92 @@ class Attendances
 {
     use Database;
 
-    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction): false|string
+    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude = null, $longitude = null, $radius = null): false|string
     {
         $status = 'not started';  // default
 
-        // Convert arrays to JSON format
-        $requiredAttendeesJson = json_encode($requiredAttendees);
-        
-        // Ensure years array is properly formatted and unique
-        $year = array_values(array_unique($year));
-        $yearJson = json_encode($year);
-        
         $requiredAttendanceRecordJson = json_encode($requiredAttendanceRecord);
 
-        // Ensure the years array is properly formatted
-        if (empty($yearJson) || $yearJson === '[]') {
-            $yearJson = '[]';  // Set to empty JSON array if no years selected
-        }
-
-        $query = "CALL sp_insert_attendance(:name, :status, :requiredAttendees, :year, :sanction, :requiredAttendanceRecord)";
+        $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius)";
         $params = [
             ':name' => $name,
             ':status' => $status,
-            ':requiredAttendees' => $requiredAttendeesJson,
-            ':year' => $yearJson,
             ':requiredAttendanceRecord' => $requiredAttendanceRecordJson,
-            ':sanction' => $sanction
+            ':sanction' => $sanction,
+            ':latitude' => $latitude,
+            ':longitude' => $longitude,
+            ':radius' => $radius
         ];
-        // Execute the query
-        return $this->query2($query, $params);
+
+        // Insert attendance and get the new ID
+        $result = $this->query2($query, $params);
+        if (!$result) return false;
+
+
+        // $atten_id = $this->getLastAttendanceId();
+        // $found = false;
+        // // Insert required attendees
+        // foreach ($requiredAttendees as $i => $program) {
+        //     $found = true;
+        //     $acad_year = $year[$i] ?? '';
+        //     print_r($program);
+        //     print_r($acad_year);
+        //     $this->insertRequiredAttendee($atten_id, $program, $acad_year);
+        // }
+
     }
+
+    public function getLastAttendanceId() {
+        // Adjust this query to match your DBMS and schema
+        $query = "SELECT MAX(atten_id) as last_id FROM attendance";
+        $result = $this->query($query);
+        return $result[0]['last_id'] ?? null;
+    }
+
+    public function insertRequiredAttendee($atten_id, $program, $acad_year) {
+        $query = "INSERT INTO required_attendees (atten_id, program, acad_year) VALUES (:atten_id, :program, :acad_year)";
+        $params = [
+            ':atten_id' => $atten_id,
+            ':program' => $program,
+            ':acad_year' => $acad_year
+        ];
+        $result = $this->query($query, $params);
+        if (!$result) {
+            error_log("Failed to insert required_attendee: atten_id=$atten_id, program=$program, acad_year=$acad_year");
+        }
+        return $result;
+    }
+
+    public function getRequiredAttendees($atten_id): array
+    {
+        try {
+            $query = "SELECT program, acad_year FROM required_attendees WHERE atten_id = :atten_id";
+            $params = [
+                ':atten_id' => $atten_id
+            ];
+            $result = $this->query($query, $params);
+            return is_array($result) ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error in getRequiredAttendees: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function deleteAttendance($id): bool|array
     {
         $query = "DELETE FROM attendance WHERE atten_id = :id";
         $query2 = "DELETE FROM attendance_record WHERE atten_id = :id";
+        $query3 = "DELETE FROM required_attendees WHERE atten_id = :id";
         $params2 = [
             ':id' => $id
         ];
         $params = [
             ':id' => $id
         ];
+        $params3 = [
+            ':id' => $id
+        ];
+        $this->query($query3, $params3);    
         $this->query($query2, $params2);
         return $this->query($query, $params);
     }

@@ -73,16 +73,17 @@
                             <label class="block mb-2 text-sm font-medium text-gray-700">Required Attendees</label>
                             <ul class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 w-full">
                                 <?php
-                                // Ensure variables are arrays
-                                if (!empty($requiredAttendees) && is_array($requiredAttendees) && is_array($acad_year)):
+                                // Check if required attendees data exists
+                                if (!empty($requiredAttendees) && is_array($requiredAttendees)):
                                     foreach ($requiredAttendees as $index => $program):
-                                        $year = $acad_year[$index] ?? ''; // Ensure index exists
-
-                                        // Display "All years required" if $year is empty
-                                        $yearDisplay = !empty($year) ? htmlspecialchars($year) : 'All years required';
+                                        $year = isset($acad_year[$index]) ? $acad_year[$index] : '';
+                                        
+                                        // Display "All years" if year is empty, null, or empty string
+                                        $yearDisplay = (!empty($year) && $year !== '' && $year !== null) ? htmlspecialchars($year) : 'All years';
                                         ?>
-                                        <li class="flex justify-between items-center p-2 border-b border-gray-200">
-                                            <span><?php echo htmlspecialchars($program); ?> (<?php echo $yearDisplay; ?>)</span>
+                                        <li class="flex justify-between items-center p-2 border-b border-gray-200 last:border-b-0">
+                                            <span class="font-medium"><?php echo htmlspecialchars($program); ?></span>
+                                            <span class="text-gray-600">(<?php echo $yearDisplay; ?>)</span>
                                         </li>
                                     <?php
                                     endforeach;
