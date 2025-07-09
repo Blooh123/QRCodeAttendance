@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
 
         case 'deleteUser':
-            if ($user->deleteUser($userId)) {
+            if ($user->deleteUsers($userId)) {
                 header("Location: adminHome?page=Users&userDeleted=1");
                 exit();
             }
