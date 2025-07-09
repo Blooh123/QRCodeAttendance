@@ -9,7 +9,13 @@ class User
 {
     use \Database;
     public function deleteUsers($id): bool|array
+
     {
+        $query = "DELETE FROM user_personal_info WHERE id = :id";
+        $params = [
+            ':id' => $id
+        ];
+        $this->query($query, $params);
         $query = "DELETE FROM users WHERE id = :id";
         $params = [
             ':id' => $id
