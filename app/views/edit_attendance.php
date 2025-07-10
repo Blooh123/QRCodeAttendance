@@ -158,14 +158,26 @@
                                         <i class="fas fa-location-arrow mr-1"></i>Use Current Location
                                     </button>
                                     <button type="button" onclick="openMapSelector()" 
-                                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium mr-2">
                                         <i class="fas fa-map mr-1"></i>Select on Map
+                                    </button>
+                                    <button type="button" onclick="checkAndFixCoordinateSwapping()" 
+                                            class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
+                                        <i class="fas fa-exchange-alt mr-1"></i>Fix Coordinates
                                     </button>
                                 </div>
                                 
                                 <div class="text-sm text-gray-600 mb-4">
                                     <i class="fas fa-info-circle mr-1"></i>
                                     Leave empty to disable geofence restrictions for this attendance event.
+                                </div>
+                                
+                                <!-- Debug info for coordinates -->
+                                <div class="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
+                                    <strong>Debug Info:</strong><br>
+                                    Raw Latitude: <?php echo var_export($attendanceDetails['latitude'] ?? 'NULL', true); ?><br>
+                                    Raw Longitude: <?php echo var_export($attendanceDetails['longitude'] ?? 'NULL', true); ?><br>
+                                    Raw Radius: <?php echo var_export($attendanceDetails['radius'] ?? 'NULL', true); ?>
                                 </div>
                                 
                                 <!-- Map Preview Section -->
@@ -418,6 +430,9 @@
             const radiusInput = document.getElementById('radius');
             
             if (latInput && lngInput) {
+                // Check for coordinate swapping on page load
+                checkAndFixCoordinateSwapping();
+                
                 // Update map preview when coordinates are entered
                 latInput.addEventListener('input', function() {
                     if (latInput.value && lngInput.value) {
@@ -462,6 +477,50 @@
                 }
             }
         });
+        
+        // Function to check and fix coordinate swapping
+        function checkAndFixCoordinateSwapping() {
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            
+            if (!latInput || !lngInput) return;
+            
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            
+            if (isNaN(lat) || isNaN(lng)) return;
+            
+            // Check if coordinates appear to be swapped
+            // Latitude should be between -90 and 90, longitude between -180 and 180
+            // If latitude > 90 or longitude < 90, they might be swapped
+            if (lat > 90 || lng < 90) {
+                console.log('Detected coordinate swapping in edit form, correcting...');
+                console.log('Original coordinates:', { lat: lat, lng: lng });
+                
+                // Swap the coordinates
+                const tempLat = lat;
+                const tempLng = lng;
+                
+                latInput.value = tempLng.toFixed(6);
+                lngInput.value = tempLat.toFixed(6);
+                
+                console.log('Corrected coordinates:', { 
+                    lat: tempLng.toFixed(6), 
+                    lng: tempLat.toFixed(6) 
+                });
+                
+                // Show notification to user
+                Swal.fire({
+                    title: 'Coordinates Corrected',
+                    text: 'The latitude and longitude values were swapped and have been automatically corrected.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+                
+                // Update map preview with corrected coordinates
+                setTimeout(updateMapPreview, 100);
+            }
+        }
 
         // Pass PHP array to JS
         const fullActivityLog = <?php echo json_encode($activityListLog); ?>;
