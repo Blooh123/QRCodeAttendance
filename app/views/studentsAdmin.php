@@ -173,12 +173,12 @@ if (empty($_SESSION['csrf_token'])) {
     </div>
 </div>
 
-<!-- <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
     <div class="flex items-center space-x-3">
         <i class="fas fa-user-graduate text-[#a31d1d] text-3xl"></i>
         <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
     </div>
-</header> -->
+</header>
 
 <div class="max-w-7xl mx-auto">
     <!-- Search and Filter Section -->
