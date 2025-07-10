@@ -348,6 +348,30 @@ require_once '../app/core/config.php';
             radius: assignedRadius
         });
 
+        // Validate coordinates
+        function validateCoordinates(lat, lng) {
+            const isValidLat = lat !== null && lat !== undefined && !isNaN(lat) && lat >= -90 && lat <= 90;
+            const isValidLng = lng !== null && lng !== undefined && !isNaN(lng) && lng >= -180 && lng <= 180;
+            
+            console.log('Coordinate validation:', {
+                lat: lat,
+                lng: lng,
+                isValidLat: isValidLat,
+                isValidLng: isValidLng
+            });
+            
+            return isValidLat && isValidLng;
+        }
+
+        // Check if geofence data is valid
+        const isGeofenceValid = validateCoordinates(assignedLatitude, assignedLongitude) && 
+                               assignedRadius !== null && 
+                               assignedRadius !== undefined && 
+                               !isNaN(assignedRadius) && 
+                               assignedRadius > 0;
+
+        console.log('Geofence validation result:', isGeofenceValid);
+
         // Check location permission on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkLocationPermission();
@@ -400,10 +424,11 @@ require_once '../app/core/config.php';
                 hasRadius: !!assignedRadius,
                 latitude: assignedLatitude,
                 longitude: assignedLongitude,
-                radius: assignedRadius
+                radius: assignedRadius,
+                isGeofenceValid: isGeofenceValid
             });
 
-            if (assignedLatitude && assignedLongitude && assignedRadius) {
+            if (isGeofenceValid) {
                 // Check if user is within geofence
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -444,25 +469,14 @@ require_once '../app/core/config.php';
                     }
                 );
             } else {
-                // No geofence data available - show warning but allow scanning
-                console.warn('No geofence data available for this attendance event');
-                showGeofenceWarning();
+                // Invalid geofence data - show error but allow scanning
+                console.warn('Invalid geofence data:', {
+                    latitude: assignedLatitude,
+                    longitude: assignedLongitude,
+                    radius: assignedRadius
+                });
+                showGeofenceDataError();
             }
-        }
-
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; // Earth's radius in meters
-            const φ1 = lat1 * Math.PI/180;
-            const φ2 = lat2 * Math.PI/180;
-            const Δφ = (lat2-lat1) * Math.PI/180;
-            const Δλ = (lon2-lon1) * Math.PI/180;
-
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                    Math.cos(φ1) * Math.cos(φ2) *
-                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-            return R * c; // Distance in meters
         }
 
         function showGeofenceError(userLocation, distance) {
@@ -481,8 +495,14 @@ require_once '../app/core/config.php';
             
             // Initialize map if not already done
             if (!geofenceMap) {
+                console.log('Initializing geofence map with:', {
+                    center: [assignedLatitude, assignedLongitude],
+                    radius: assignedRadius,
+                    userLocation: userLocation
+                });
                 initGeofenceMap();
             } else {
+                console.log('Updating existing geofence map with user location:', userLocation);
                 updateGeofenceMap(userLocation);
             }
         }
@@ -517,7 +537,56 @@ require_once '../app/core/config.php';
             showScanner();
         }
 
+        function showGeofenceDataError() {
+            // Show an error about invalid geofence data
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #f44336;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                font-weight: bold;
+                max-width: 400px;
+                text-align: center;
+            `;
+            errorDiv.innerHTML = '⚠️ Invalid geofence data for this event. Location checking disabled.<br><small>Please contact the administrator to set proper coordinates.</small>';
+            document.body.appendChild(errorDiv);
+            
+            // Remove error after 8 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.parentNode.removeChild(errorDiv);
+                }
+            }, 8000);
+            
+            // Show scanner anyway
+            showScanner();
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth's radius in meters
+            const φ1 = lat1 * Math.PI/180;
+            const φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180;
+            const Δλ = (lon2-lon1) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return R * c; // Distance in meters
+        }
+
         function initGeofenceMap() {
+            console.log('Creating new map with center:', [assignedLatitude, assignedLongitude]);
+            
             // Initialize the map
             geofenceMap = L.map('geofence-map').setView([assignedLatitude, assignedLongitude], 15);
             
@@ -534,6 +603,8 @@ require_once '../app/core/config.php';
                 weight: 2
             }).addTo(geofenceMap).bindPopup('Assigned Area<br>Radius: ' + assignedRadius + 'm');
             
+            console.log('Added geofence circle at:', [assignedLatitude, assignedLongitude], 'with radius:', assignedRadius);
+            
             // Add center marker
             L.marker([assignedLatitude, assignedLongitude], {
                 icon: L.divIcon({
@@ -543,11 +614,16 @@ require_once '../app/core/config.php';
                     iconAnchor: [6, 6]
                 })
             }).addTo(geofenceMap).bindPopup('Area Center');
+            
+            console.log('Added center marker at:', [assignedLatitude, assignedLongitude]);
         }
 
         function updateGeofenceMap(userLocation) {
+            console.log('Updating map with user location:', userLocation);
+            
             if (userMarker) {
                 geofenceMap.removeLayer(userMarker);
+                console.log('Removed existing user marker');
             }
             
             // Add user marker
@@ -560,12 +636,16 @@ require_once '../app/core/config.php';
                 })
             }).addTo(geofenceMap).bindPopup('Your Location');
             
+            console.log('Added user marker at:', [userLocation.lat, userLocation.lng]);
+            
             // Fit map to show both user and geofence
             const bounds = L.latLngBounds([
                 [userLocation.lat, userLocation.lng],
                 [assignedLatitude, assignedLongitude]
             ]);
             geofenceMap.fitBounds(bounds, { padding: [20, 20] });
+            
+            console.log('Fitted map bounds to:', bounds);
         }
 
         function showLocationModal() {
