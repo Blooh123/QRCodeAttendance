@@ -11,52 +11,25 @@ require_once '../app/core/config.php';
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
     <title>QR Code Scanner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<!--    <script src="../node_modules/html5-qrcode/html5-qrcode.min.js"></script>-->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Poppins', sans-serif;
-            background-image:
-                radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
-                linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
-            background-size: 24px 24px;
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
             min-height: 100vh;
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .hover-card {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .hover-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
-        }
         
-        /* Main container */
-        .main-container {
-            animation: slideInUp 0.8s ease-out;
-        }
-        
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+
         
         /* Scanner container */
         .scanner-container {
@@ -68,30 +41,7 @@ require_once '../app/core/config.php';
             position: relative;
         }
         
-        .scanner-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #a31d1d, #ff6b6b, #a31d1d);
-            background-size: 400% 400%;
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 2s ease-in-out infinite;
-        }
-        
-        @keyframes borderGlow {
-            0%, 100% { 
-                background-position: 0% 50%;
-                box-shadow: 0 0 20px rgba(163, 29, 29, 0.3);
-            }
-            50% { 
-                background-position: 100% 50%;
-                box-shadow: 0 0 30px rgba(163, 29, 29, 0.6);
-            }
-        }
+
         
         #reader {
             width: 100%;
@@ -328,11 +278,11 @@ require_once '../app/core/config.php';
         }
 
         .loader {
-            border: 8px solid #f3f3f3; /* Light gray */
-            border-top: 8px solid #3ddf20; /* Blue */
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3ddf20;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
             margin: 0 auto 10px;
         }
@@ -398,7 +348,7 @@ require_once '../app/core/config.php';
 </div>
 
 <?php if ($isOngoing): ?>
-    <div id="scanner-content" class="max-w-2xl mx-auto main-container">
+    <div id="scanner-content" class="max-w-2xl mx-auto">
         <!-- Event Info Card -->
         <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
@@ -458,8 +408,8 @@ require_once '../app/core/config.php';
     </div>
 
     <script>
-        let html5QrCode = new Html5Qrcode("reader");
-        let currentFacingMode = { facingMode: "environment" }; // Default camera mode
+        let html5QrCode = null;
+        let currentFacingMode = { facingMode: "environment" };
         let locationPermissionGranted = false;
         let geofenceMap = null;
         let userMarker = null;
@@ -832,13 +782,17 @@ require_once '../app/core/config.php';
         });
 
         function startScanner() {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+            
             document.getElementById("result").textContent = "Waiting for scan...";
             document.getElementById("restart-btn").style.display = "none";
             document.getElementById("student-info").textContent = "";
 
             html5QrCode.start(
                 currentFacingMode,
-                { fps: 10, qrbox: { width: 300, height: 300 } },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
                 (decodedText) => {
                     document.getElementById("result").innerHTML = `<p>Decoded QR Code: ${decodedText}</p>`;
                     document.getElementById("loading-screen").style.display = "flex";
@@ -947,13 +901,21 @@ require_once '../app/core/config.php';
         // Restart button handler
         document.getElementById("restart-btn").addEventListener("click", () => {
             document.getElementById("restart-btn").style.display = "none";
-            location.reload();
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    startScanner();
+                }).catch(console.error);
+            } else {
+                startScanner();
+            }
         });
 
         // Flip camera button handler
         document.getElementById("flip-camera-btn").addEventListener("click", () => {
             currentFacingMode.facingMode = currentFacingMode.facingMode === "environment" ? "user" : "environment";
-            html5QrCode.stop().then(startScanner).catch(console.error);
+            if (html5QrCode) {
+                html5QrCode.stop().then(startScanner).catch(console.error);
+            }
         });
     </script>
 <?php else: ?>
