@@ -126,42 +126,7 @@ require_once '../app/core/config.php';
             gap: 15px;
         }
         
-        button, a {
-            padding: 12px 24px;
-            border: none;
-            background-color: #a31d1d;
-            color: white;
-            cursor: pointer;
-            border-radius: 10px;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(163, 29, 29, 0.3);
-        }
-        
-        button:hover, a:hover {
-            background-color: #8a1818;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(163, 29, 29, 0.4);
-        }
-        
-        .secondary-btn {
-            background-color: #6c757d;
-        }
-        
-        .secondary-btn:hover {
-            background-color: #5a6268;
-        }
-        
-        .success-btn {
-            background-color: #28a745;
-        }
-        
-        .success-btn:hover {
-            background-color: #218838;
-        }
+
         
         @media (max-width: 600px) {
             #reader {
@@ -398,8 +363,8 @@ require_once '../app/core/config.php';
         <div class="icon">📍</div>
         <h3>Location Permission Required</h3>
         <p>To use the QR Code Scanner, you need to enable location services. This helps ensure accurate attendance tracking within the designated area.</p>
-        <button id="enable-location-btn" class="success-btn">Enable Location</button>
-        <button id="cancel-location-btn" class="secondary-btn">Cancel</button>
+        <button id="enable-location-btn" class="bg-[#28a745] hover:bg-[#218838] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Enable Location</button>
+        <button id="cancel-location-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Cancel</button>
     </div>
 </div>
 
@@ -427,8 +392,8 @@ require_once '../app/core/config.php';
             <span id="distance-info">Calculating...</span>
         </div>
         
-        <button id="retry-location-btn" class="success-btn">Check Location Again</button>
-        <button id="close-geofence-btn" class="secondary-btn">Close</button>
+        <button id="retry-location-btn" class="bg-[#28a745] hover:bg-[#218838] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Check Location Again</button>
+        <button id="close-geofence-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Close</button>
     </div>
 </div>
 
@@ -469,22 +434,24 @@ require_once '../app/core/config.php';
                 <img id="student-image" src="" alt="Student Profile">
                 <p id="student-name" class="text-lg font-semibold text-gray-800 mb-2"></p>
                 <p id="student-program" class="text-gray-600 mb-4"></p>
-                <div class="flex justify-center space-x-4">
-                    <button id="confirm-btn" class="success-btn">Confirm</button>
-                    <button id="cancel-btn" class="secondary-btn">Cancel</button>
+                <div class="flex justify-center gap-4">
+                    <button id="confirm-btn" class="bg-[#28a745] hover:bg-[#218838] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Confirm</button>
+                    <button id="cancel-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">Cancel</button>
                 </div>
             </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="mt-6">
-            <button id="restart-btn" class="success-btn w-full mb-4" style="display: none;">Scan Again</button>
-            <div class="btn-container">
-                <button id="flip-camera-btn" class="secondary-btn">
-                    <i class="fas fa-sync-alt mr-2"></i>Flip Camera
+        <div class="mt-6 flex flex-col gap-4">
+            <button id="restart-btn" class="w-full bg-[#28a745] hover:bg-[#218838] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2" style="display: none;">
+                <i class="fas fa-redo"></i> Scan Again
+            </button>
+            <div class="flex flex-col md:flex-row gap-4">
+                <button id="flip-camera-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-sync-alt"></i> Flip Camera
                 </button>
-                <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="secondary-btn">
-                    <i class="fas fa-arrow-left mr-2"></i>Back
+                <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
         </div>
@@ -994,8 +961,8 @@ require_once '../app/core/config.php';
         <div class="text-red-600 text-6xl mb-4">⚠️</div>
         <h2 class="text-2xl font-bold text-red-600 mb-4">No Ongoing Event</h2>
         <p class="text-gray-600 mb-6">There is no active attendance event available for scanning.</p>
-        <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="secondary-btn inline-block">
-            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 inline-block">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
     </div>
 <?php endif; ?>
