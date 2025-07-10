@@ -77,7 +77,7 @@ $totalSanctionHours = array_sum(array_column($sanctionList, 'sanction_hours'));
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[#a31d1d] font-semibold">Name</label>
-                    <input type="email" name="email" id="email" class="w-full border-gray-300 rounded-lg p-2.5"
+                    <input type="text" name="email" id="email" class="w-full border-gray-300 rounded-lg p-2.5"
                            value="<?php echo htmlspecialchars($studentData['name']) ?>">
                 </div>
                 <div>
