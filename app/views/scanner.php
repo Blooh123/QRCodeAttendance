@@ -1,5 +1,5 @@
 <?php
-global $AttendanceID, $EventName, $EventDate, $EventTime, $isOngoing;
+global $AttendanceID, $EventName, $EventDate, $EventTime, $isOngoing, $latitude, $longitude, $radius;
 require_once '../app/core/config.php';
 
 ?>
@@ -12,6 +12,8 @@ require_once '../app/core/config.php';
     <title>QR Code Scanner</title>
 <!--    <script src="../node_modules/html5-qrcode/html5-qrcode.min.js"></script>-->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -122,6 +124,81 @@ require_once '../app/core/config.php';
             background-color: #7f8c8d;
         }
 
+        /* Geofence error modal styles */
+        #geofence-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        #geofence-modal > div {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 95%;
+            width: 600px;
+            max-height: 90vh;
+            color: black;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+        #geofence-modal h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        #geofence-modal p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        #geofence-modal .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        #geofence-modal button {
+            margin: 5px;
+            background-color: #e74c3c;
+        }
+        #geofence-modal button:hover {
+            background-color: #c0392b;
+        }
+        #geofence-modal .secondary-btn {
+            background-color: #95a5a6;
+        }
+        #geofence-modal .secondary-btn:hover {
+            background-color: #7f8c8d;
+        }
+        #geofence-map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+        }
+        .location-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        .location-info strong {
+            color: #333;
+        }
+        .distance-info {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+
         /* Responsive styles for the confirmation modal */
         #confirmation-modal {
             display: none;
@@ -191,6 +268,35 @@ require_once '../app/core/config.php';
     </div>
 </div>
 
+<!-- Geofence Error Modal -->
+<div id="geofence-modal">
+    <div>
+        <div class="icon">🚫</div>
+        <h3>Location Outside Assigned Area</h3>
+        <p>You are currently outside the designated attendance area. Please move to the correct location to continue scanning.</p>
+        
+        <div id="geofence-map"></div>
+        
+        <div class="location-info">
+            <strong>Your Current Location:</strong><br>
+            <span id="user-location">Loading...</span>
+        </div>
+        
+        <div class="location-info">
+            <strong>Assigned Area:</strong><br>
+            <span id="assigned-area">Loading...</span>
+        </div>
+        
+        <div class="distance-info">
+            <strong>Distance to Area:</strong><br>
+            <span id="distance-info">Calculating...</span>
+        </div>
+        
+        <button id="retry-location-btn">Check Location Again</button>
+        <button id="close-geofence-btn" class="secondary-btn">Close</button>
+    </div>
+</div>
+
 <?php if ($isOngoing): ?>
     <div id="scanner-content">
         <p><strong>Event Name:</strong> <?= $EventName; ?></p>
@@ -225,6 +331,15 @@ require_once '../app/core/config.php';
         let html5QrCode = new Html5Qrcode("reader");
         let currentFacingMode = { facingMode: "environment" }; // Default camera mode
         let locationPermissionGranted = false;
+        let geofenceMap = null;
+        let userMarker = null;
+        let geofenceCircle = null;
+        let userLocation = null;
+        
+        // Geofence data from PHP
+        const assignedLatitude = <?= $latitude ?: 'null' ?>;
+        const assignedLongitude = <?= $longitude ?: 'null' ?>;
+        const assignedRadius = <?= $radius ?: 'null' ?>;
 
         // Check location permission on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -240,7 +355,7 @@ require_once '../app/core/config.php';
             navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
                 if (result.state === 'granted') {
                     locationPermissionGranted = true;
-                    showScanner();
+                    checkGeofenceAndShowScanner();
                 } else if (result.state === 'denied') {
                     showLocationModal();
                 } else {
@@ -257,7 +372,7 @@ require_once '../app/core/config.php';
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     locationPermissionGranted = true;
-                    showScanner();
+                    checkGeofenceAndShowScanner();
                 },
                 function(error) {
                     showLocationModal();
@@ -268,6 +383,133 @@ require_once '../app/core/config.php';
                     maximumAge: 60000
                 }
             );
+        }
+
+        function checkGeofenceAndShowScanner() {
+            if (assignedLatitude && assignedLongitude && assignedRadius) {
+                // Check if user is within geofence
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        const distance = calculateDistance(
+                            userLocation.lat, userLocation.lng,
+                            assignedLatitude, assignedLongitude
+                        );
+                        
+                        if (distance <= assignedRadius) {
+                            // User is within geofence, show scanner
+                            showScanner();
+                        } else {
+                            // User is outside geofence, show map
+                            showGeofenceError(userLocation, distance);
+                        }
+                    },
+                    function(error) {
+                        console.error("Error getting location:", error);
+                        showLocationError("Unable to get your current location.");
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                // No geofence data, show scanner directly
+                showScanner();
+            }
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth's radius in meters
+            const φ1 = lat1 * Math.PI/180;
+            const φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180;
+            const Δλ = (lon2-lon1) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            return R * c; // Distance in meters
+        }
+
+        function showGeofenceError(userLocation, distance) {
+            // Update location info
+            document.getElementById('user-location').innerHTML = 
+                `Latitude: ${userLocation.lat.toFixed(6)}, Longitude: ${userLocation.lng.toFixed(6)}`;
+            
+            document.getElementById('assigned-area').innerHTML = 
+                `Center: ${assignedLatitude.toFixed(6)}, ${assignedLongitude.toFixed(6)}<br>Radius: ${assignedRadius} meters`;
+            
+            document.getElementById('distance-info').innerHTML = 
+                `${distance.toFixed(2)} meters from the center (${(distance - assignedRadius).toFixed(2)} meters outside the area)`;
+            
+            // Show modal
+            document.getElementById('geofence-modal').style.display = 'flex';
+            
+            // Initialize map if not already done
+            if (!geofenceMap) {
+                initGeofenceMap();
+            } else {
+                updateGeofenceMap(userLocation);
+            }
+        }
+
+        function initGeofenceMap() {
+            // Initialize the map
+            geofenceMap = L.map('geofence-map').setView([assignedLatitude, assignedLongitude], 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(geofenceMap);
+            
+            // Add geofence circle
+            geofenceCircle = L.circle([assignedLatitude, assignedLongitude], {
+                radius: assignedRadius,
+                color: 'green',
+                fillColor: '#4CAF50',
+                fillOpacity: 0.2,
+                weight: 2
+            }).addTo(geofenceMap).bindPopup('Assigned Area<br>Radius: ' + assignedRadius + 'm');
+            
+            // Add center marker
+            L.marker([assignedLatitude, assignedLongitude], {
+                icon: L.divIcon({
+                    className: 'geofence-center-marker',
+                    html: '<div style="background-color: green; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>',
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
+                })
+            }).addTo(geofenceMap).bindPopup('Area Center');
+        }
+
+        function updateGeofenceMap(userLocation) {
+            if (userMarker) {
+                geofenceMap.removeLayer(userMarker);
+            }
+            
+            // Add user marker
+            userMarker = L.marker([userLocation.lat, userLocation.lng], {
+                icon: L.divIcon({
+                    className: 'user-marker',
+                    html: '<div style="background-color: red; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>',
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
+                })
+            }).addTo(geofenceMap).bindPopup('Your Location');
+            
+            // Fit map to show both user and geofence
+            const bounds = L.latLngBounds([
+                [userLocation.lat, userLocation.lng],
+                [assignedLatitude, assignedLongitude]
+            ]);
+            geofenceMap.fitBounds(bounds, { padding: [20, 20] });
         }
 
         function showLocationModal() {
@@ -283,6 +525,7 @@ require_once '../app/core/config.php';
 
         function showScanner() {
             document.getElementById('location-modal').style.display = 'none';
+            document.getElementById('geofence-modal').style.display = 'none';
             document.getElementById('scanner-content').style.display = 'block';
             startScanner();
         }
@@ -295,6 +538,17 @@ require_once '../app/core/config.php';
         // Cancel location button handler
         document.getElementById('cancel-location-btn').addEventListener('click', function() {
             window.location.href = '<?php echo ROOT ?>facilitator';
+        });
+
+        // Retry location button handler
+        document.getElementById('retry-location-btn').addEventListener('click', function() {
+            document.getElementById('geofence-modal').style.display = 'none';
+            checkGeofenceAndShowScanner();
+        });
+
+        // Close geofence modal button handler
+        document.getElementById('close-geofence-btn').addEventListener('click', function() {
+            document.getElementById('geofence-modal').style.display = 'none';
         });
 
         function startScanner() {
