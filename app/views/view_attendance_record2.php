@@ -86,30 +86,30 @@
 
 <script>
     function filterTable() {
-        const input = document.getElementById("searchInput").value.toLowerCase();
-        const rows = document.querySelectorAll("#sanctionedTable tr");
-
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(input) ? "" : "none";
-        });
-    }
-</script>
-<script>
-    function filterTable() {
         const search = document.getElementById("searchInput").value.toLowerCase();
         const selectedProgram = document.getElementById("programFilter").value.toLowerCase();
         const selectedYear = document.getElementById("yearFilter").value.toLowerCase();
         const rows = document.querySelectorAll("#sanctionedTable tr");
 
         rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            const matchesSearch = text.includes(search);
-            const programCell = row.cells[4]?.innerText.toLowerCase() || ""; // adjust index if needed
-            const yearCell = row.cells[3]?.innerText.toLowerCase() || "";
+            // Skip if it's the "no data" row
+            if (row.cells.length === 1) {
+                row.style.display = "none";
+                return;
+            }
 
-            const matchesProgram = !selectedProgram || programCell === selectedProgram;
-            const matchesYear = !selectedYear || yearCell === selectedYear;
+            const studentId = row.cells[0]?.innerText.toLowerCase() || "";
+            const lastName = row.cells[1]?.innerText.toLowerCase() || "";
+            const year = row.cells[2]?.innerText.toLowerCase() || "";
+            const program = row.cells[3]?.innerText.toLowerCase() || "";
+            const sanctionHours = row.cells[4]?.innerText.toLowerCase() || "";
+
+            // Combine all text for search
+            const allText = `${studentId} ${lastName} ${year} ${program} ${sanctionHours}`;
+            
+            const matchesSearch = !search || allText.includes(search);
+            const matchesProgram = !selectedProgram || program === selectedProgram;
+            const matchesYear = !selectedYear || year === selectedYear;
 
             row.style.display = (matchesSearch && matchesProgram && matchesYear) ? "" : "none";
         });
@@ -122,8 +122,14 @@
         const rows = document.querySelectorAll("#sanctionedTable tr");
 
         rows.forEach(row => {
-            const program = row.cells[4]?.innerText.trim();
-            const year = row.cells[3]?.innerText.trim();
+            // Skip if it's the "no data" row
+            if (row.cells.length === 1) {
+                return;
+            }
+
+            const program = row.cells[3]?.innerText.trim(); // Program is in column 3
+            const year = row.cells[2]?.innerText.trim(); // Academic Year is in column 2
+            
             if (program) programSet.add(program);
             if (year) yearSet.add(year);
         });
