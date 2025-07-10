@@ -10,61 +10,158 @@ require_once '../app/core/config.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
     <title>QR Code Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <!--    <script src="../node_modules/html5-qrcode/html5-qrcode.min.js"></script>-->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
         body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            background-color: #4a4a4a;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            background-image:
+                radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
+                linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
+            background-size: 24px 24px;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
         }
-        h1 {
-            color: #f8f8f8;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        #reader {
-            width: 90%;
-            max-width: 500px;
-            height: auto;
-            margin: 20px auto;
+        .hover-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .hover-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+        }
+        
+        /* Main container */
+        .main-container {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scanner container */
+        .scanner-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid #a31d1d;
             position: relative;
         }
+        
+        .scanner-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #a31d1d, #ff6b6b, #a31d1d);
+            background-size: 400% 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                box-shadow: 0 0 20px rgba(163, 29, 29, 0.3);
+            }
+            50% { 
+                background-position: 100% 50%;
+                box-shadow: 0 0 30px rgba(163, 29, 29, 0.6);
+            }
+        }
+        
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        
         #result, #student-info {
             margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
         }
+        
         #student-info {
             color: #4CAF50;
+            border-left: 4px solid #4CAF50;
         }
+        
         .btn-container {
             margin-top: 20px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
         }
+        
         button, a {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            background-color: #4CAF50;
+            background-color: #a31d1d;
             color: white;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
             text-decoration: none;
             text-align: center;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(163, 29, 29, 0.3);
         }
+        
         button:hover, a:hover {
-            background-color: #388e3c;
+            background-color: #8a1818;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(163, 29, 29, 0.4);
         }
+        
+        .secondary-btn {
+            background-color: #6c757d;
+        }
+        
+        .secondary-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .success-btn {
+            background-color: #28a745;
+        }
+        
+        .success-btn:hover {
+            background-color: #218838;
+        }
+        
         @media (max-width: 600px) {
             #reader {
                 width: 100%;
@@ -90,38 +187,43 @@ require_once '../app/core/config.php';
         }
         #location-modal > div {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
             max-width: 90%;
-            width: 400px;
+            width: 450px;
             color: black;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 2px solid #a31d1d;
         }
         #location-modal h3 {
-            color: #e74c3c;
-            margin-bottom: 15px;
+            color: #a31d1d;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
         }
         #location-modal p {
-            margin-bottom: 20px;
-            line-height: 1.5;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #666;
+            font-size: 16px;
         }
         #location-modal .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 64px;
+            margin-bottom: 20px;
         }
         #location-modal button {
-            margin: 5px;
-            background-color: #e74c3c;
+            margin: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
         #location-modal button:hover {
-            background-color: #c0392b;
-        }
-        #location-modal .secondary-btn {
-            background-color: #95a5a6;
-        }
-        #location-modal .secondary-btn:hover {
-            background-color: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
         /* Geofence error modal styles */
@@ -139,40 +241,45 @@ require_once '../app/core/config.php';
         }
         #geofence-modal > div {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
             max-width: 95%;
-            width: 600px;
+            width: 700px;
             max-height: 90vh;
             color: black;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             overflow-y: auto;
+            border: 2px solid #a31d1d;
         }
         #geofence-modal h3 {
-            color: #e74c3c;
-            margin-bottom: 15px;
+            color: #a31d1d;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
         }
         #geofence-modal p {
-            margin-bottom: 15px;
-            line-height: 1.5;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #666;
+            font-size: 16px;
         }
         #geofence-modal .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 64px;
+            margin-bottom: 20px;
         }
         #geofence-modal button {
-            margin: 5px;
-            background-color: #e74c3c;
+            margin: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
         #geofence-modal button:hover {
-            background-color: #c0392b;
-        }
-        #geofence-modal .secondary-btn {
-            background-color: #95a5a6;
-        }
-        #geofence-modal .secondary-btn:hover {
-            background-color: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
         #geofence-map {
             height: 400px;
@@ -207,30 +314,51 @@ require_once '../app/core/config.php';
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
+            z-index: 2000;
         }
         #confirmation-modal > div {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
             max-width: 90%;
-            width: 400px;
+            width: 450px;
             color: black;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 2px solid #a31d1d;
+        }
+        #confirmation-modal h3 {
+            color: #a31d1d;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
         }
         #student-image {
             width: 150px;
             height: 150px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 15px;
             margin: 20px auto;
             display: block;
+            border: 3px solid #a31d1d;
+            box-shadow: 0 8px 25px rgba(163, 29, 29, 0.3);
         }
 
         #confirmation-modal button {
-            margin: 5px;
+            margin: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        #confirmation-modal button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
         .loader {
@@ -253,9 +381,15 @@ require_once '../app/core/config.php';
         }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-6">
 
-<h1>QR Code Scanner</h1>
+<!-- Header -->
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-2xl mx-auto glass-card">
+    <div class="flex items-center space-x-3">
+        <i class="fas fa-qrcode text-[#a31d1d] text-3xl"></i>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">QR Code Scanner</h1>
+    </div>
+</header>
 
 <!-- Location Permission Modal -->
 <div id="location-modal">
@@ -263,7 +397,7 @@ require_once '../app/core/config.php';
         <div class="icon">📍</div>
         <h3>Location Permission Required</h3>
         <p>To use the QR Code Scanner, you need to enable location services. This helps ensure accurate attendance tracking within the designated area.</p>
-        <button id="enable-location-btn">Enable Location</button>
+        <button id="enable-location-btn" class="success-btn">Enable Location</button>
         <button id="cancel-location-btn" class="secondary-btn">Cancel</button>
     </div>
 </div>
@@ -292,38 +426,66 @@ require_once '../app/core/config.php';
             <span id="distance-info">Calculating...</span>
         </div>
         
-        <button id="retry-location-btn">Check Location Again</button>
+        <button id="retry-location-btn" class="success-btn">Check Location Again</button>
         <button id="close-geofence-btn" class="secondary-btn">Close</button>
     </div>
 </div>
 
 <?php if ($isOngoing): ?>
-    <div id="scanner-content">
-        <p><strong>Event Name:</strong> <?= $EventName; ?></p>
-        <p><strong>Date Started:</strong> <?= $EventDate; ?></p>
-        <p><strong>Time Started:</strong> <?= $EventTime; ?></p>
-        <div id="reader"></div>
-        <div id="result"></div>
-        <div id="student-info"></div>
+    <div id="scanner-content" class="max-w-2xl mx-auto main-container">
+        <!-- Event Info Card -->
+        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                    <div class="text-blue-600 text-2xl mb-2">📅</div>
+                    <div class="text-blue-700 font-semibold">Event</div>
+                    <div class="text-blue-600 text-sm"><?= $EventName; ?></div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                    <div class="text-green-600 text-2xl mb-2">📆</div>
+                    <div class="text-green-700 font-semibold">Date</div>
+                    <div class="text-green-600 text-sm"><?= $EventDate; ?></div>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200">
+                    <div class="text-purple-600 text-2xl mb-2">⏰</div>
+                    <div class="text-purple-700 font-semibold">Time</div>
+                    <div class="text-purple-600 text-sm"><?= $EventTime; ?></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Container -->
+        <div class="scanner-container p-6">
+            <div id="reader"></div>
+            <div id="result"></div>
+            <div id="student-info"></div>
+        </div>
 
         <!-- Confirmation Modal -->
         <div id="confirmation-modal">
             <div>
                 <h3>Confirm Attendance</h3>
                 <img id="student-image" src="" alt="Student Profile">
-                <p id="student-name"></p>
-                <p id="student-program"></p>
-                <div>
-                    <button id="confirm-btn">Confirm</button>
-                    <button id="cancel-btn">Cancel</button>
+                <p id="student-name" class="text-lg font-semibold text-gray-800 mb-2"></p>
+                <p id="student-program" class="text-gray-600 mb-4"></p>
+                <div class="flex justify-center space-x-4">
+                    <button id="confirm-btn" class="success-btn">Confirm</button>
+                    <button id="cancel-btn" class="secondary-btn">Cancel</button>
                 </div>
             </div>
         </div>
 
-        <button id="restart-btn" style="display: none;">Scan Again</button>
-        <div class="btn-container">
-            <button id="flip-camera-btn">Flip Camera</button>
-            <a id="back-btn" href="<?php echo ROOT ?>facilitator">Back</a>
+        <!-- Action Buttons -->
+        <div class="mt-6">
+            <button id="restart-btn" class="success-btn w-full mb-4" style="display: none;">Scan Again</button>
+            <div class="btn-container">
+                <button id="flip-camera-btn" class="secondary-btn">
+                    <i class="fas fa-sync-alt mr-2"></i>Flip Camera
+                </button>
+                <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="secondary-btn">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </a>
+            </div>
         </div>
     </div>
 
@@ -827,15 +989,21 @@ require_once '../app/core/config.php';
         });
     </script>
 <?php else: ?>
-    <p style="color: red;">No ongoing attendance event available.</p>
-    <a id="back-btn" href="<?php echo ROOT ?>facilitator">Back</a>
+    <div class="max-w-2xl mx-auto glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 text-center">
+        <div class="text-red-600 text-6xl mb-4">⚠️</div>
+        <h2 class="text-2xl font-bold text-red-600 mb-4">No Ongoing Event</h2>
+        <p class="text-gray-600 mb-6">There is no active attendance event available for scanning.</p>
+        <a id="back-btn" href="<?php echo ROOT ?>facilitator" class="secondary-btn inline-block">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        </a>
+    </div>
 <?php endif; ?>
 
 <!-- Loading Screen -->
-<div id="loading-screen" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.8); z-index:1000; align-items:center; justify-content:center;">
+<div id="loading-screen" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); z-index:1000; align-items:center; justify-content:center; backdrop-filter: blur(5px);">
     <div class="text-center">
         <div class="loader"></div>
-        <p style="color: green">Loading student data...</p>
+        <p class="text-[#a31d1d] font-semibold text-lg mt-4">Loading student data...</p>
     </div>
 </div>
 
