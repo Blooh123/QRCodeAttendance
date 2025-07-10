@@ -132,6 +132,7 @@
                                                value="<?php echo htmlspecialchars($attendanceDetails['latitude'] ?? ''); ?>"
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
                                                placeholder="e.g., 7.4474">
+
                                     </div>
                                     <div>
                                         <label for="longitude" class="block mb-2 text-sm font-medium text-gray-700">Longitude</label>
@@ -139,6 +140,7 @@
                                                value="<?php echo htmlspecialchars($attendanceDetails['longitude'] ?? ''); ?>"
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
                                                placeholder="e.g., 125.8025">
+
                                     </div>
                                     <div>
                                         <label for="radius" class="block mb-2 text-sm font-medium text-gray-700">Radius (meters)</label>
@@ -146,6 +148,7 @@
                                                value="<?php echo htmlspecialchars($attendanceDetails['radius'] ?? ''); ?>"
                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
                                                placeholder="e.g., 500">
+
                                     </div>
                                 </div>
                                 
@@ -259,7 +262,7 @@
 
     <script>
         // Map preview variables
-        let previewMap, previewMarker;
+        let previewMap, previewMarker, previewCircle;
         
         // Initialize map preview
         function initMapPreview() {
@@ -313,6 +316,25 @@
             }
             previewMarker = L.marker(newCenter).addTo(previewMap);
             previewMarker.bindPopup("Geofence Center").openPopup();
+            
+            // Add radius circle if radius is set
+            const radius = parseFloat(document.getElementById('radius').value);
+            if (!isNaN(radius) && radius > 0) {
+                // Remove existing circle if any
+                if (previewMap.hasLayer && previewMap.hasLayer(previewCircle)) {
+                    previewMap.removeLayer(previewCircle);
+                }
+                
+                // Add new circle
+                previewCircle = L.circle(newCenter, {
+                    radius: radius,
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.2,
+                    weight: 2
+                }).addTo(previewMap);
+                previewCircle.bindPopup(`Geofence Area<br>Radius: ${radius}m`);
+            }
         }
         
         // Geofence location functions
@@ -389,10 +411,11 @@
             });
         }
         
-        // Add event listeners for coordinate inputs
+                // Add event listeners for coordinate inputs
         document.addEventListener('DOMContentLoaded', function() {
             const latInput = document.getElementById('latitude');
             const lngInput = document.getElementById('longitude');
+            const radiusInput = document.getElementById('radius');
             
             if (latInput && lngInput) {
                 // Update map preview when coordinates are entered
@@ -407,6 +430,15 @@
                         updateMapPreview();
                     }
                 });
+                
+                // Update map preview when radius changes
+                if (radiusInput) {
+                    radiusInput.addEventListener('input', function() {
+                        if (latInput.value && lngInput.value) {
+                            updateMapPreview();
+                        }
+                    });
+                }
                 
                 // Update map preview when coordinates lose focus (for better UX)
                 latInput.addEventListener('blur', function() {
@@ -424,6 +456,9 @@
                 // Initialize map preview if coordinates are already set
                 if (latInput.value && lngInput.value) {
                     setTimeout(updateMapPreview, 100);
+                } else {
+                    // Initialize empty map preview
+                    initMapPreview();
                 }
             }
         });
