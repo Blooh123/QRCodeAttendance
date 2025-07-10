@@ -50,9 +50,19 @@ class LoginPage extends Controller
                 }
             }
 
+
+
             // Proceed with login validation
             $validate = $this->validateLogIn(trim($_POST['username']), trim($_POST['password']));
-        
+            $stmt = $this->connect()->prepare("SELECT COUNT(*) FROM user_sessions WHERE user_id = ?");
+            $stmt->execute([$validate['id']]);
+            $activeSession = $stmt->fetchColumn();
+
+            if ($activeSession > 0) {
+                $_SESSION['error'] = "Another user is currently logged in. Please log out first.";
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit();
+            }
 
             if ($validate) {
                 $role = $validate['roles'];
