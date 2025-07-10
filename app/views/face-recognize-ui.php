@@ -128,8 +128,8 @@ body {
         <p class="text-gray-600 text-sm pulse">AI-Powered Authentication System</p>
         
         <!-- Back button -->
-        <a href="<?php echo ROOT ?>adminHome" class="inline-block bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 mx-auto w-fit">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        <a href="<?php echo ROOT ?>login" class="inline-block bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 mx-auto w-fit">
+            <i class="fas fa-arrow-left"></i> Back
         </a>
     </div>
 
