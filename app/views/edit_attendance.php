@@ -8,33 +8,42 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendance System • Edit Attendance</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-        <title>Attendance System • Edit Attendance</title>
         <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
-            /* Custom Maroon Dark Red */
-            .bg-maroon { background-color: #800000; }
-            .hover\:bg-maroon-hover:hover { background-color: #660000; }
-            .text-maroon { color: #800000; }
-            .border-maroon { border-color: #800000; }
-            .focus\:ring-maroon:focus { --tw-ring-color: #800000; }
-            /* Hide scrollbar but keep scroll functionality */
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+            body {
+                font-family: 'Poppins', sans-serif;
+                background-image:
+                    radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
+                    linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
+                background-size: 24px 24px;
+                background-color: #f8f9fa;
+            }
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .hover-card {
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+            .hover-card:hover {
+                transform: translateY(-8px) scale(1.03);
+                box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+            }
             .hide-scrollbar::-webkit-scrollbar {
                 display: none;
             }
-
             .hide-scrollbar {
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;     /* Firefox */
+                -ms-overflow-style: none;
+                scrollbar-width: none;
             }
             
             /* Map preview styles */
@@ -45,50 +54,46 @@
                 border: 2px solid #d1d5db;
             }
         </style>
-
     </head>
-    <body>
+    <body class="p-4 md:p-6 bg-[#f8f9fa]">
 
-    <!-- Main modal -->
-    <div id="crud-modal" tabindex="-1" aria-hidden="false" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
-        <div class="relative p-4 w-full max-w-4xl max-h-full overflow-y-auto">
-            <!-- Modal content -->
-            <div class="relative bg-gray-50 rounded-lg shadow">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-800">
-                        Edit Attendance
-                    </h3>
-                    <a href="<?php echo ROOT?>adminHome?page=Attendance" type="button" class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-close="crud-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </a>
-                </div>
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-4xl mx-auto glass-card">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-edit text-[#a31d1d] text-3xl"></i>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Edit Attendance</h1>
+            </div>
+            <a href="<?php echo ROOT?>adminHome?page=Attendance" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto">
+        <div class="glass-card rounded-2xl p-8 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                 
-                <!-- Modal body -->
-                <form method="POST" class="p-4 md:p-5" action="<?php echo ROOT?>update_attendance" id="attendanceForm">
-                    <div class="grid gap-4 mb-4 grid-cols-1 lg:grid-cols-2">
+                <form method="POST" class="space-y-6" action="<?php echo ROOT?>update_attendance" id="attendanceForm">
+                    <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
                         <!-- Left Column - Basic Info -->
-                        <div class="space-y-4">
+                        <div class="space-y-6">
                             <div>
                                 <label for="eventName" class="block mb-2 text-sm font-medium text-gray-700">Event Name</label>
-                                <input type="text" name="eventName" id="eventName" value="<?php echo htmlspecialchars($attendanceDetails['event_name']); ?>" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <input type="text" name="eventName" id="eventName" value="<?php echo htmlspecialchars($attendanceDetails['event_name']); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
                             </div>
                             
                             <div>
                                 <label for="atten_id" class="block mb-2 text-sm font-medium text-gray-700">Attendance Status</label>
-                                <input type="hidden" name="atten_id" id="atten_id" value="<?php echo htmlspecialchars($attendanceDetails['atten_id']); ?>" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <input type="hidden" name="atten_id" id="atten_id" value="<?php echo htmlspecialchars($attendanceDetails['atten_id']); ?>" required>
                                 <input type="hidden" name="atten_status" id="atten_status" value="<?php echo $attendanceDetails['atten_status']?>">
-                                <div class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 w-full">
-                                    <span class="font-medium"><?php echo $attendanceDetails['atten_status']?></span>
+                                <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
+                                    <span class="font-medium text-gray-700"><?php echo $attendanceDetails['atten_status']?></span>
                                 </div>
                             </div>
 
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Required Attendees</label>
-                                <ul class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 w-full max-h-32 overflow-y-auto">
+                                <ul class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 max-h-32 overflow-y-auto">
                                     <?php
                                     // Check if required attendees data exists
                                     if (!empty($requiredAttendees) && is_array($requiredAttendees)):
@@ -99,7 +104,7 @@
                                             $yearDisplay = (!empty($year) && $year !== '' && $year !== null) ? htmlspecialchars($year) : 'All years';
                                             ?>
                                             <li class="flex justify-between items-center p-2 border-b border-gray-200 last:border-b-0">
-                                                <span class="font-medium"><?php echo htmlspecialchars($program); ?></span>
+                                                <span class="font-medium text-gray-700"><?php echo htmlspecialchars($program); ?></span>
                                                 <span class="text-gray-600">(<?php echo $yearDisplay; ?>)</span>
                                             </li>
                                         <?php
@@ -113,57 +118,54 @@
 
                             <div>
                                 <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
-                                <input type="number" name="sanction" id="sanction" value="<?php echo htmlspecialchars($attendanceDetails['sanction']); ?>" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <input type="number" name="sanction" id="sanction" value="<?php echo htmlspecialchars($attendanceDetails['sanction']); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
                             </div>
                         </div>
 
                         <!-- Right Column - Geofence Settings -->
-                        <div class="space-y-4">
-                            <div class="border-t pt-4">
+                        <div class="space-y-6">
+                            <div class="border-t pt-6">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                    <i class="fas fa-map-marker-alt text-maroon mr-2"></i>
-                                    Geofence Settings
+                                    <i class="fas fa-map-marker-alt text-[#a31d1d] mr-2"></i>
+                                    Geofence Settings (Optional)
                                 </h3>
                                 
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                     <div>
                                         <label for="latitude" class="block mb-2 text-sm font-medium text-gray-700">Latitude</label>
                                         <input type="number" name="latitude" id="latitude" step="0.000001"
                                                value="<?php echo htmlspecialchars($attendanceDetails['latitude'] ?? ''); ?>"
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
                                                placeholder="e.g., 7.4474">
-
                                     </div>
                                     <div>
                                         <label for="longitude" class="block mb-2 text-sm font-medium text-gray-700">Longitude</label>
                                         <input type="number" name="longitude" id="longitude" step="0.000001"
                                                value="<?php echo htmlspecialchars($attendanceDetails['longitude'] ?? ''); ?>"
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
                                                placeholder="e.g., 125.8025">
-
                                     </div>
                                     <div>
                                         <label for="radius" class="block mb-2 text-sm font-medium text-gray-700">Radius (meters)</label>
                                         <input type="number" name="radius" id="radius" min="50" max="5000"
                                                value="<?php echo htmlspecialchars($attendanceDetails['radius'] ?? ''); ?>"
-                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon text-sm"
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
                                                placeholder="e.g., 500">
-
                                     </div>
                                 </div>
                                 
                                 <div class="mb-4">
                                     <button type="button" onclick="getCurrentLocation()" 
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium mr-2">
-                                        <i class="fas fa-location-arrow mr-1"></i>Use Current Location
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mr-2">
+                                        <i class="fas fa-location-arrow mr-2"></i>Use Current Location
                                     </button>
                                     <button type="button" onclick="openMapSelector()" 
-                                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium mr-2">
-                                        <i class="fas fa-map mr-1"></i>Select on Map
+                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mr-2">
+                                        <i class="fas fa-map mr-2"></i>Select on Map
                                     </button>
                                     <button type="button" onclick="checkAndFixCoordinateSwapping()" 
-                                            class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg text-sm font-medium">
-                                        <i class="fas fa-exchange-alt mr-1"></i>Fix Coordinates
+                                            class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                                        <i class="fas fa-exchange-alt mr-2"></i>Fix Coordinates
                                     </button>
                                 </div>
                                 
@@ -181,15 +183,15 @@
                                 </div>
                                 
                                 <!-- Map Preview Section -->
-                                <div>
+                                <div class="mt-6">
                                     <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
                                         <i class="fas fa-map text-blue-500 mr-2"></i>
                                         Location Preview
                                     </h4>
-                                    <div id="map-preview" class="w-full rounded-lg border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+                                    <div id="map-preview" class="w-full h-64 rounded-lg border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
                                         <div class="text-center text-gray-500">
                                             <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
-                                            <p class="text-sm">Enter coordinates above to see the location preview</p>
+                                            <p>Enter coordinates above to see the location preview</p>
                                         </div>
                                     </div>
                                     <div class="mt-2 text-xs text-gray-500">
@@ -205,59 +207,61 @@
                     <input type="hidden" name="action" id="action" value="">
 
                     <!-- Button Container for Better Layout -->
-                    <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                        <!-- Done Button -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t">
+                        <!-- Save Changes Button -->
                         <button type="submit" onclick="setAction('save changes of',event)"
-                                class="w-full sm:w-auto text-white inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            <i class="fas fa-check me-2"></i>
+                                class="w-full sm:w-auto text-white inline-flex items-center bg-[#a31d1d] hover:bg-[#8a1818] font-medium rounded-xl px-6 py-2.5 text-center shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+                            <i class="fas fa-check mr-2"></i>
                             Save Changes
                         </button>
 
                         <!-- Start/Stop Attendance Button -->
                         <button type="submit"
                                 onclick="setAction('<?php echo $buttonAction ?>', event)"
-                                class="w-full sm:w-auto text-white inline-flex items-center <?php echo $buttonClass; ?> font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                class="w-full sm:w-auto text-white inline-flex items-center <?php echo $buttonClass; ?> font-medium rounded-xl px-6 py-2.5 text-center shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200"
                             <?php echo ($buttonClass === 'hidden') ? 'hidden disabled style="pointer-events: none;"' : ''; ?>>
-                            <i class="fas <?php echo ($buttonAction === 'start') ? 'fa-play' : 'fa-stop'; ?> me-2"></i>
+                            <i class="fas <?php echo ($buttonAction === 'start') ? 'fa-play' : 'fa-stop'; ?> mr-2"></i>
                             <?php echo $buttonLabel; ?>
                         </button>
 
                         <!-- Finished Attendance Button -->
                         <button type="submit" onclick="setAction('finished',event)"
-                                class="w-full sm:w-auto text-white inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                class="w-full sm:w-auto text-white inline-flex items-center bg-blue-600 hover:bg-blue-700 font-medium rounded-xl px-6 py-2.5 text-center shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200"
                                 <?php echo ($buttonClass === 'hidden') ? 'hidden disabled style="pointer-events: none;"' : ''; ?>>
-                            <i class="fas fa-flag-checkered me-2"></i>
+                            <i class="fas fa-flag-checkered mr-2"></i>
                             Finished Attendance
                         </button>
                     </div>
                 </form>
 
                 <!-- Activity Log Section -->
-                <div class="bg-white p-4 rounded-lg shadow-md mx-4 mb-4">
+                <div class="glass-card rounded-2xl p-6 mt-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                     <!-- Toggle -->
-                    <button onclick="toggleLogs()" class="bg-maroon hover:bg-maroon-hover text-white px-4 py-2 rounded-lg flex items-center gap-2 mb-4">
+                    <button onclick="toggleLogs()" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 mb-4">
                         <i class="fas fa-clock"></i> View Activity Log
                     </button>
 
                     <!-- Log List -->
                     <div id="activity-log" class="mt-4">
-                        <h3 class="text-xl font-bold mb-2 text-maroon">Activity Log</h3>
+                        <h3 class="text-xl font-bold mb-4 text-[#a31d1d] flex items-center">
+                            <i class="fas fa-history mr-2"></i> Activity Log
+                        </h3>
 
                         <!-- Search -->
-                        <div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                        <div class="flex flex-col md:flex-row md:items-center gap-2 mb-4">
                             <input type="text" id="search-input"
-                                   placeholder="Search..."
-                                   class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon">
+                                   placeholder="Search activities..."
+                                   class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
 
                             <button type="button" id="search-btn"
-                                    class="bg-maroon hover:bg-maroon-hover text-white px-4 py-2 rounded-lg flex items-center gap-4">
+                                    class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
                                 <i class="fas fa-search"></i> Search
                             </button>
                         </div>
 
                         <!-- Scrollable container -->
-                        <div class="h-60 overflow-y-auto border border-gray-200 rounded-lg p-2 bg-gray-50 hide-scrollbar">
-                            <ul class="space-y-2" id="activity-log-list">
+                        <div class="h-60 overflow-y-auto border border-gray-200 rounded-lg p-4 bg-gray-50 hide-scrollbar">
+                            <ul class="space-y-3" id="activity-log-list">
                                 <!-- Logs will be rendered here by JS -->
                             </ul>
                         </div>
@@ -268,9 +272,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Backdrop -->
-    <div id="crud-modal-backdrop" class="fixed inset-0 z-40 bg-black bg-opacity-50"></div>
 
     <script>
         // Map preview variables
@@ -530,14 +531,20 @@
             const list = document.getElementById("activity-log-list");
             list.innerHTML = ''; // Clear
             if (logs.length === 0) {
-                list.innerHTML = '<li class="text-gray-500 text-sm">No logs found.</li>';
+                list.innerHTML = '<li class="text-gray-500 text-sm text-center py-4">No logs found.</li>';
             } else {
                 logs.forEach(log => {
                     const item = document.createElement("li");
-                    item.className = "border border-gray-200 rounded-lg p-3 text-gray-700 bg-white";
+                    item.className = "border border-gray-200 rounded-lg p-4 text-gray-700 bg-white hover:shadow-md transition-shadow duration-200";
                     item.innerHTML = `
-                        <span class="font-semibold">${log.activity}</span><br>
-                        <span class="text-sm text-gray-500">${log.time_created}</span>
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <span class="font-semibold text-gray-800">${log.activity}</span>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <i class="fas fa-clock mr-1"></i>${log.time_created}
+                                </div>
+                            </div>
+                        </div>
                     `;
                     list.appendChild(item);
                 });
