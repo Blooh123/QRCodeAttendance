@@ -232,6 +232,9 @@ $EventDate = 'No Date';
 $EventTime = 'No Time';
 $onTimeCheck = 0;
 $isOngoing = false;
+$longitude = '';
+$latitude = '';
+$radius = '';
 
 foreach ($attendanceList as $attendance) {
     if ($attendance['atten_status'] == 'on going') {
