@@ -164,8 +164,8 @@
                                         <i class="fas fa-map mr-2"></i>Select on Map
                                     </button>
                                     <button type="button" onclick="checkAndFixCoordinateSwapping()" 
-                                            class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                                        <i class="fas fa-exchange-alt mr-4"></i>Fix Coordinates
+                                            class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-4">
+                                        <i class="fas fa-exchange-alt mr-2"></i>Fix Coordinates
                                     </button>
                                 </div>
                                 
