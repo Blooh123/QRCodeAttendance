@@ -30,12 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($actionType) {
         case 'saveChanges':
             $newUsername = trim($_POST['username']);
-            if (empty($newUsername)) {
-                header("Location: edit_user?id=$userId&error=emptyUsername");
+            $newName = trim($_POST['name']);
+            $newEmail = trim($_POST['email']);
+            
+            if (empty($newUsername) || empty($newName) || empty($newEmail)) {
+                header("Location: edit_user?id=$userId&error=emptyFields");
                 exit();
             }
 
-            if ($user->updateUser($userId, $newUsername)) {
+            // Update username
+            $usernameUpdated = $user->updateUser($userId, $newUsername);
+            
+            // Update personal information
+            $personalInfoUpdated = $user->updatePersonalInfo($userId, $newName, $newEmail);
+            
+            if ($usernameUpdated && $personalInfoUpdated) {
                 header("Location: edit_user?id=$userId&success=1");
                 exit();
             }
@@ -74,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$userData = $user->getUserData($_GET['id']);
+$userData = $user->getUserDataWithPersonalInfo($_GET['id']);
 
 $data = [
     'userData' => $userData

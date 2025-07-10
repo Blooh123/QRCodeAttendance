@@ -67,9 +67,7 @@ class LoginPage extends Controller
                     $authToken = bin2hex(random_bytes(32)); // Secure 64-character token
                     $_SESSION['auth_token'] = $authToken;
 
-                    // Call createSession() to generate a secure token
-                    $userId = $validate['id'];
-                    $this->createSession($userId, $role, $authToken);
+
 
                     $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 
@@ -91,6 +89,9 @@ class LoginPage extends Controller
                     $uri = '';
                     // Redirect based on role
                     if ($role == 'admin') {
+                                            // Call createSession() to generate a secure token
+                        $userId = $validate['id'];
+                        $this->createSession($userId, $role, $authToken);
                         setcookie(
                             'user_data',
                             json_encode($userSessions),
@@ -104,6 +105,9 @@ class LoginPage extends Controller
                     } elseif ($role == 'Facilitator') {
                         $uri = str_replace('/login', '/face-recognize', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'student') {
+                                            // Call createSession() to generate a secure token
+                        $userId = $validate['id'];
+                        $this->createSession($userId, $role, $authToken);
                         setcookie(
                             'user_data',
                             json_encode($userSessions),
