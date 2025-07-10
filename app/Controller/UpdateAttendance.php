@@ -67,19 +67,28 @@ class UpdateAttendance
                     case 'save changes of':
                         $eventName = $_POST['eventName'] ?? '';
                         $sanction = $_POST['sanction'] ?? 0;
+                        $latitude = $_POST['latitude'] ?? null;
+                        $longitude = $_POST['longitude'] ?? null;
+                        $radius = $_POST['radius'] ?? null;
 
                         $stmt = $this->connect()->prepare("
                         UPDATE attendance 
                         SET event_name = :eventName, 
-                            sanction = :sanction 
+                            sanction = :sanction,
+                            latitude = :latitude,
+                            longitude = :longitude,
+                            radius = :radius
                         WHERE atten_id = :eventId
                     ");
                         $stmt->execute([
                             ':eventId' => $eventId,
                             ':eventName' => $eventName,
-                            ':sanction' => $sanction
+                            ':sanction' => $sanction,
+                            ':latitude' => $latitude,
+                            ':longitude' => $longitude,
+                            ':radius' => $radius
                         ]);
-                        $message = 'Attendance marked as done successfully.';
+                        $message = 'Attendance updated successfully.';
                         break;
 
                     case 'stopped':
