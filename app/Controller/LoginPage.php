@@ -55,7 +55,7 @@ class LoginPage extends Controller
             // Proceed with login validation
             $validate = $this->validateLogIn(trim($_POST['username']), trim($_POST['password']));
             $stmt = $this->connect()->prepare("SELECT COUNT(*) FROM user_sessions WHERE user_id = ?");
-            $stmt->execute([$validate['id']]);
+            $stmt->execute([$validate['id'], $userSessions[0]['auth_token']]);
             $activeSession = $stmt->fetchColumn();
 
             if ($activeSession > 0) {
@@ -74,21 +74,26 @@ class LoginPage extends Controller
 
                 if (!$checkLogSession) {
                     $username = $validate['username'];
+                    $userId = $validate['id'];
                     $authToken = bin2hex(random_bytes(32)); // Secure 64-character token
                     $_SESSION['auth_token'] = $authToken;
 
-                    $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'
+                    $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+
                     // Store user session in cookie
                     $userSessions = [
                         [
                             'role' => $role,
                             'username' => $username,
-                            'user_id' => $validate['id'],
+                            'user_id' => $userId,
                             'auth_token' => $authToken
                         ]
                     ];
+
                     // Set cookie expiration based on role
                     $cookieExpiry = ($role == 'student') ? time() + (60 * 10) : time() + (60 * 60 * 24 * 2);
+
+
 
                     $uri = '';
                     // Redirect based on role
