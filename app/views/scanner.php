@@ -349,26 +349,6 @@ require_once '../app/core/config.php';
 
 <?php if ($isOngoing): ?>
     <div id="scanner-content" class="max-w-2xl mx-auto">
-        <!-- Event Info Card -->
-        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
-                    <div class="text-blue-600 text-2xl mb-2">📅</div>
-                    <div class="text-blue-700 font-semibold">Event</div>
-                    <div class="text-blue-600 text-sm"><?= $EventName; ?></div>
-                </div>
-                <div class="bg-green-50 p-4 rounded-xl border border-green-200">
-                    <div class="text-green-600 text-2xl mb-2">📆</div>
-                    <div class="text-green-700 font-semibold">Date</div>
-                    <div class="text-green-600 text-sm"><?= $EventDate; ?></div>
-                </div>
-                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200">
-                    <div class="text-purple-600 text-2xl mb-2">⏰</div>
-                    <div class="text-purple-700 font-semibold">Time</div>
-                    <div class="text-purple-600 text-sm"><?= $EventTime; ?></div>
-                </div>
-            </div>
-        </div>
 
         <!-- Scanner Container -->
         <div class="scanner-container p-6">
