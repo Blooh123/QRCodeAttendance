@@ -762,18 +762,19 @@ require_once '../app/core/config.php';
         });
 
         function startScanner() {
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("reader");
-            }
-            
-            document.getElementById("result").textContent = "Waiting for scan...";
-            document.getElementById("restart-btn").style.display = "none";
-            document.getElementById("student-info").textContent = "";
+            try {
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+                
+                document.getElementById("result").textContent = "Waiting for scan...";
+                document.getElementById("restart-btn").style.display = "none";
+                document.getElementById("student-info").textContent = "";
 
-            html5QrCode.start(
-                currentFacingMode,
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                (decodedText) => {
+                html5QrCode.start(
+                    currentFacingMode,
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    (decodedText) => {
                     document.getElementById("result").innerHTML = `<p>Decoded QR Code: ${decodedText}</p>`;
                     document.getElementById("loading-screen").style.display = "flex";
                     // Fetch student details before confirming attendance
@@ -875,18 +876,34 @@ require_once '../app/core/config.php';
 
                     html5QrCode.stop();
                 }
-            );
+            ).catch(error => {
+                console.error("Scanner start error:", error);
+                document.getElementById("result").textContent = "Scanner error. Please try again.";
+                document.getElementById("restart-btn").style.display = "block";
+            });
+        } catch (error) {
+            console.error("Scanner initialization error:", error);
+            document.getElementById("result").textContent = "Scanner initialization failed. Please refresh the page.";
+            document.getElementById("restart-btn").style.display = "block";
+        }
         }
 
         // Restart button handler
         document.getElementById("restart-btn").addEventListener("click", () => {
             document.getElementById("restart-btn").style.display = "none";
-            if (html5QrCode) {
+            document.getElementById("result").textContent = "";
+            document.getElementById("student-info").textContent = "";
+            
+            if (html5QrCode && html5QrCode.isScanning) {
                 html5QrCode.stop().then(() => {
-                    startScanner();
-                }).catch(console.error);
+                    setTimeout(() => startScanner(), 500);
+                }).catch(() => {
+                    html5QrCode = null;
+                    setTimeout(() => startScanner(), 500);
+                });
             } else {
-                startScanner();
+                html5QrCode = null;
+                setTimeout(() => startScanner(), 500);
             }
         });
 
