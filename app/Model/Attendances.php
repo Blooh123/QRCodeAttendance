@@ -12,7 +12,7 @@ class Attendances
     public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude = null, $longitude = null, $radius = null): false|string
     {
         $status = 'not started';  // default
-
+        
         $requiredAttendanceRecordJson = json_encode($requiredAttendanceRecord);
 
         $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius)";

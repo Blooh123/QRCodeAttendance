@@ -87,7 +87,7 @@
 
     <!-- Map Section -->
     <div class="glass-card rounded-2xl p-6 mb-6 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-        <div id="map"></div>
+    <div id="map"></div>
     </div>
 
     <!-- Information Cards -->
@@ -267,7 +267,7 @@
             }
 
             marker = L.marker(center).addTo(map).bindPopup("You are here!").openPopup();
-
+    
             circle = L.circle(center, {
                 radius: accuracy,
                 color: '#2563eb',
@@ -277,7 +277,7 @@
 
             // Update distance information
             updateDistanceInfo();
-            
+           
             // Check if user is in geofence
             const inCoverage = isInGeofence(center, geofenceCenter, geofenceRadius);
             showStatus(inCoverage);

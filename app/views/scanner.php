@@ -352,16 +352,16 @@ require_once '../app/core/config.php';
 
         <!-- Scanner Container -->
         <div class="scanner-container p-6">
-            <div id="reader"></div>
-            <div id="result"></div>
-            <div id="student-info"></div>
+    <div id="reader"></div>
+    <div id="result"></div>
+    <div id="student-info"></div>
         </div>
 
-        <!-- Confirmation Modal -->
-        <div id="confirmation-modal">
-            <div>
-                <h3>Confirm Attendance</h3>
-                <img id="student-image" src="" alt="Student Profile">
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal">
+        <div>
+            <h3>Confirm Attendance</h3>
+            <img id="student-image" src="" alt="Student Profile">
                 <p id="student-name" class="text-lg font-semibold text-gray-800 mb-2"></p>
                 <p id="student-program" class="text-gray-600 mb-4"></p>
                 <div class="flex justify-center gap-4">
@@ -767,14 +767,14 @@ require_once '../app/core/config.php';
                     html5QrCode = new Html5Qrcode("reader");
                 }
                 
-                document.getElementById("result").textContent = "Waiting for scan...";
-                document.getElementById("restart-btn").style.display = "none";
-                document.getElementById("student-info").textContent = "";
+            document.getElementById("result").textContent = "Waiting for scan...";
+            document.getElementById("restart-btn").style.display = "none";
+            document.getElementById("student-info").textContent = "";
 
-                html5QrCode.start(
-                    currentFacingMode,
+            html5QrCode.start(
+                currentFacingMode,
                     { fps: 10, qrbox: { width: 250, height: 250 } },
-                    (decodedText) => {
+                (decodedText) => {
                     document.getElementById("result").innerHTML = `<p>Decoded QR Code: ${decodedText}</p>`;
                     document.getElementById("loading-screen").style.display = "flex";
                     // Fetch student details before confirming attendance
@@ -911,7 +911,7 @@ require_once '../app/core/config.php';
         document.getElementById("flip-camera-btn").addEventListener("click", () => {
             currentFacingMode.facingMode = currentFacingMode.facingMode === "environment" ? "user" : "environment";
             if (html5QrCode) {
-                html5QrCode.stop().then(startScanner).catch(console.error);
+            html5QrCode.stop().then(startScanner).catch(console.error);
             }
         });
     </script>

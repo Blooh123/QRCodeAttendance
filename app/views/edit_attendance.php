@@ -66,8 +66,8 @@
             </div>
             <a href="<?php echo ROOT?>adminHome?page=Attendance" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
                 <i class="fas fa-arrow-left"></i> Back
-            </a>
-        </div>
+                    </a>
+                </div>
     </header>
 
     <div class="max-w-4xl mx-auto">
@@ -78,43 +78,43 @@
                         <!-- Left Column - Basic Info -->
                         <div class="space-y-6">
                             <div>
-                                <label for="eventName" class="block mb-2 text-sm font-medium text-gray-700">Event Name</label>
+                            <label for="eventName" class="block mb-2 text-sm font-medium text-gray-700">Event Name</label>
                                 <input type="text" name="eventName" id="eventName" value="<?php echo htmlspecialchars($attendanceDetails['event_name']); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
                             </div>
                             
                             <div>
-                                <label for="atten_id" class="block mb-2 text-sm font-medium text-gray-700">Attendance Status</label>
+                            <label for="atten_id" class="block mb-2 text-sm font-medium text-gray-700">Attendance Status</label>
                                 <input type="hidden" name="atten_id" id="atten_id" value="<?php echo htmlspecialchars($attendanceDetails['atten_id']); ?>" required>
-                                <input type="hidden" name="atten_status" id="atten_status" value="<?php echo $attendanceDetails['atten_status']?>">
+                            <input type="hidden" name="atten_status" id="atten_status" value="<?php echo $attendanceDetails['atten_status']?>">
                                 <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50">
                                     <span class="font-medium text-gray-700"><?php echo $attendanceDetails['atten_status']?></span>
                                 </div>
-                            </div>
+                        </div>
 
                             <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-700">Required Attendees</label>
+                            <label class="block mb-2 text-sm font-medium text-gray-700">Required Attendees</label>
                                 <ul class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 max-h-32 overflow-y-auto">
-                                    <?php
+                                <?php
                                     // Check if required attendees data exists
                                     if (!empty($requiredAttendees) && is_array($requiredAttendees)):
-                                        foreach ($requiredAttendees as $index => $program):
+                                    foreach ($requiredAttendees as $index => $program):
                                             $year = isset($acad_year[$index]) ? $acad_year[$index] : '';
-                                            
+
                                             // Display "All years" if year is empty, null, or empty string
                                             $yearDisplay = (!empty($year) && $year !== '' && $year !== null) ? htmlspecialchars($year) : 'All years';
-                                            ?>
+                                        ?>
                                             <li class="flex justify-between items-center p-2 border-b border-gray-200 last:border-b-0">
                                                 <span class="font-medium text-gray-700"><?php echo htmlspecialchars($program); ?></span>
                                                 <span class="text-gray-600">(<?php echo $yearDisplay; ?>)</span>
-                                            </li>
-                                        <?php
-                                        endforeach;
-                                    else:
-                                        ?>
-                                        <li class="text-gray-500 p-2">No required attendees listed</li>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
+                                        </li>
+                                    <?php
+                                    endforeach;
+                                else:
+                                    ?>
+                                    <li class="text-gray-500 p-2">No required attendees listed</li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
 
                             <div>
                                 <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
@@ -269,11 +269,11 @@
                 </div>
 
                 <script src="<?php echo ROOT?>assets/js/editingAttendance.js"></script>
-            </div>
-        </div>
-    </div>
+                        </div>
+                    </div>
+                </div>
 
-    <script>
+                <script>
         // Map preview variables
         let previewMap, previewMarker, previewCircle;
         
@@ -526,17 +526,17 @@
         // Pass PHP array to JS
         const fullActivityLog = <?php echo json_encode($activityListLog); ?>;
 
-        // Render logs
-        function renderLogs(logs) {
-            const list = document.getElementById("activity-log-list");
-            list.innerHTML = ''; // Clear
-            if (logs.length === 0) {
+                    // Render logs
+                    function renderLogs(logs) {
+                        const list = document.getElementById("activity-log-list");
+                        list.innerHTML = ''; // Clear
+                        if (logs.length === 0) {
                 list.innerHTML = '<li class="text-gray-500 text-sm text-center py-4">No logs found.</li>';
-            } else {
-                logs.forEach(log => {
-                    const item = document.createElement("li");
+                        } else {
+                            logs.forEach(log => {
+                                const item = document.createElement("li");
                     item.className = "border border-gray-200 rounded-lg p-4 text-gray-700 bg-white hover:shadow-md transition-shadow duration-200";
-                    item.innerHTML = `
+                                item.innerHTML = `
                         <div class="flex items-start justify-between">
                             <div class="flex-1">
                                 <span class="font-semibold text-gray-800">${log.activity}</span>
@@ -545,44 +545,44 @@
                                 </div>
                             </div>
                         </div>
-                    `;
-                    list.appendChild(item);
-                });
-            }
-        }
+                `;
+                                list.appendChild(item);
+                            });
+                        }
+                    }
 
-        // Search functionality
-        document.getElementById("search-btn").addEventListener("click", () => {
-            const keyword = document.getElementById("search-input").value.toLowerCase();
-            const filtered = fullActivityLog.filter(log =>
-                log.activity.toLowerCase().includes(keyword) ||
-                log.time_created.toLowerCase().includes(keyword)
-            );
-            renderLogs(filtered);
-        });
+                    // Search functionality
+                    document.getElementById("search-btn").addEventListener("click", () => {
+                        const keyword = document.getElementById("search-input").value.toLowerCase();
+                        const filtered = fullActivityLog.filter(log =>
+                            log.activity.toLowerCase().includes(keyword) ||
+                            log.time_created.toLowerCase().includes(keyword)
+                        );
+                        renderLogs(filtered);
+                    });
 
-        // Optional: Enter key triggers search
-        document.getElementById("search-input").addEventListener("keypress", function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById("search-btn").click();
-            }
-        });
+                    // Optional: Enter key triggers search
+                    document.getElementById("search-input").addEventListener("keypress", function (e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.getElementById("search-btn").click();
+                        }
+                    });
 
         // Toggle logs visibility
-        function toggleLogs() {
-            const logDiv = document.getElementById("activity-log");
-            logDiv.classList.toggle("hidden");
-            if (!logDiv.classList.contains("hidden")) {
-                renderLogs(fullActivityLog);
-            }
-        }
+                    function toggleLogs() {
+                        const logDiv = document.getElementById("activity-log");
+                        logDiv.classList.toggle("hidden");
+                        if (!logDiv.classList.contains("hidden")) {
+                            renderLogs(fullActivityLog);
+                        }
+                    }
 
         // Render logs by default on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            renderLogs(fullActivityLog);
-        });
-    </script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        renderLogs(fullActivityLog);
+                    });
+                </script>
 
     </body>
     </html>
