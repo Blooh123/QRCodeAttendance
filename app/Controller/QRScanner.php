@@ -247,9 +247,13 @@ foreach ($attendanceList as $attendance) {
         $isOngoing = true;
         $onTimeCheck = $attendance['atten_OnTimeCheck'];
         //get the coordinates
-        $longitude = $attendance['longitude'];
-        $latitude = $attendance['latitude'];
-        $radius = $attendance['radius'];
+        $longitude = $attendance['longitude'] ?? null;
+        $latitude = $attendance['latitude'] ?? null;
+        $radius = $attendance['radius'] ?? null;
+        
+        // Debug: Log the geofence data
+        error_log("Geofence Data for Event {$EventName}: lat={$latitude}, lng={$longitude}, radius={$radius}");
+        
         break;
     }
 }

@@ -341,6 +341,13 @@ require_once '../app/core/config.php';
         const assignedLongitude = <?= $longitude ?: 'null' ?>;
         const assignedRadius = <?= $radius ?: 'null' ?>;
 
+        // Debug geofence data
+        console.log('Geofence Data:', {
+            latitude: assignedLatitude,
+            longitude: assignedLongitude,
+            radius: assignedRadius
+        });
+
         // Check location permission on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkLocationPermission();
@@ -386,6 +393,16 @@ require_once '../app/core/config.php';
         }
 
         function checkGeofenceAndShowScanner() {
+            // Debug: Log the geofence check
+            console.log('Checking geofence:', {
+                hasLatitude: !!assignedLatitude,
+                hasLongitude: !!assignedLongitude,
+                hasRadius: !!assignedRadius,
+                latitude: assignedLatitude,
+                longitude: assignedLongitude,
+                radius: assignedRadius
+            });
+
             if (assignedLatitude && assignedLongitude && assignedRadius) {
                 // Check if user is within geofence
                 navigator.geolocation.getCurrentPosition(
@@ -399,6 +416,14 @@ require_once '../app/core/config.php';
                             userLocation.lat, userLocation.lng,
                             assignedLatitude, assignedLongitude
                         );
+                        
+                        console.log('Location check:', {
+                            userLocation: userLocation,
+                            assignedCenter: [assignedLatitude, assignedLongitude],
+                            distance: distance,
+                            radius: assignedRadius,
+                            isInside: distance <= assignedRadius
+                        });
                         
                         if (distance <= assignedRadius) {
                             // User is within geofence, show scanner
@@ -419,8 +444,9 @@ require_once '../app/core/config.php';
                     }
                 );
             } else {
-                // No geofence data, show scanner directly
-                showScanner();
+                // No geofence data available - show warning but allow scanning
+                console.warn('No geofence data available for this attendance event');
+                showGeofenceWarning();
             }
         }
 
@@ -459,6 +485,36 @@ require_once '../app/core/config.php';
             } else {
                 updateGeofenceMap(userLocation);
             }
+        }
+
+        function showGeofenceWarning() {
+            // Show a warning that no geofence is set, but allow scanning
+            const warningDiv = document.createElement('div');
+            warningDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #ff9800;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                font-weight: bold;
+            `;
+            warningDiv.innerHTML = '⚠️ No geofence area set for this event. Location checking disabled.';
+            document.body.appendChild(warningDiv);
+            
+            // Remove warning after 5 seconds
+            setTimeout(() => {
+                if (warningDiv.parentNode) {
+                    warningDiv.parentNode.removeChild(warningDiv);
+                }
+            }, 5000);
+            
+            // Show scanner anyway
+            showScanner();
         }
 
         function initGeofenceMap() {
