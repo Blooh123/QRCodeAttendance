@@ -165,7 +165,7 @@
                                     </button>
                                     <button type="button" onclick="checkAndFixCoordinateSwapping()" 
                                             class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                                        <i class="fas fa-exchange-alt mr-2"></i>Fix Coordinates
+                                        <i class="fas fa-exchange-alt mr-4"></i>Fix Coordinates
                                     </button>
                                 </div>
                                 
@@ -175,12 +175,12 @@
                                 </div>
                                 
                                 <!-- Debug info for coordinates -->
-                                <div class="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
+                                <!-- <div class="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
                                     <strong>Debug Info:</strong><br>
                                     Raw Latitude: <?php echo var_export($attendanceDetails['latitude'] ?? 'NULL', true); ?><br>
                                     Raw Longitude: <?php echo var_export($attendanceDetails['longitude'] ?? 'NULL', true); ?><br>
                                     Raw Radius: <?php echo var_export($attendanceDetails['radius'] ?? 'NULL', true); ?>
-                                </div>
+                                </div> -->
                                 
                                 <!-- Map Preview Section -->
                                 <div class="mt-6">
