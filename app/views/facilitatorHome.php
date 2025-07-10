@@ -46,14 +46,14 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 glass-card">
-        <div class="flex items-center justify-between">
+    <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-4 md:p-6 mb-8 glass-card">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="flex items-center space-x-3">
-                <img src="<?php echo $imageSource; ?>" alt="OSAS Logo" class="w-16 h-16 rounded-lg">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Facilitator Dashboard</h1>
+                <img src="<?php echo $imageSource; ?>" alt="OSAS Logo" class="w-12 h-12 md:w-16 md:h-16 rounded-lg">
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Facilitator Dashboard</h1>
             </div>
-            <button onclick="logout('<?php echo ROOT; ?>')" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
-                <i class="fas fa-sign-out-alt"></i> Logout
+            <button onclick="logout('<?php echo ROOT; ?>')" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 w-full md:w-auto">
+                <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Logout</span>
             </button>
         </div>
     </header>
@@ -84,14 +84,14 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
 
 
     <!-- Attendance Dropdown -->
-    <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+    <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black relative">
         <button id="attendanceDropdownButton"
                 class="w-full sm:w-auto bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-between gap-2">
             <span>View Recent Events</span>
             <i class="fas fa-chevron-down" id="dropdownIcon"></i>
         </button>
         <div id="attendanceDropdownMenu"
-             class="hidden absolute z-10 w-full sm:w-80 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+             class="hidden absolute z-50 w-full sm:w-80 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
             <?php if (empty($attendanceList2)) { ?>
                 <div class="p-4 text-center text-gray-500">
                     No attendance records found.
