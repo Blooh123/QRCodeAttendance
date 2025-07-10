@@ -363,8 +363,22 @@ require_once '../app/core/config.php';
             return isValidLat && isValidLng;
         }
 
-        // Check if geofence data is valid
-        const isGeofenceValid = validateCoordinates(assignedLatitude, assignedLongitude) && 
+        // Check if geofence data is valid - handle coordinate swapping
+        let correctedLatitude = assignedLatitude;
+        let correctedLongitude = assignedLongitude;
+        
+        // If coordinates appear to be swapped (latitude > 90 or longitude < 90), swap them
+        if (assignedLatitude > 90 || assignedLongitude < 90) {
+            console.log('Detected coordinate swapping, correcting...');
+            correctedLatitude = assignedLongitude;
+            correctedLongitude = assignedLatitude;
+            console.log('Corrected coordinates:', {
+                original: { lat: assignedLatitude, lng: assignedLongitude },
+                corrected: { lat: correctedLatitude, lng: correctedLongitude }
+            });
+        }
+        
+        const isGeofenceValid = validateCoordinates(correctedLatitude, correctedLongitude) && 
                                assignedRadius !== null && 
                                assignedRadius !== undefined && 
                                !isNaN(assignedRadius) && 
@@ -439,12 +453,12 @@ require_once '../app/core/config.php';
                         
                         const distance = calculateDistance(
                             userLocation.lat, userLocation.lng,
-                            assignedLatitude, assignedLongitude
+                            correctedLatitude, correctedLongitude
                         );
                         
                         console.log('Location check:', {
                             userLocation: userLocation,
-                            assignedCenter: [assignedLatitude, assignedLongitude],
+                            assignedCenter: [correctedLatitude, correctedLongitude],
                             distance: distance,
                             radius: assignedRadius,
                             isInside: distance <= assignedRadius
@@ -485,7 +499,7 @@ require_once '../app/core/config.php';
                 `Latitude: ${userLocation.lat.toFixed(6)}, Longitude: ${userLocation.lng.toFixed(6)}`;
             
             document.getElementById('assigned-area').innerHTML = 
-                `Center: ${assignedLatitude.toFixed(6)}, ${assignedLongitude.toFixed(6)}<br>Radius: ${assignedRadius} meters`;
+                `Center: ${correctedLatitude.toFixed(6)}, ${correctedLongitude.toFixed(6)}<br>Radius: ${assignedRadius} meters`;
             
             document.getElementById('distance-info').innerHTML = 
                 `${distance.toFixed(2)} meters from the center (${(distance - assignedRadius).toFixed(2)} meters outside the area)`;
@@ -496,7 +510,7 @@ require_once '../app/core/config.php';
             // Initialize map if not already done
             if (!geofenceMap) {
                 console.log('Initializing geofence map with:', {
-                    center: [assignedLatitude, assignedLongitude],
+                    center: [correctedLatitude, correctedLongitude],
                     radius: assignedRadius,
                     userLocation: userLocation
                 });
@@ -585,17 +599,17 @@ require_once '../app/core/config.php';
         }
 
         function initGeofenceMap() {
-            console.log('Creating new map with center:', [assignedLatitude, assignedLongitude]);
+            console.log('Creating new map with center:', [correctedLatitude, correctedLongitude]);
             
             // Initialize the map
-            geofenceMap = L.map('geofence-map').setView([assignedLatitude, assignedLongitude], 15);
+            geofenceMap = L.map('geofence-map').setView([correctedLatitude, correctedLongitude], 15);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(geofenceMap);
             
             // Add geofence circle
-            geofenceCircle = L.circle([assignedLatitude, assignedLongitude], {
+            geofenceCircle = L.circle([correctedLatitude, correctedLongitude], {
                 radius: assignedRadius,
                 color: 'green',
                 fillColor: '#4CAF50',
@@ -603,10 +617,10 @@ require_once '../app/core/config.php';
                 weight: 2
             }).addTo(geofenceMap).bindPopup('Assigned Area<br>Radius: ' + assignedRadius + 'm');
             
-            console.log('Added geofence circle at:', [assignedLatitude, assignedLongitude], 'with radius:', assignedRadius);
+            console.log('Added geofence circle at:', [correctedLatitude, correctedLongitude], 'with radius:', assignedRadius);
             
             // Add center marker
-            L.marker([assignedLatitude, assignedLongitude], {
+            L.marker([correctedLatitude, correctedLongitude], {
                 icon: L.divIcon({
                     className: 'geofence-center-marker',
                     html: '<div style="background-color: green; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>',
@@ -615,7 +629,7 @@ require_once '../app/core/config.php';
                 })
             }).addTo(geofenceMap).bindPopup('Area Center');
             
-            console.log('Added center marker at:', [assignedLatitude, assignedLongitude]);
+            console.log('Added center marker at:', [correctedLatitude, correctedLongitude]);
         }
 
         function updateGeofenceMap(userLocation) {
@@ -641,7 +655,7 @@ require_once '../app/core/config.php';
             // Fit map to show both user and geofence
             const bounds = L.latLngBounds([
                 [userLocation.lat, userLocation.lng],
-                [assignedLatitude, assignedLongitude]
+                [correctedLatitude, correctedLongitude]
             ]);
             geofenceMap.fitBounds(bounds, { padding: [20, 20] });
             
