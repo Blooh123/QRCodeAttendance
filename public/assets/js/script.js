@@ -1,10 +1,73 @@
 const video = document.getElementById("video");
 
+// Loading state management
+function updateLoadingStep(stepNumber, status = 'loading') {
+  const step = document.getElementById(`step-${stepNumber}`);
+  if (!step) return;
+  
+  const icon = step.querySelector('i');
+  const text = step.querySelector('span');
+  
+  if (status === 'completed') {
+    icon.className = 'fas fa-check text-green-500';
+    text.className = 'text-green-600 font-medium';
+  } else if (status === 'error') {
+    icon.className = 'fas fa-times text-red-500';
+    text.className = 'text-red-600 font-medium';
+  }
+}
+
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById('loading-screen');
+  const mainContent = document.getElementById('main-content');
+  
+  if (loadingScreen && mainContent) {
+    loadingScreen.style.opacity = '0';
+    loadingScreen.style.transition = 'opacity 0.5s ease-out';
+    
+    setTimeout(() => {
+      loadingScreen.style.display = 'none';
+      mainContent.classList.remove('hidden');
+    }, 500);
+  }
+}
+
+// Load models with progress tracking
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("../public/assets/js/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("../public/assets/js/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("../public/assets/js/models"),
-]).then(startVideo);
+  faceapi.nets.ssdMobilenetv1.loadFromUri("../public/assets/js/models")
+    .then(() => {
+      updateLoadingStep(1, 'completed');
+      console.log('Face detection model loaded');
+    })
+    .catch(error => {
+      updateLoadingStep(1, 'error');
+      console.error('Error loading face detection model:', error);
+    }),
+  faceapi.nets.faceRecognitionNet.loadFromUri("../public/assets/js/models")
+    .then(() => {
+      updateLoadingStep(2, 'completed');
+      console.log('Face recognition model loaded');
+    })
+    .catch(error => {
+      updateLoadingStep(2, 'error');
+      console.error('Error loading face recognition model:', error);
+    }),
+  faceapi.nets.faceLandmark68Net.loadFromUri("../public/assets/js/models")
+    .then(() => {
+      updateLoadingStep(3, 'completed');
+      console.log('Face landmarks model loaded');
+    })
+    .catch(error => {
+      updateLoadingStep(3, 'error');
+      console.error('Error loading face landmarks model:', error);
+    })
+]).then(() => {
+  // All models loaded, now start video and process faces
+  startVideo();
+}).catch(error => {
+  console.error('Error loading models:', error);
+  alert('Failed to load AI models. Please refresh the page.');
+});
 
 function startVideo() {
   navigator.mediaDevices.getUserMedia({ video: true })
@@ -15,43 +78,61 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptions() {
-  // Use absolute path
-  const res = await fetch('../public/assets/js/labels.php');
-  const labels = await res.json();
+  try {
+    // Use absolute path
+    const res = await fetch('../public/assets/js/labels.php');
+    const labels = await res.json();
 
-  return Promise.all(
-    labels.map(async (label) => {
-      const descriptions = [];
-      for (let i = 1; i <= 3; i++) {
-        const extensions = ['jpg', 'jpeg', 'png'];
-        let found = false;
-        for (const ext of extensions) {
-          try {
-            const img = await faceapi.fetchImage(`../public/assets/js/labels/${label}/${i}.${ext}`);
-            const detections = await faceapi
-              .detectSingleFace(img)
-              .withFaceLandmarks()
-              .withFaceDescriptor();
-            if (detections) {
-              descriptions.push(detections.descriptor);
-              found = true;
-              break;
+    console.log(`Processing ${labels.length} registered faces...`);
+
+    const labeledFaceDescriptors = await Promise.all(
+      labels.map(async (label, index) => {
+        const descriptions = [];
+        for (let i = 1; i <= 3; i++) {
+          const extensions = ['jpg', 'jpeg', 'png'];
+          let found = false;
+          for (const ext of extensions) {
+            try {
+              const img = await faceapi.fetchImage(`../public/assets/js/labels/${label}/${i}.${ext}`);
+              const detections = await faceapi
+                .detectSingleFace(img)
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+              if (detections) {
+                descriptions.push(detections.descriptor);
+                found = true;
+                break;
+              }
+            } catch (e) {
+              // Image does not exist, try next extension
             }
-          } catch (e) {
-            // Image does not exist, try next extension
+          }
+          if (!found) {
+            console.warn(`No valid image found for ${label}/${i} (jpg, jpeg, png)`);
           }
         }
-        if (!found) {
-          console.warn(`No valid image found for ${label}/${i} (jpg, jpeg, png)`);
+        if (descriptions.length === 0) {
+          console.warn(`No valid images for label: ${label}`);
+          return null;
         }
-      }
-      if (descriptions.length === 0) {
-        console.warn(`No valid images for label: ${label}`);
-        return null;
-      }
-      return new faceapi.LabeledFaceDescriptors(label, descriptions);
-    })
-  );
+        return new faceapi.LabeledFaceDescriptors(label, descriptions);
+      })
+    );
+
+    // Update loading step 4 to completed
+    updateLoadingStep(4, 'completed');
+    
+    // Hide loading screen after a short delay
+    setTimeout(() => {
+      hideLoadingScreen();
+    }, 1000);
+
+    return labeledFaceDescriptors;
+  } catch (error) {
+    console.error('Error processing labeled face descriptions:', error);
+    updateLoadingStep(4, 'error');
+    throw error;
+  }
 }
 
 // Fetch the username stored in PHP session
@@ -70,6 +151,13 @@ async function getUsernameFromSession() {
 video.addEventListener("play", async () => {
   let labeledFaceDescriptors = await getLabeledFaceDescriptions();
   labeledFaceDescriptors = labeledFaceDescriptors.filter(d => d); // Remove nulls
+  
+  if (labeledFaceDescriptors.length === 0) {
+    console.warn('No valid face descriptors found');
+    setStatus("⚠️ No registered faces found", "status-warning");
+    return;
+  }
+  
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
 
   const canvas = faceapi.createCanvasFromMedia(video);
