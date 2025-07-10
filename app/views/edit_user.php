@@ -58,17 +58,27 @@
             <div>
                 <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
                 <input name="username" id="username" type="text" value="<?php echo htmlspecialchars($userData[0]['username']); ?>"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
+            </div>
+            <div>
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Full Name</label>
+                <input name="name" id="name" type="text" value="<?php echo htmlspecialchars($userData[0]['name'] ?? ''); ?>"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
+            </div>
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
+                <input name="email" id="email" type="email" value="<?php echo htmlspecialchars($userData[0]['email'] ?? ''); ?>"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
             </div>
             <div>
                 <label for="newPassword" class="block mb-2 text-sm font-medium text-gray-700">New Password</label>
                 <input name="newPassword" id="newPassword" type="password" placeholder="New Password"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
             </div>
             <div>
                 <label for="confirmPassword" class="block mb-2 text-sm font-medium text-gray-700">Confirm Password</label>
                 <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
             </div>
             <div class="flex flex-col gap-3 mt-6">
                 <button type="button" onclick="confirmAction('saveChanges')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
@@ -115,7 +125,7 @@
 <script>
     function confirmAction(action) {
         let messages = {
-            saveChanges: "Are you sure you want to update the username?",
+            saveChanges: "Are you sure you want to update the user information?",
             changePassword: "Are you sure you want to change the password?",
             deleteUser: "This action is irreversible. Are you sure you want to delete this user?"
         };

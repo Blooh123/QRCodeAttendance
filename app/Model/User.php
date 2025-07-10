@@ -193,6 +193,26 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function updatePersonalInfo($id, $name, $email): bool|array
+    {
+        $query = "UPDATE user_personal_info SET name = :name, email = :email WHERE id = :id";
+        $params = [
+            ':id' => $id,
+            ':name' => $name,
+            ':email' => $email
+        ];
+        return $this->query($query, $params);
+    }
+
+    public function getUserDataWithPersonalInfo($id): array
+    {
+        $sql = 'CALL sp_get_user_data_with_personal_info(:id)';
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 
