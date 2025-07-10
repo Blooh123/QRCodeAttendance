@@ -10,6 +10,7 @@ require_once '../app/core/config.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
     <title>QR Code Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <!--    <script src="../node_modules/html5-qrcode/html5-qrcode.min.js"></script>-->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
