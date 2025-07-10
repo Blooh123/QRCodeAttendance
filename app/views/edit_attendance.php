@@ -127,7 +127,7 @@
                             <div class="border-t pt-6">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                                     <i class="fas fa-map-marker-alt text-[#a31d1d] mr-2"></i>
-                                    Geofence Settings (Optional)
+                                    Geofence Settings
                                 </h3>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -168,14 +168,6 @@
                                 <div class="text-sm text-gray-600 mb-4">
                                     <i class="fas fa-info-circle mr-1"></i>
                                     Leave empty to disable geofence restrictions for this attendance event.
-                                </div>
-                                
-                                <!-- Debug info for coordinates -->
-                                <div class="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
-                                    <strong>Debug Info:</strong><br>
-                                    Raw Latitude: <?php echo var_export($attendanceDetails['latitude'] ?? 'NULL', true); ?><br>
-                                    Raw Longitude: <?php echo var_export($attendanceDetails['longitude'] ?? 'NULL', true); ?><br>
-                                    Raw Radius: <?php echo var_export($attendanceDetails['radius'] ?? 'NULL', true); ?>
                                 </div>
                                 
                                 <!-- Map Preview Section -->
