@@ -32,9 +32,9 @@ $routes = [
 
     '/view_records' => '../app/Controller/ViewAttendanceRecord.php',
 
-    // '/' => '../app/Controller/LandingPage.php',
+    '/' => '../app/Controller/LandingPage.php',
 
-    // '/public/login' => '../app/Controller/LoginPage.php',
+    '/public/login' => '../app/Controller/LoginPage.php',
     '/public/logout' => '../app/Controller/Logout.php',
     '/public/logout2' => '../app/Controller/Logout2.php',
     '/public/adminHome' => '../app/Controller/AdminHome.php',
@@ -70,9 +70,9 @@ $routes = [
     '/public/download-report' => '../app/Controller/PDFgeneration.php',
 
     //maintenance Mode
-    '/' => '../app/Controller/MaintenanceController.php',
+    // '/' => '../app/Controller/MaintenanceController.php',
 
-    '/public/login' => '../app/Controller/MaintenanceController.php',
+    // '/public/login' => '../app/Controller/MaintenanceController.php',
     // //login2
     // '/public/login2' => '../app/Controller/LoginPage.php',
     // '/public/logout' => '../app/Controller/MaintenanceController.php',

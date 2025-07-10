@@ -73,6 +73,55 @@ require_once '../app/core/config.php';
             }
         }
 
+        /* Location permission modal styles */
+        #location-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        #location-modal > div {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            color: black;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        #location-modal h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        #location-modal p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        #location-modal .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        #location-modal button {
+            margin: 5px;
+            background-color: #e74c3c;
+        }
+        #location-modal button:hover {
+            background-color: #c0392b;
+        }
+        #location-modal .secondary-btn {
+            background-color: #95a5a6;
+        }
+        #location-modal .secondary-btn:hover {
+            background-color: #7f8c8d;
+        }
+
         /* Responsive styles for the confirmation modal */
         #confirmation-modal {
             display: none;
@@ -120,44 +169,133 @@ require_once '../app/core/config.php';
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Scanner content that will be hidden initially */
+        #scanner-content {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <h1>QR Code Scanner</h1>
 
-<?php if ($isOngoing): ?>
-    <p><strong>Event Name:</strong> <?= $EventName; ?></p>
-    <p><strong>Date Started:</strong> <?= $EventDate; ?></p>
-    <p><strong>Time Started:</strong> <?= $EventTime; ?></p>
-    <div id="reader"></div>
-    <div id="result"></div>
-    <div id="student-info"></div>
+<!-- Location Permission Modal -->
+<div id="location-modal">
+    <div>
+        <div class="icon">📍</div>
+        <h3>Location Permission Required</h3>
+        <p>To use the QR Code Scanner, you need to enable location services. This helps ensure accurate attendance tracking within the designated area.</p>
+        <button id="enable-location-btn">Enable Location</button>
+        <button id="cancel-location-btn" class="secondary-btn">Cancel</button>
+    </div>
+</div>
 
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal">
-        <div>
-            <h3>Confirm Attendance</h3>
-            <img id="student-image" src="" alt="Student Profile">
-            <p id="student-name"></p>
-            <p id="student-program"></p>
+<?php if ($isOngoing): ?>
+    <div id="scanner-content">
+        <p><strong>Event Name:</strong> <?= $EventName; ?></p>
+        <p><strong>Date Started:</strong> <?= $EventDate; ?></p>
+        <p><strong>Time Started:</strong> <?= $EventTime; ?></p>
+        <div id="reader"></div>
+        <div id="result"></div>
+        <div id="student-info"></div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal">
             <div>
-                <button id="confirm-btn">Confirm</button>
-                <button id="cancel-btn">Cancel</button>
+                <h3>Confirm Attendance</h3>
+                <img id="student-image" src="" alt="Student Profile">
+                <p id="student-name"></p>
+                <p id="student-program"></p>
+                <div>
+                    <button id="confirm-btn">Confirm</button>
+                    <button id="cancel-btn">Cancel</button>
+                </div>
             </div>
+        </div>
+
+        <button id="restart-btn" style="display: none;">Scan Again</button>
+        <div class="btn-container">
+            <button id="flip-camera-btn">Flip Camera</button>
+            <a id="back-btn" href="<?php echo ROOT ?>facilitator">Back</a>
         </div>
     </div>
 
-    <button id="restart-btn" style="display: none;">Scan Again</button>
-    <div class="btn-container">
-        <button id="flip-camera-btn">Flip Camera</button>
-        <a id="back-btn" href="<?php echo ROOT ?>facilitator">Back</a>
-    </div>
-
     <script>
-
         let html5QrCode = new Html5Qrcode("reader");
         let currentFacingMode = { facingMode: "environment" }; // Default camera mode
+        let locationPermissionGranted = false;
+
+        // Check location permission on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLocationPermission();
+        });
+
+        function checkLocationPermission() {
+            if (!navigator.geolocation) {
+                showLocationError("Geolocation is not supported by this browser.");
+                return;
+            }
+
+            navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+                if (result.state === 'granted') {
+                    locationPermissionGranted = true;
+                    showScanner();
+                } else if (result.state === 'denied') {
+                    showLocationModal();
+                } else {
+                    // Permission is prompt, try to get location
+                    requestLocationPermission();
+                }
+            }).catch(function(error) {
+                // Fallback for browsers that don't support permissions API
+                requestLocationPermission();
+            });
+        }
+
+        function requestLocationPermission() {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    locationPermissionGranted = true;
+                    showScanner();
+                },
+                function(error) {
+                    showLocationModal();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        }
+
+        function showLocationModal() {
+            document.getElementById('location-modal').style.display = 'flex';
+        }
+
+        function showLocationError(message) {
+            document.getElementById('location-modal').style.display = 'flex';
+            document.querySelector('#location-modal h3').textContent = 'Location Error';
+            document.querySelector('#location-modal p').textContent = message;
+            document.getElementById('enable-location-btn').style.display = 'none';
+        }
+
+        function showScanner() {
+            document.getElementById('location-modal').style.display = 'none';
+            document.getElementById('scanner-content').style.display = 'block';
+            startScanner();
+        }
+
+        // Enable location button handler
+        document.getElementById('enable-location-btn').addEventListener('click', function() {
+            requestLocationPermission();
+        });
+
+        // Cancel location button handler
+        document.getElementById('cancel-location-btn').addEventListener('click', function() {
+            window.location.href = '<?php echo ROOT ?>facilitator';
+        });
 
         function startScanner() {
             document.getElementById("result").textContent = "Waiting for scan...";
@@ -283,9 +421,6 @@ require_once '../app/core/config.php';
             currentFacingMode.facingMode = currentFacingMode.facingMode === "environment" ? "user" : "environment";
             html5QrCode.stop().then(startScanner).catch(console.error);
         });
-
-        // Start the initial scanner
-        startScanner();
     </script>
 <?php else: ?>
     <p style="color: red;">No ongoing attendance event available.</p>

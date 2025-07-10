@@ -246,6 +246,10 @@ foreach ($attendanceList as $attendance) {
         $AttendanceID = htmlspecialchars($attendance['atten_id']);
         $isOngoing = true;
         $onTimeCheck = $attendance['atten_OnTimeCheck'];
+        //get the coordinates
+        $longitude = $attendance['longitude'];
+        $latitude = $attendance['latitude'];
+        $radius = $attendance['radius'];
         break;
     }
 }
@@ -270,7 +274,10 @@ $data = [
     "EventName" => $EventName,
     "EventDate" => $EventDate,
     "EventTime" => $EventTime,
-    "isOngoing" => $isOngoing
+    "isOngoing" => $isOngoing,
+    "longitude" => $longitude,
+    "latitude" => $latitude,
+    "radius" => $radius
 
 ];
 
