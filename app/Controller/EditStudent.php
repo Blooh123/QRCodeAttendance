@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_POST['id'])) {
             $student->updateStudent($_POST['id'], $_POST['name'], $_POST['program'], $_POST['acad_year'], $_POST['email']);
             $user->updateUser($_POST['id'], $_POST['email']);
-            header("Location: " . "edit_student?id=".$_GET['id'] . "&removed=2");
+            // header("Location: " . "edit_student?id=".$_GET['id'] . "&removed=2");
         }
     }
 

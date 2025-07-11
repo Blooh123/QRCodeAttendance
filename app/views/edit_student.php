@@ -72,7 +72,7 @@ $totalSanctionHours = array_sum(array_column($sanctionList, 'sanction_hours'));
             <div class="mb-4">
                 <label class="block text-[#a31d1d] font-semibold">Student ID</label>
                 <input type="text" name="id" id="id" class="w-full border-gray-300 rounded-lg p-2.5 bg-gray-200 cursor-not-allowed"
-                       value="<?php echo htmlspecialchars($studentData['student_id']) ?>" readonly>
+                       value="<?php echo htmlspecialchars($studentData['student_id']) ?>">
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
