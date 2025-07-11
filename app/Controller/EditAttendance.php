@@ -83,6 +83,11 @@ foreach ($requiredAttendeesData as $requirement) {
 $year = $student->getAllYear();
 $programList = $student->getAllProgram();
 
+$bannerBase64 = null;
+if (!empty($attendanceDetails['atten_id'])) {
+    $bannerBase64 = $attendances->getBannerAsBase64($attendanceDetails['atten_id']);
+}
+
 $data = [
     'buttonLabel' => $buttonLabel,
     'buttonClass' => $buttonClass,
@@ -92,7 +97,8 @@ $data = [
     'acad_year' => $acad_year,
     'year' => $year,
     'programList' => $programList,
-    'activityListLog' => $activityListLog
+    'activityListLog' => $activityListLog,
+    'bannerBase64' => $bannerBase64
 ];
 
 $editAttendance = new EditAttendance();

@@ -130,6 +130,15 @@
         <div class="glass-card rounded-2xl p-8 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                 
                 <form method="POST" class="space-y-6" action="<?php echo ROOT?>update_attendance" id="attendanceForm">
+                    <?php if (!empty($bannerBase64)): ?>
+    <div class="mb-6">
+        <label class="block mb-2 text-sm font-medium text-gray-700">
+            <i class="fas fa-image text-[#a31d1d] mr-1"></i>Event Banner
+        </label>
+        <img src="<?php echo htmlspecialchars($bannerBase64); ?>" alt="Event Banner" class="w-full h-48 object-cover rounded-lg border-2 border-gray-300 shadow mb-2">
+    </div>
+<?php endif; ?>
+
                     <div class="grid gap-6 grid-cols-1 lg:grid-cols-2">
                         <!-- Left Column - Basic Info -->
                         <div class="space-y-6">

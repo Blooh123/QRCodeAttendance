@@ -35,18 +35,28 @@ class Attendances
         $result = $this->query2($query, $params);
         if (!$result) return false;
 
+        return $result;
+    }
 
-        // $atten_id = $this->getLastAttendanceId();
-        // $found = false;
-        // // Insert required attendees
-        // foreach ($requiredAttendees as $i => $program) {
-        //     $found = true;
-        //     $acad_year = $year[$i] ?? '';
-        //     print_r($program);
-        //     print_r($acad_year);
-        //     $this->insertRequiredAttendee($atten_id, $program, $acad_year);
-        // }
-
+    public function updateBanner($attenId, $bannerData): bool
+    {
+        try {
+            error_log("Updating banner for attendance ID: " . $attenId);
+            error_log("Banner data size: " . strlen($bannerData));
+            
+            $query = "UPDATE attendance SET banner = :banner WHERE atten_id = :atten_id";
+            $params = [
+                ':banner' => $bannerData,
+                ':atten_id' => $attenId
+            ];
+            $result = $this->query($query, $params);
+            
+            error_log("Banner update result: " . ($result ? 'success' : 'failed'));
+            return $result !== false;
+        } catch (Exception $e) {
+            error_log("Error updating banner: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function getLastAttendanceId() {
@@ -248,6 +258,63 @@ class Attendances
         $stmt->bindParam(":student_id", $id);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getBannerImage($attenId): ?string
+    {
+        try {
+            $query = "SELECT banner FROM attendance WHERE atten_id = :atten_id";
+            $params = [
+                ':atten_id' => $attenId
+            ];
+            $result = $this->query($query, $params);
+            
+            if (is_array($result) && !empty($result) && isset($result[0]['banner'])) {
+                return $result[0]['banner'];
+            }
+            
+            return null;
+        } catch (Exception $e) {
+            error_log("Error getting banner image: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getBannerAsBase64($attenId): ?string
+    {
+        try {
+            $bannerData = $this->getBannerImage($attenId);
+            if ($bannerData) {
+                // Convert to base64 for display
+                $base64 = base64_encode($bannerData);
+                // You might want to detect MIME type or store it separately
+                return "data:image/jpeg;base64,$base64";
+            }
+            return null;
+        } catch (Exception $e) {
+            error_log("Error converting banner to base64: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getAttendanceWithBanner($attenId): ?array
+    {
+        try {
+            $query = "SELECT atten_id, event_name, banner FROM attendance WHERE atten_id = :atten_id";
+            $params = [
+                ':atten_id' => $attenId
+            ];
+            $result = $this->query($query, $params);
+            
+            if (is_array($result) && !empty($result)) {
+                return $result[0];
+            }
+            
+            return null;
+        } catch (Exception $e) {
+            error_log("Error getting attendance with banner: " . $e->getMessage());
+            return null;
+        }
     }
 
 

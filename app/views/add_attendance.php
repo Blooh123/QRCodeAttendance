@@ -80,6 +80,26 @@ require_once '../app/core/config.php';
             border-radius: 6px !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
         }
+        
+        /* Banner preview animations */
+        #banner-preview-container {
+            transition: all 0.3s ease;
+        }
+        
+        .banner-upload-zone {
+            transition: all 0.3s ease;
+        }
+        
+        .banner-upload-zone:hover {
+            border-color: #a31d1d !important;
+            background-color: #fef2f2 !important;
+        }
+        
+        .banner-upload-zone.drag-over {
+            border-color: #a31d1d !important;
+            background-color: #fef2f2 !important;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
@@ -94,7 +114,7 @@ require_once '../app/core/config.php';
 
 <div class="max-w-2xl mx-auto">
     <div class="glass-card rounded-2xl p-8 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-        <form method="POST" action="<?php echo ROOT?>add_attendance" class="space-y-6">
+        <form method="POST" action="<?php echo ROOT?>add_attendance" enctype="multipart/form-data" class="space-y-6">
             <div>
                 <label for="eventName" class="block mb-2 text-sm font-medium text-gray-700">Event Name</label>
                 <input type="text" name="eventName" id="eventName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" placeholder="Event name" required>
@@ -163,6 +183,53 @@ require_once '../app/core/config.php';
                 <div class="mt-2 text-sm text-gray-600">
                     <i class="fas fa-info-circle mr-1"></i>
                     Provide a detailed description including event purpose, requirements, and any important information for attendees.
+                </div>
+            </div>
+            
+            <!-- Banner Image Section -->
+            <div class="border-t pt-6 mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-image text-[#a31d1d] mr-2"></i>
+                    Event Banner
+                </h3>
+                
+                <div class="space-y-4">
+                    <!-- Banner Upload -->
+                    <div>
+                        <label for="banner_image" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-upload text-[#a31d1d] mr-1"></i>Upload Banner Image
+                        </label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="banner_image" class="banner-upload-zone flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                    <p class="mb-2 text-sm text-gray-500">
+                                        <span class="font-semibold">Click to upload</span> or drag and drop
+                                    </p>
+                                    <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 5MB</p>
+                                </div>
+                                <input id="banner_image" name="banner_image" type="file" class="hidden" accept="image/*" onchange="previewBanner(this)" />
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Banner Preview -->
+                    <div id="banner-preview-container" class="hidden">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-eye text-[#a31d1d] mr-1"></i>Banner Preview
+                        </label>
+                        <div class="relative">
+                            <img id="banner-preview" class="w-full h-48 object-cover rounded-lg border-2 border-gray-300" alt="Banner Preview">
+                            <button type="button" onclick="removeBanner()" 
+                                    class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all duration-200">
+                                <i class="fas fa-times text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            This banner will be displayed at the top of the attendance event page.
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -500,6 +567,121 @@ require_once '../app/core/config.php';
                 return false;
             }
         });
+    });
+    
+    // Banner image preview and validation functions
+    function previewBanner(input) {
+        const file = input.files[0];
+        const previewContainer = document.getElementById('banner-preview-container');
+        const preview = document.getElementById('banner-preview');
+        
+        if (file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    title: 'Invalid File Type',
+                    text: 'Please upload a valid image file (JPEG, PNG, GIF, or WebP).',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                input.value = '';
+                return;
+            }
+            
+            // Validate file size (5MB)
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                Swal.fire({
+                    title: 'File Too Large',
+                    text: 'Please upload an image smaller than 5MB.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                input.value = '';
+                return;
+            }
+            
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+                
+                // Add smooth animation
+                previewContainer.style.opacity = '0';
+                previewContainer.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    previewContainer.style.opacity = '1';
+                    previewContainer.style.transform = 'translateY(0)';
+                }, 100);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function removeBanner() {
+        const input = document.getElementById('banner_image');
+        const previewContainer = document.getElementById('banner-preview-container');
+        const preview = document.getElementById('banner-preview');
+        
+        // Clear the file input
+        input.value = '';
+        
+        // Hide preview with animation
+        previewContainer.style.opacity = '0';
+        previewContainer.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            previewContainer.classList.add('hidden');
+            preview.src = '';
+        }, 200);
+    }
+    
+    // Add drag and drop functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.querySelector('label[for="banner_image"]');
+        const fileInput = document.getElementById('banner_image');
+        
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function highlight(e) {
+            dropZone.classList.add('drag-over');
+        }
+        
+        function unhighlight(e) {
+            dropZone.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                fileInput.files = files;
+                previewBanner(fileInput);
+            }
+        }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

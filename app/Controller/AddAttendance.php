@@ -45,13 +45,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $years = array_pad($years, count($programs), '');
         }
 
-
         // Get geofence parameters (optional)
         $latitude = !empty($_POST['latitude']) ? floatval($_POST['latitude']) : null;
         $longitude = !empty($_POST['longitude']) ? floatval($_POST['longitude']) : null;
         $radius = !empty($_POST['radius']) ? intval($_POST['radius']) : null;
 
         $description = !empty($_POST['description']) ? $_POST['description'] : '';
+        
+        // Handle banner image upload
+        $banner = null;
+        if (isset($_FILES['banner_image']) && $_FILES['banner_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadedFile = $_FILES['banner_image'];
+            
+            // Debug: Check file upload
+            error_log("File upload detected: " . print_r($uploadedFile, true));
+            
+            // Validate file type
+            $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            $fileType = mime_content_type($uploadedFile['tmp_name']);
+            
+            error_log("File type: " . $fileType);
+            
+            if (!in_array($fileType, $allowedTypes)) {
+                echo "<script>alert('Invalid file type. Please upload a valid image (JPEG, PNG, GIF, or WebP).');</script>";
+                $attendance = new AddAttendance();
+                $attendance->index($data);
+                return;
+            }
+            
+            // Validate file size (max 5MB)
+            $maxSize = 5 * 1024 * 1024; // 5MB
+            if ($uploadedFile['size'] > $maxSize) {
+                echo "<script>alert('File size too large. Please upload an image smaller than 5MB.');</script>";
+                $attendance = new AddAttendance();
+                $attendance->index($data);
+                return;
+            }
+            
+            // Read image data directly (same as StudentProfile)
+            $banner = file_get_contents($uploadedFile['tmp_name']);
+            
+            // Debug: Check banner data
+            error_log("Banner data size: " . strlen($banner));
+            error_log("Banner data first 100 chars: " . substr(bin2hex($banner), 0, 100));
+        } else {
+            error_log("No file upload or upload error: " . ($_FILES['banner_image']['error'] ?? 'no file'));
+        }
         
         // Validate required fields
         if (empty($_POST['eventName']) || empty($_POST['sanction']) || empty($description)) {
@@ -63,6 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         
         $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius, $description);
         $last_id = $attendance->getLastAttendanceId();
+        
+        // Update banner if image was uploaded
+        if ($banner && $last_id) {
+            if (!$attendance->updateBanner($last_id, $banner)) {
+                error_log("Failed to update banner for attendance ID: " . $last_id);
+            }
+        }
         
         foreach ($programs as $i => $program) {
             $acad_year = $years[$i] ?? '';
