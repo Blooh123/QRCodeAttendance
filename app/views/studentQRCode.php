@@ -118,12 +118,48 @@ $name = htmlspecialchars($studentData['name'] ?? 'N/A');
 
                         downloadBtn.style.display = "inline-block";
                         downloadBtn.addEventListener("click", function () {
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = "Student_QRCode.png";
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
+                            // Canvas size
+                            const canvasWidth = 350;
+                            const canvasHeight = 420;
+                            const canvas = document.createElement('canvas');
+                            canvas.width = canvasWidth;
+                            canvas.height = canvasHeight;
+                            const ctx = canvas.getContext('2d');
+
+                            // White background
+                            ctx.fillStyle = "#fff";
+                            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                            // Header
+                            ctx.font = "bold 22px Poppins, sans-serif";
+                            ctx.fillStyle = "#a31d1d";
+                            ctx.textAlign = "center";
+                            ctx.fillText("Official QR Code", canvasWidth / 2, 40);
+
+                            // Draw QR code image
+                            const qrImg = new window.Image();
+                            qrImg.onload = function () {
+                                ctx.drawImage(qrImg, (canvasWidth - 250) / 2, 60, 250, 250);
+
+                                // Name
+                                ctx.font = "bold 18px Poppins, sans-serif";
+                                ctx.fillStyle = "#222";
+                                ctx.fillText(<?php echo json_encode($name); ?>, canvasWidth / 2, 340);
+
+                                // ID number
+                                ctx.font = "16px Poppins, sans-serif";
+                                ctx.fillStyle = "#444";
+                                ctx.fillText("ID: " + <?php echo json_encode($student_id); ?>, canvasWidth / 2, 370);
+
+                                // Download
+                                const a = document.createElement('a');
+                                a.href = canvas.toDataURL('image/png');
+                                a.download = "Student_QRCode.png";
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            };
+                            qrImg.src = url;
                         });
                     })
                     .catch(error => console.error("QR Code generation error:", error));
