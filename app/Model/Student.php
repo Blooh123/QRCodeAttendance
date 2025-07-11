@@ -124,13 +124,12 @@ class Student
         return $this->query($query, $params);
     }
 
-    public function updateStudent($id, $f_name, $l_name, $program, $acad_year, $email, $phone): bool|array
+    public function updateStudent($id, $name, $program, $acad_year, $email, $phone): bool|array
     {
-        $query = "UPDATE students SET f_name = :f_name, l_name = :l_name, program = :program, acad_year = :year, email = :email, contact_num = :contact WHERE student_id = :id";
+        $query = "UPDATE students SET name = :name, program = :program, acad_year = :year, email = :email, contact_num = :contact WHERE student_id = :id";
         $params = [
             ':id' => $id,
-            ':f_name' => $f_name,
-            ':l_name' => $l_name,
+            ':name' => $name,
             ':program' => $program,
             ':year' => $acad_year,
             ':contact' => $phone,
