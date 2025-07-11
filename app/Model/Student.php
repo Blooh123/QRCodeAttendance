@@ -132,7 +132,6 @@ class Student
             ':name' => $name,
             ':program' => $program,
             ':year' => $acad_year,
-            ':contact' => $phone,
             ':email' => $email
         ];
         return $this->query($query, $params);
