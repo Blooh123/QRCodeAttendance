@@ -76,7 +76,7 @@
                     <form action="" method="POST">
                         <input type="text" id="username" name="username"
                                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#a31d1d] focus:outline-none"
-                               value="<?php echo htmlspecialchars($userData[0]['username']); ?>">
+                               value="<?php echo htmlspecialchars($username); ?>">
                         <button type="submit"
                                 class="mt-4 w-full bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                             <i class="fas fa-save"></i> Save
