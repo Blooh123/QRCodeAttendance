@@ -136,10 +136,35 @@ $name = htmlspecialchars($studentData['name'] ?? 'N/A');
                             ctx.textAlign = "center";
                             ctx.fillText("Official QR Code", canvasWidth / 2, 40);
 
-                            // Draw QR code image
+                            // Draw QR code with border
                             const qrImg = new window.Image();
                             qrImg.onload = function () {
-                                ctx.drawImage(qrImg, (canvasWidth - 250) / 2, 60, 250, 250);
+                                // Border
+                                const qrX = (canvasWidth - 250) / 2;
+                                const qrY = 60;
+                                const qrSize = 250;
+                                const borderRadius = 28;
+                                const borderWidth = 6;
+
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(qrX + borderRadius, qrY);
+                                ctx.lineTo(qrX + qrSize - borderRadius, qrY);
+                                ctx.quadraticCurveTo(qrX + qrSize, qrY, qrX + qrSize, qrY + borderRadius);
+                                ctx.lineTo(qrX + qrSize, qrY + qrSize - borderRadius);
+                                ctx.quadraticCurveTo(qrX + qrSize, qrY + qrSize, qrX + qrSize - borderRadius, qrY + qrSize);
+                                ctx.lineTo(qrX + borderRadius, qrY + qrSize);
+                                ctx.quadraticCurveTo(qrX, qrY + qrSize, qrX, qrY + qrSize - borderRadius);
+                                ctx.lineTo(qrX, qrY + borderRadius);
+                                ctx.quadraticCurveTo(qrX, qrY, qrX + borderRadius, qrY);
+                                ctx.closePath();
+                                ctx.lineWidth = borderWidth;
+                                ctx.strokeStyle = "#a31d1d";
+                                ctx.stroke();
+                                ctx.restore();
+
+                                // QR code
+                                ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
                                 // Name
                                 ctx.font = "bold 18px Poppins, sans-serif";
