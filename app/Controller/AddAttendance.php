@@ -132,7 +132,7 @@ class AddAttendance extends Controller
         foreach ($students as $studentData) {
             try {
                 $mail->clearAddresses();
-                $studentName = $studentData['f_name'] . ' ' . $studentData['l_name'];
+                $studentName = $studentData['name'];
                 $mail->addAddress($studentData['email'], $studentName);
                 
                 if ($mail->send()) {
@@ -319,7 +319,7 @@ class AddAttendance extends Controller
                     $mail->clearAddresses();
                     
                     // Add student as recipient
-                    $studentName = $studentData['f_name'] . ' ' . $studentData['l_name'];
+                    $studentName = $studentData['name'];
                     $mail->addAddress($studentData['email'], $studentName);
                     
                     // Send email
