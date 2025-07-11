@@ -166,6 +166,50 @@ class Student
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    public function getStudentsByProgramAndYear($programs, $years): array
+    {
+        $students = [];
+        
+        foreach ($programs as $i => $program) {
+            $year = $years[$i] ?? '';
+            
+            if ($program === 'AllStudents') {
+                // Get all students
+                $query = "SELECT email, name, program, acad_year FROM students";
+                $stmt = $this->connect()->prepare($query);
+                $stmt->execute();
+            } else {
+                // Get students by specific program and year
+                if (!empty($year)) {
+                    $query = "SELECT email, name, program, acad_year FROM students WHERE program = :program AND acad_year = :year";
+                    $stmt = $this->connect()->prepare($query);
+                    $stmt->bindParam(':program', $program);
+                    $stmt->bindParam(':year', $year);
+                } else {
+                    $query = "SELECT email, name, program, acad_year FROM students WHERE program = :program";
+                    $stmt = $this->connect()->prepare($query);
+                    $stmt->bindParam(':program', $program);
+                }
+                $stmt->execute();
+            }
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $students = array_merge($students, $result);
+        }
+        
+        // Remove duplicates based on email
+        $uniqueStudents = [];
+        $seenEmails = [];
+        foreach ($students as $student) {
+            if (!in_array($student['email'], $seenEmails)) {
+                $uniqueStudents[] = $student;
+                $seenEmails[] = $student['email'];
+            }
+        }
+        
+        return $uniqueStudents;
+    }
     // Update profile picture in database
     public function updateProfilePicture($student_id, $imageData): bool
     {

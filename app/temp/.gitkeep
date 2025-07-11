@@ -1,0 +1,2 @@
+# This file ensures the temp directory is created in git
+# Email queue files will be stored here temporarily 
