@@ -85,28 +85,77 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
 
     <!-- Attendance Dropdown -->
     <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black relative">
-        <button id="attendanceDropdownButton"
-                class="w-full sm:w-auto bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-between gap-2">
-            <span>View Recent Events</span>
-            <i class="fas fa-chevron-down" id="dropdownIcon"></i>
-        </button>
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
+                <i class="fas fa-calendar-alt"></i> Recent Events
+            </h2>
+            <button id="attendanceDropdownButton"
+                    class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-eye"></i>
+                <span>View Events</span>
+                <i class="fas fa-chevron-down transition-transform duration-200" id="dropdownIcon"></i>
+            </button>
+        </div>
+        
         <div id="attendanceDropdownMenu"
-             class="hidden absolute z-50 w-full sm:w-80 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+             class="hidden bg-white border border-gray-200 rounded-xl shadow-lg max-h-80 overflow-y-auto">
             <?php if (empty($attendanceList2)) { ?>
-                <div class="p-4 text-center text-gray-500">
-                    No attendance records found.
+                <div class="p-8 text-center">
+                    <div class="text-gray-400 mb-4">
+                        <i class="fas fa-calendar-times text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-600 mb-2">No Events Found</h3>
+                    <p class="text-gray-500 text-sm">No recent attendance events are available.</p>
                 </div>
             <?php } else { ?>
-                <?php foreach ($attendanceList2 as $attendance) { ?>
-                    <a href="<?php echo ROOT ?>view_records?id=<?php echo htmlspecialchars($attendance['atten_id']) ?>&eventName=<?php echo htmlspecialchars($attendance['event_name']); ?>"
-                       class="flex items-center justify-between p-3 border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200">
-                        <div>
-                            <p class="text-sm font-semibold text-[#a31d1d]"><?php echo htmlspecialchars($attendance['event_name']); ?></p>
-                            <p class="text-xs text-gray-600"><?php echo htmlspecialchars($attendance['date_created']); ?></p>
-                        </div>
-                        <i class="fas fa-eye text-[#a31d1d] hover:text-[#8a1818]" title="View Details"></i>
-                    </a>
-                <?php } ?>
+                <div class="p-4">
+                    <div class="text-sm font-medium text-gray-600 mb-3 px-2">
+                        <?= count($attendanceList2) ?> Recent Event<?= count($attendanceList2) !== 1 ? 's' : '' ?>
+                    </div>
+                    <div class="space-y-2">
+                        <?php foreach ($attendanceList2 as $index => $attendance) { ?>
+                            <a href="<?php echo ROOT ?>view_records?id=<?php echo htmlspecialchars($attendance['atten_id']) ?>&eventName=<?php echo htmlspecialchars($attendance['event_name']); ?>"
+                               class="group block p-4 rounded-xl border border-gray-200 hover:border-[#a31d1d] hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-200 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <div class="bg-[#a31d1d] text-white p-2 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                                            <i class="fas fa-calendar-check text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-semibold text-[#a31d1d] group-hover:text-[#8a1818] transition-colors duration-200 truncate">
+                                                <?php echo htmlspecialchars($attendance['event_name']); ?>
+                                            </h4>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <i class="fas fa-clock text-xs text-gray-500"></i>
+                                                <span class="text-xs text-gray-600">
+                                                    <?php 
+                                                    $date = new DateTime($attendance['date_created']);
+                                                    echo $date->format('M j, Y \a\t g:i A');
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
+                                            Active
+                                        </span>
+                                        <i class="fas fa-arrow-right text-gray-400 group-hover:text-[#a31d1d] group-hover:translate-x-1 transition-all duration-200"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php } ?>
+                    </div>
+                    
+                    <!-- View All Events Link -->
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <a href="<?php echo ROOT ?>adminHome?page=Attendance" 
+                           class="block text-center text-[#a31d1d] hover:text-[#8a1818] font-medium text-sm transition-colors duration-200">
+                            <i class="fas fa-list mr-1"></i>
+                            View All Events
+                        </a>
+                    </div>
+                </div>
             <?php } ?>
         </div>
     </div>
@@ -118,16 +167,14 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
 
         dropdownButton.addEventListener('click', () => {
             dropdownMenu.classList.toggle('hidden');
-            dropdownIcon.classList.toggle('fa-chevron-down');
-            dropdownIcon.classList.toggle('fa-chevron-up');
+            dropdownIcon.classList.toggle('rotate-180');
         });
 
         // Close dropdown when clicking outside
         document.addEventListener('click', (event) => {
             if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
                 dropdownMenu.classList.add('hidden');
-                dropdownIcon.classList.add('fa-chevron-down');
-                dropdownIcon.classList.remove('fa-chevron-up');
+                dropdownIcon.classList.remove('rotate-180');
             }
         });
 
@@ -135,8 +182,18 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
         dropdownMenu.querySelectorAll('a').forEach(item => {
             item.addEventListener('click', () => {
                 dropdownMenu.classList.add('hidden');
-                dropdownIcon.classList.add('fa-chevron-down');
-                dropdownIcon.classList.remove('fa-chevron-up');
+                dropdownIcon.classList.remove('rotate-180');
+            });
+        });
+
+        // Add hover effect for better UX
+        dropdownMenu.querySelectorAll('a').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateX(4px)';
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0)';
             });
         });
     </script>
