@@ -162,15 +162,15 @@ class Attendances
             }
         }
 
-        $sql = "CALL sp_get_student_attendance_record(?, ?, ?, ?, ?)";
-        $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?, ?)";
+        $sql = "CALL sp_get_student_attendance_record(?, ?, ?, ?)";
+        $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?)";
 
         try {
             if (!in_array('AllStudents', $programs)) {
                 $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
-                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $searchQuery, $programList, $eventID]);
+                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $programList, $eventID]);
             } else {
-                $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $searchQuery, $eventID]);
+                $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
             }
 
             // Ensure query result is an array
