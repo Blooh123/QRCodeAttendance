@@ -54,7 +54,24 @@ $viewNotAttended = $_GET['view'] ?? '';
         }
         
         @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            @page {
+                size: landscape;
+                margin: 10mm;
+            }
+            
             .no-print, .no-print * {
+                display: none !important;
+            }
+            
+            /* Hide filter and search sections */
+            .filter-section,
+            .search-section,
+            form {
                 display: none !important;
             }
             
@@ -63,6 +80,8 @@ $viewNotAttended = $_GET['view'] ?? '';
                 padding: 0 !important;
                 margin: 0 !important;
                 font-family: 'Arial', sans-serif !important;
+                font-size: 10px !important;
+                line-height: 1.2 !important;
             }
             
             .glass-card {
@@ -71,17 +90,19 @@ $viewNotAttended = $_GET['view'] ?? '';
                 border: 1px solid #ddd !important;
                 box-shadow: none !important;
                 outline: none !important;
+                margin: 0 !important;
+                padding: 10px !important;
             }
             
             header {
                 background: white !important;
                 border-bottom: 2px solid #333 !important;
-                margin-bottom: 20px !important;
+                margin-bottom: 15px !important;
             }
             
             h1, h2, h3 {
                 color: black !important;
-                margin-bottom: 10px !important;
+                margin-bottom: 8px !important;
             }
             
             .text-[#a31d1d] {
@@ -96,28 +117,28 @@ $viewNotAttended = $_GET['view'] ?? '';
             .grid {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
-                gap: 15px !important;
-                margin-bottom: 20px !important;
+                gap: 10px !important;
+                margin-bottom: 15px !important;
             }
             
             .hover-card {
                 transform: none !important;
                 box-shadow: none !important;
                 border: 1px solid #ddd !important;
-                padding: 15px !important;
+                padding: 10px !important;
             }
             
             /* Table Styles */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                font-size: 10px !important;
-                margin-top: 20px !important;
+                font-size: 9px !important;
+                margin-top: 15px !important;
             }
             
             th, td {
                 border: 1px solid #333 !important;
-                padding: 6px 8px !important;
+                padding: 4px 6px !important;
                 text-align: left !important;
                 vertical-align: top !important;
             }
@@ -126,11 +147,11 @@ $viewNotAttended = $_GET['view'] ?? '';
                 background-color: #f0f0f0 !important;
                 color: black !important;
                 font-weight: bold !important;
-                font-size: 11px !important;
+                font-size: 10px !important;
             }
             
             td {
-                font-size: 10px !important;
+                font-size: 9px !important;
                 color: black !important;
             }
             
@@ -149,24 +170,19 @@ $viewNotAttended = $_GET['view'] ?? '';
                 display: none !important;
             }
             
-            /* Form elements */
-            form {
-                display: none !important;
-            }
-            
             /* Hide scrollbars */
             .hide-scrollbar {
                 overflow: visible !important;
             }
             
             /* Page breaks */
-            tr:nth-child(15n) {
+            tr:nth-child(20n) {
                 page-break-after: always !important;
             }
             
             /* Ensure proper spacing */
             .space-y-6 > * + * {
-                margin-top: 20px !important;
+                margin-top: 15px !important;
             }
             
             /* Remove shadows and effects */
@@ -176,19 +192,19 @@ $viewNotAttended = $_GET['view'] ?? '';
             
             /* Ensure text is readable */
             .text-sm {
-                font-size: 10px !important;
+                font-size: 9px !important;
             }
             
             .text-xl {
-                font-size: 16px !important;
+                font-size: 14px !important;
             }
             
             .text-2xl {
-                font-size: 18px !important;
+                font-size: 16px !important;
             }
             
             .text-3xl {
-                font-size: 20px !important;
+                font-size: 18px !important;
             }
             
             /* Remove rounded corners */
@@ -220,19 +236,13 @@ $viewNotAttended = $_GET['view'] ?? '';
                 background-color: white !important;
             }
             
-            /* Ensure proper page margins */
-            @page {
-                margin: 1in;
-                size: A4;
-            }
-            
             /* Header for each page */
             .print-header {
                 display: block !important;
                 text-align: center !important;
-                margin-bottom: 20px !important;
+                margin-bottom: 15px !important;
                 border-bottom: 2px solid #333 !important;
-                padding-bottom: 10px !important;
+                padding-bottom: 8px !important;
             }
             
             .print-header.hidden {
@@ -243,11 +253,11 @@ $viewNotAttended = $_GET['view'] ?? '';
             .print-footer {
                 display: block !important;
                 text-align: center !important;
-                margin-top: 20px !important;
+                margin-top: 15px !important;
                 font-size: 8px !important;
                 color: #666 !important;
                 border-top: 1px solid #ddd !important;
-                padding-top: 10px !important;
+                padding-top: 8px !important;
             }
             
             .print-footer.hidden {
