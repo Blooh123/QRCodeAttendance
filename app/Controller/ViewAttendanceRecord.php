@@ -28,9 +28,12 @@ $attendance = new Attendances();
 $student = new Student();
 
 $attendanceDetails = $attendance->getAttendanceDetails($_GET['id'], $_GET['eventName']);
-$requireProgram = $attendanceDetails['required_attendees'];
 $EventName = $attendanceDetails['event_name'];
 $EventID = $attendanceDetails['atten_id'];
+
+// Get required attendees using the proper function
+$requiredAttendees = $attendance->getRequiredAttendees($EventID);
+$requireProgram = $requiredAttendees;
 
 $totalStudents = $student->getUserCount();
 $attendedCount = $attendance->countAttendanceRecord($attendanceDetails['atten_id']);
@@ -44,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Filter by program and year
         $attendanceList = $attendance->AttendanceRecord($_POST['program'], $_POST['year'], $_GET['id']);
     } elseif (isset($_POST['search']) && !empty($_POST['search'])) {
-        // Search functionality
+        // Search functionality - use required attendees from database
         $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], $_POST['search']);
     } else {
         // Default: show all students for the event
@@ -59,9 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $attendanceList = [];
     }
 } else {
-    // Default: show all students for the event when page loads
-    // Use 'AllStudents' to show all students regardless of program requirements
-    $attendanceList = $attendance->getAttendanceRecord(['AllStudents'], $_GET['id'], '');
+    // Default: show students based on required attendees when page loads
+    $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], '');
 }
 
 $data = [
