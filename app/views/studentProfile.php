@@ -131,7 +131,30 @@ require_once '../app/core/imageConfig.php';
             <?php endif; ?>
 
             <!-- Change Password Card -->
-            <div class="mt-8 glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+            <!-- Security Header and Developer Info Dropdown -->
+            <div class="mt-8">
+                <h4 class="text-2xl font-bold text-[#a31d1d] mb-4">Security</h4>
+                <!-- Developer Info Dropdown -->
+                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mb-6">
+                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-6 py-4 text-lg font-semibold text-[#a31d1d] focus:outline-none">
+                        <span>Developer Info</span>
+                        <svg id="devInfoChevron" class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div id="devInfoPanel" class="px-6 pb-6 pt-0 hidden">
+                        <div class="flex flex-col md:flex-row items-center gap-6 mt-4">
+                            <img src="<?php echo ROOT ?>assets/images/Default.png" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
+                            <div>
+                                <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
+                                <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">BSIT</span></div>
+                                <!-- skills -->
+                                <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer</span></div>
+                                <div class="text-gray-600 text-base">A passionate developer dedicated to building modern, user-friendly, and robust web applications. Always striving for clean code and great user experience.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                 <h4 class="text-xl font-bold text-[#a31d1d] mb-6">Change Password</h4>
                 <form method="POST" class="space-y-4">
                     <div class="space-y-4">
@@ -280,6 +303,17 @@ require_once '../app/core/imageConfig.php';
                 setTimeout(() => {
                     popup.style.display = 'none';
                 }, 3000);
+            }
+
+            // Developer Info Dropdown
+            const devInfoToggle = document.getElementById('devInfoToggle');
+            const devInfoPanel = document.getElementById('devInfoPanel');
+            const devInfoChevron = document.getElementById('devInfoChevron');
+            if (devInfoToggle && devInfoPanel && devInfoChevron) {
+                devInfoToggle.addEventListener('click', function () {
+                    devInfoPanel.classList.toggle('hidden');
+                    devInfoChevron.classList.toggle('rotate-180');
+                });
             }
         });
     </script>
