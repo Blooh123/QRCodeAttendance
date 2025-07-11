@@ -5,7 +5,7 @@ global $imageSource, $imageSource4, $imageSource2;
 require_once '../app/core/imageConfig.php'; // Include your configuration file
 
 $page = $_GET['page'] ?? 'StudentProfile'; // Default to 'studentProfile'
-$allowed_pages = ['StudentProfile', 'StudentQRCode', 'StudentReport'];
+$allowed_pages = ['StudentProfile', 'StudentQRCode', 'StudentReport', 'Event'];
 
 // Prevent loading invalid files
 if (!in_array($page, $allowed_pages)) {
@@ -127,6 +127,10 @@ if (!in_array($page, $allowed_pages)) {
                        class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'StudentQRCode' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
                         QR Code
                     </a>
+                    <a href="?page=Event" 
+                       class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'Event' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
+                        Events
+                    </a>
                     <a href="?page=StudentReport" 
                        class="nav-link text-lg font-semibold transition-colors <?php echo $page === 'StudentReport' ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
                         Reports
@@ -177,6 +181,25 @@ if (!in_array($page, $allowed_pages)) {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                             </svg>
                             <span>QR Code</span>
+                        </div>
+                    </a>
+                    <a href="?page=Event"
+                       class="mb-1 px-5 py-3 rounded-xl text-lg font-semibold transition-all duration-200
+                          <?php echo $page === 'Event' 
+                            ? 'bg-[#a31d1d] text-white shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black' 
+                            : 'bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black'; ?>">
+                        <div class="flex items-center gap-3">
+                            <!-- SVG Calendar Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-6 w-6"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="<?php echo $page === 'Event' ? '#fff' : '#a31d1d'; ?>"
+                                 stroke-width="2">
+                              <rect x="3" y="8" width="18" height="13" rx="2" />
+                              <path d="M16 2v4M8 2v4M3 10h18" />
+                            </svg>
+                            <span>Events</span>
                         </div>
                     </a>
                     <a href="?page=StudentReport"

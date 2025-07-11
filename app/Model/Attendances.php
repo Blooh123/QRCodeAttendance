@@ -116,7 +116,7 @@ class Attendances
 
     function getAllAttendance(): array
     {
-        $query = "SELECT * FROM viewattendance ORDER BY date_created DESC";
+        $query = "SELECT * FROM attendance ORDER BY date_created DESC";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
