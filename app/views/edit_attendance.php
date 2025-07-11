@@ -212,7 +212,7 @@
                             <div class="border-t pt-6">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                                     <i class="fas fa-map-marker-alt text-[#a31d1d] mr-2"></i>
-                                    Geofence Settings (Optional)
+                                    Geofence Settings
                                 </h3>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
