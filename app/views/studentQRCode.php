@@ -136,31 +136,19 @@ $name = htmlspecialchars($studentData['name'] ?? 'N/A');
                             ctx.textAlign = "center";
                             ctx.fillText("Official QR Code", canvasWidth / 2, 40);
 
-                            // Draw QR code with border
+                            // Draw QR code with rectangular border
                             const qrImg = new window.Image();
                             qrImg.onload = function () {
-                                // Border
+                                // Border (rectangle, no radius)
                                 const qrX = (canvasWidth - 250) / 2;
                                 const qrY = 60;
                                 const qrSize = 250;
-                                const borderRadius = 28;
                                 const borderWidth = 6;
 
                                 ctx.save();
-                                ctx.beginPath();
-                                ctx.moveTo(qrX + borderRadius, qrY);
-                                ctx.lineTo(qrX + qrSize - borderRadius, qrY);
-                                ctx.quadraticCurveTo(qrX + qrSize, qrY, qrX + qrSize, qrY + borderRadius);
-                                ctx.lineTo(qrX + qrSize, qrY + qrSize - borderRadius);
-                                ctx.quadraticCurveTo(qrX + qrSize, qrY + qrSize, qrX + qrSize - borderRadius, qrY + qrSize);
-                                ctx.lineTo(qrX + borderRadius, qrY + qrSize);
-                                ctx.quadraticCurveTo(qrX, qrY + qrSize, qrX, qrY + qrSize - borderRadius);
-                                ctx.lineTo(qrX, qrY + borderRadius);
-                                ctx.quadraticCurveTo(qrX, qrY, qrX + borderRadius, qrY);
-                                ctx.closePath();
                                 ctx.lineWidth = borderWidth;
                                 ctx.strokeStyle = "#a31d1d";
-                                ctx.stroke();
+                                ctx.strokeRect(qrX, qrY, qrSize, qrSize);
                                 ctx.restore();
 
                                 // QR code
