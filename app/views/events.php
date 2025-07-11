@@ -161,7 +161,7 @@
                                 <?php if (!empty($event['description'])): ?>
                                     <div class="event-description mb-2"><?php echo $event['description']; ?></div>
                                 <?php endif; ?>
-                                <a href="?page=EventDetails&id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">View Details</a>
+                                <a href="?page=EventDetails&id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">Apply for Excuse</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
