@@ -35,16 +35,12 @@
             <form method="POST" class="p-4 md:p-5" action="<?php echo ROOT ?>add_student" enctype="multipart/form-data">
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
-                        <label for="FirstName" class="block mb-2 text-sm font-medium text-gray-700">First name</label>
-                        <input type="text" name="first_name" id="FirstName" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="First name" >
-                        <label for="LastName" class="block mb-2 text-sm font-medium text-gray-700">Last name</label>
-                        <input type="text" name="last_name" id="LastName" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Last name" >
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" name="name" id="name" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Name" >
                         <label for="StudentID" class="block mb-2 text-sm font-medium text-gray-700">Student ID</label>
                         <input type="text" name="student_id" id="StudentID" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Student ID" >
                         <label for="Email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
                         <input type="email" name="email" id="Email" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Email" >
-                        <label for="Contact" class="block mb-2 text-sm font-medium text-gray-700">Contact</label>
-                        <input type="text" name="contact" id="Contact" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contact number" >
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="program" class="block mb-2 text-sm font-medium text-gray-700">Program</label>

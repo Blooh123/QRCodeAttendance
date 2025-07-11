@@ -34,12 +34,10 @@ class AddStudent extends \Controller
                         } else {
                             $student->insertStudent(
                                 $_POST['student_id'],
-                                $_POST['first_name'],
-                                $_POST['last_name'],
+                                $_POST['name'],
                                 $_POST['program'],
                                 $_POST['year'],
-                                $_POST['email'],
-                                $_POST['contact']
+                                $_POST['email']
                             );
                             $qrcode = new QrCode();
                             $qrCode = $qrcode->generateQRCode($_POST['student_id']);

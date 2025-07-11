@@ -125,13 +125,13 @@ try {
 
 // Set cookie for client-side access
 $userSessions = [
-    [
-        'role' => $_SESSION['role'],
-        'username' => $_SESSION['username'],
-        'user_id' => $_SESSION['user_id'],
-        'auth_token' => $_SESSION['auth_token']
-    ]
-];
+                        [
+                            'role' => $_SESSION['role'],
+                            'username' => $_SESSION['username'],
+                            'user_id' => $_SESSION['user_id'],
+                            'auth_token' => $_SESSION['auth_token']
+                        ]
+                    ];
 
 $cookieExpiry = time() + 60 * 60 * 24 * 2; // 2 days
 

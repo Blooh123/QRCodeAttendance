@@ -1,5 +1,9 @@
 <?php
-require_once '../app/core/config.php';
+
+// Get the project root directory
+$projectRoot = dirname(dirname(__DIR__));
+require_once $projectRoot . '/app/core/config.php';
+
 Trait Database
 {
     public function connect(): PDO

@@ -1,7 +1,11 @@
 <?php
 
 namespace Model;
-require_once '../app/core/Database.php';
+
+// Get the project root directory
+$projectRoot = dirname(dirname(__DIR__));
+require_once $projectRoot . '/app/core/Database.php';
+
 use Database;
 use PDO;
 

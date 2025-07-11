@@ -1,7 +1,11 @@
 <?php
 
 namespace Model;
-require_once '../app/core/Database.php';
+
+// Get the project root directory
+$projectRoot = dirname(dirname(__DIR__));
+require_once $projectRoot . '/app/core/Database.php';
+
 use PDO;
 
 class Student
@@ -103,21 +107,19 @@ class Student
         return $this->query($query, $params);
     }
 
-    public function insertStudent($id, $f_name, $l_name, $program, $acad_year, $email, $phone): bool|array
+    public function insertStudent($id, $f_name, $program, $acad_year, $email): bool|array
     {
         // Define the SQL query
-        $query = "INSERT INTO students (student_id, f_name, l_name, program, acad_year, email, contact_num) 
-              VALUES (:id, :f_name, :l_name, :program, :acad_year, :email, :phone)";
+        $query = "INSERT INTO students (student_id, name, program, acad_year, email, notified) 
+              VALUES (:id, :name, :program, :acad_year, :email, 0)";
 
         // Define the parameters
         $params = [
             ':id' => $id,
-            ':f_name' => $f_name,
-            ':l_name' => $l_name,
+            ':name' => $f_name,
             ':program' => $program,
             ':acad_year' => $acad_year, // Added missing parameter
-            ':email' => $email,
-            ':phone' => $phone
+            ':email' => $email
         ];
 
         // Execute the query
