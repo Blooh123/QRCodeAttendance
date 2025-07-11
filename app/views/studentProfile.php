@@ -171,13 +171,12 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                         <span>Developer Info</span>
                         <svg id="devInfoChevron" class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                     </button>
-                    <div id="devInfoPanel" class="px-6 pb-6 pt-0 hidden">
+                    <div id="devInfoPanel" class="px-6 pb-6 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none">
                         <div class="flex flex-col md:flex-row items-center gap-6 mt-4">
                             <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
-                            <div>
+                            <div class="flex-1 text-center">
                                 <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
                                 <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">BSIT</span></div>
-                                <!-- skills -->
                                 <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer</span></div>
                                 <div class="text-gray-600 text-base">A passionate developer dedicated to building modern, user-friendly, and robust web applications. Always striving for clean code and great user experience.</div>
                             </div>
@@ -315,8 +314,16 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
             const devInfoChevron = document.getElementById('devInfoChevron');
             if (devInfoToggle && devInfoPanel && devInfoChevron) {
                 devInfoToggle.addEventListener('click', function () {
-                    devInfoPanel.classList.toggle('hidden');
-                    devInfoChevron.classList.toggle('rotate-180');
+                    const isOpen = devInfoPanel.classList.contains('opacity-100');
+                    if (!isOpen) {
+                        devInfoPanel.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+                        devInfoPanel.classList.add('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
+                        devInfoChevron.classList.add('rotate-180');
+                    } else {
+                        devInfoPanel.classList.remove('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
+                        devInfoPanel.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+                        devInfoChevron.classList.remove('rotate-180');
+                    }
                 });
             }
         });
