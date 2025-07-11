@@ -27,7 +27,6 @@ if (!in_array($user_de['role'],$userRole)) {
 $attendance = new Attendances();
 $student = new Student();
 
-
 $attendanceDetails = $attendance->getAttendanceDetails($_GET['id'], $_GET['eventName']);
 $requireProgram = $attendanceDetails['required_attendees'];
 $EventName = $attendanceDetails['event_name'];
@@ -36,24 +35,33 @@ $EventID = $attendanceDetails['atten_id'];
 $totalStudents = $student->getUserCount();
 $attendedCount = $attendance->countAttendanceRecord($attendanceDetails['atten_id']);
 
-
-
-
 $year = $student->getAllYear();
 $programList = $student->getAllProgram();
 $attendanceList = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['year']) && isset($_POST['program'])) {
+    if (isset($_POST['year']) && isset($_POST['program']) && !empty($_POST['year']) && !empty($_POST['program'])) {
+        // Filter by program and year
         $attendanceList = $attendance->AttendanceRecord($_POST['program'], $_POST['year'], $_GET['id']);
-    }elseif (isset($_POST['program'])){
-        $attendanceList = $attendance->AttendanceRecord($_POST['program'], $_POST['year'], $_GET['id']);
-    }else{
-        $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'],$_POST['search']);
+    } elseif (isset($_POST['search']) && !empty($_POST['search'])) {
+        // Search functionality
+        $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], $_POST['search']);
+    } else {
+        // Default: show all students for the event
+        $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], '');
     }
-}elseif (isset($_GET['view']) && $_GET['view'] === 'not_attended') {
+} elseif (isset($_GET['view']) && $_GET['view'] === 'not_attended') {
     // Get students who did NOT attend
-    $attendanceList = $attendance->getStudentsWhoDidNotAttend($EventID,$_GET['program'], $_GET['year']);
+    if (isset($_GET['program']) && isset($_GET['year']) && !empty($_GET['program']) && !empty($_GET['year'])) {
+        $attendanceList = $attendance->getStudentsWhoDidNotAttend($EventID, $_GET['program'], $_GET['year']);
+    } else {
+        // If no program/year specified, show empty list or handle appropriately
+        $attendanceList = [];
+    }
+} else {
+    // Default: show all students for the event when page loads
+    // Use 'AllStudents' to show all students regardless of program requirements
+    $attendanceList = $attendance->getAttendanceRecord(['AllStudents'], $_GET['id'], '');
 }
 
 $data = [

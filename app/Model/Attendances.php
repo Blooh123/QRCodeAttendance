@@ -141,22 +141,44 @@ class Attendances
             $programs = []; // Default to an empty array
         }
 
+        // If programs is null after JSON decode, try to handle it
+        if ($programs === null) {
+            $programs = [];
+        }
+
+        // If still empty, try to get required attendees from the database
         if (empty($programs)) {
-            return []; // Prevent errors if decoding fails
+            try {
+                $requiredAttendees = $this->getRequiredAttendees($eventID);
+                if (!empty($requiredAttendees)) {
+                    $programs = array_column($requiredAttendees, 'program');
+                } else {
+                    // If no specific programs required, show all students
+                    $programs = ['AllStudents'];
+                }
+            } catch (Exception $e) {
+                error_log("Error getting required attendees: " . $e->getMessage());
+                $programs = ['AllStudents'];
+            }
         }
 
         $sql = "CALL sp_get_student_attendance_record(?, ?, ?, ?, ?)";
         $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?, ?)";
 
-        if (!in_array('AllStudents', $programs)) {
-            $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
-            $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $searchQuery, $programList, $eventID]);
-        } else {
-            $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $searchQuery, $eventID]);
-        }
+        try {
+            if (!in_array('AllStudents', $programs)) {
+                $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
+                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $searchQuery, $programList, $eventID]);
+            } else {
+                $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $searchQuery, $eventID]);
+            }
 
-        // Ensure query result is an array
-        return is_array($attendanceRecords) ? $attendanceRecords : [];
+            // Ensure query result is an array
+            return is_array($attendanceRecords) ? $attendanceRecords : [];
+        } catch (Exception $e) {
+            error_log("Error in getAttendanceRecord: " . $e->getMessage());
+            return [];
+        }
     }
 
 

@@ -137,9 +137,6 @@ global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgra
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-1 md:gap-2 flex-shrink-0">
-                                        <span class="text-xs bg-green-100 text-green-800 px-1.5 md:px-2 py-0.5 md:py-1 rounded-full font-medium whitespace-nowrap">
-                                            Active
-                                        </span>
                                         <i class="fas fa-arrow-right text-gray-400 group-hover:text-[#a31d1d] group-hover:translate-x-1 transition-all duration-200"></i>
                                     </div>
                                 </div>
