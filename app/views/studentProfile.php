@@ -1,7 +1,8 @@
 <?php
+global $imageSource, $imageSource4, $imageSource2, $imageSource5;
+require_once '../app/core/imageConfig.php'; // Include your configuration file
 
-require_once '../app/core/imageConfig.php';
-require_once '../app/core/config.php';
+
 ?>
 
 <!doctype html>
@@ -172,7 +173,7 @@ require_once '../app/core/config.php';
                     </button>
                     <div id="devInfoPanel" class="px-6 pb-6 pt-0 hidden">
                         <div class="flex flex-col md:flex-row items-center gap-6 mt-4">
-                            <img src="<?php echo ROOT ?>assets/images/Default.png" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
+                            <img src="<?php echo $imageSource5 ?>" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
                             <div>
                                 <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
                                 <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">BSIT</span></div>
