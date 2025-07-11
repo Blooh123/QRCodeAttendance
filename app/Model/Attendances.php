@@ -171,15 +171,15 @@ class Attendances
         $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?)";
 
         try {
-            if (!in_array('AllStudents', $programs)) {
-                $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
+        if (!in_array('AllStudents', $programs)) {
+            $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
                 $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $programList, $eventID]);
-            } else {
+        } else {
                 $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
-            }
+        }
 
-            // Ensure query result is an array
-            return is_array($attendanceRecords) ? $attendanceRecords : [];
+        // Ensure query result is an array
+        return is_array($attendanceRecords) ? $attendanceRecords : [];
         } catch (Exception $e) {
             error_log("Error in getAttendanceRecord: " . $e->getMessage());
             return [];

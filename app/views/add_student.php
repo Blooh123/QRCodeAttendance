@@ -9,43 +9,142 @@
     <link rel="stylesheet" href="<?php echo ROOT ?>assets/css/students.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Attendance System • Add Student</title>
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image:
+                radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
+                linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
+            background-size: 24px 24px;
+            background-color: #f8f9fa;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .hover-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(163, 29, 29, 0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #a31d1d 0%, #c53030 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(163, 29, 29, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(163, 29, 29, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(163, 29, 29, 0.3), transparent);
+            margin: 2rem 0;
+        }
+    </style>
 </head>
-<body>
+<body class="p-4 md:p-6 bg-[#f8f9fa]">
 
-<!-- Main modal -->
-<div id="crud-modal" tabindex="-1" aria-hidden="false" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
-    <div class="relative p-4 w-full max-w-md max-h-full overflow-y-auto">
-        <!-- Modal content -->
-        <div class="relative bg-gray-50 rounded-lg shadow"> <!-- Changed to bg-gray-50 -->
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200"> <!-- Changed border color -->
-                <h3 class="text-lg font-semibold text-gray-800"> <!-- Changed text color -->
-                    Add New Student
+<!-- Header -->
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-2xl mx-auto glass-card">
+    <div class="flex items-center space-x-3">
+        <i class="fas fa-user-plus text-[#a31d1d] text-3xl"></i>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Add New Student</h1>
+    </div>
+</header>
+
+<div class="max-w-2xl mx-auto">
+    <div class="glass-card rounded-2xl p-8 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+        <form method="POST" action="<?php echo ROOT ?>add_student" enctype="multipart/form-data" class="space-y-6">
+            
+            <!-- Personal Information Section -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-user-circle text-[#a31d1d] mr-2"></i>
+                    Personal Information
                 </h3>
-                <a href="<?php echo ROOT ?>adminHome?page=Students" type="button" class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-close="crud-modal"> <!-- Changed text and hover colors -->
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </a>
-            </div>
-            <!-- Modal body -->
-            <form method="POST" class="p-4 md:p-5" action="<?php echo ROOT ?>add_student" enctype="multipart/form-data">
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Name" >
-                        <label for="StudentID" class="block mb-2 text-sm font-medium text-gray-700">Student ID</label>
-                        <input type="text" name="student_id" id="StudentID" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Student ID" >
-                        <label for="Email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" id="Email" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Email" >
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-user text-[#a31d1d] mr-1"></i>Full Name
+                        </label>
+                        <input type="text" name="name" id="name" 
+                               class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" 
+                               placeholder="Enter student's full name" required>
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="program" class="block mb-2 text-sm font-medium text-gray-700">Program</label>
-                        <!-- Program Dropdown -->
-                        <select name="program" id="program" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    
+                    <div>
+                        <label for="StudentID" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-id-card text-[#a31d1d] mr-1"></i>Student ID
+                        </label>
+                        <input type="text" name="student_id" id="StudentID" 
+                               class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" 
+                               placeholder="Enter student ID" required>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <label for="Email" class="block mb-2 text-sm font-medium text-gray-700">
+                        <i class="fas fa-envelope text-[#a31d1d] mr-1"></i>Email Address
+                    </label>
+                    <input type="email" name="email" id="Email" 
+                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" 
+                           placeholder="Enter email address" required>
+                    <div class="mt-2 text-sm text-gray-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        This email will be used for attendance notifications and system communications.
+                    </div>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- Academic Information Section -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-graduation-cap text-[#a31d1d] mr-2"></i>
+                    Academic Information
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="program" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-book text-[#a31d1d] mr-1"></i>Program
+                        </label>
+                        <select name="program" id="program" 
+                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" required>
                             <option value="">Select program</option>
                             <?php foreach ($programs as $program): ?>
                                 <option value="<?php echo htmlspecialchars($program['program']); ?>">
@@ -54,10 +153,13 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="year" class="block mb-2 text-sm font-medium text-gray-700">Year</label>
-                        <!-- Year Dropdown -->
-                        <select name="year" id="year" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    
+                    <div>
+                        <label for="year" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-calendar text-[#a31d1d] mr-1"></i>Academic Year
+                        </label>
+                        <select name="year" id="year" 
+                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" required>
                             <option value="">Select year</option>
                             <?php foreach ($years as $year): ?>
                                 <option value="<?php echo htmlspecialchars($year['acad_year']); ?>">
@@ -67,55 +169,121 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Add Student
-                </button>
-                <label for="excelFile" class="block mb-2 text-sm font-medium text-gray-700">Import Excel File</label>
-                <a href="<?php echo ROOT?>upload_file" type="submit" class="mt-2 text-white inline-flex items-center bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all duration-200 ease-in-out" >
-                    <svg class="me-2 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 16a1 1 0 011-1h12a1 1 0 011 1v1a1 1 0 11-2 0v-1H5v1a1 1 0 11-2 0v-1zM10 3a1 1 0 011 1v8.586l1.707-1.707a1 1 0 011.414 1.414l-3.5 3.5a1 1 0 01-1.414 0l-3.5-3.5a1 1 0 111.414-1.414L9 12.586V4a1 1 0 011-1z"></path>
-                    </svg>
-                    Import Students
-                </a>
+                
+                <div class="mt-4 text-sm text-gray-600">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    This information will be used to determine which attendance events the student is required to attend.
+                </div>
+            </div>
 
-            </form>
-        </div>
+            <hr class="section-divider">
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                <button type="submit" 
+                        class="btn-primary text-white font-semibold rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Student</span>
+                </button>
+                
+                <a href="<?php echo ROOT?>upload_file" 
+                   class="btn-secondary text-white font-semibold rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Import from Excel</span>
+                </a>
+                
+                <a href="<?php echo ROOT ?>adminHome?page=Students"
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-xl px-6 py-3 flex items-center justify-center space-x-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- Backdrop -->
-<div id="crud-modal-backdrop" class="fixed inset-0 z-40 bg-black bg-opacity-50"></div>
 <script>
+    // Add interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add focus effects to inputs
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-105');
+            });
+        });
+
+        // Add loading state to submit button
+        const form = document.querySelector('form');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding Student...';
+            submitBtn.disabled = true;
+        });
+
+        // Form validation
+        form.addEventListener('submit', function(e) {
+            const name = document.getElementById('name').value.trim();
+            const studentId = document.getElementById('StudentID').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const program = document.getElementById('program').value;
+            const year = document.getElementById('year').value;
+
+            if (!name || !studentId || !email || !program || !year) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Required Fields Missing',
+                    text: 'Please fill in all required fields.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Invalid Email',
+                    text: 'Please enter a valid email address.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                document.getElementById('email').focus();
+                return false;
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    <?php if (isset($_SESSION['success_message'])): ?>
+    Swal.fire({
+        title: 'Success!',
+        text: '<?php echo $_SESSION['success_message']; ?>',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+    <?php unset($_SESSION['success_message']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error_message'])): ?>
+    Swal.fire({
+        title: 'Error!',
+        text: '<?php echo $_SESSION['error_message']; ?>',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+    <?php unset($_SESSION['error_message']); ?>
+    <?php endif; ?>
 </script>
 
 </body>
-<script>
-    //// Track if the user is navigating away or submitting a form
-    //let isNavigating = false;
-    //
-    //// Detect clicks on links or buttons that lead to navigation
-    //document.addEventListener('click', function(event) {
-    //    const target = event.target.closest('a, button[type="submit"], input[type="submit"]');
-    //    if (target) {
-    //        isNavigating = true;
-    //    }
-    //});
-    //
-    //// Detect form submissions
-    //document.addEventListener('submit', function() {
-    //    isNavigating = true;
-    //});
-    //
-    //// Use beforeunload to detect when the user is leaving the page
-    //window.addEventListener('beforeunload', function(event) {
-    //    // If the user is NOT navigating or submitting a form, they are closing the tab/browser
-    //    if (!isNavigating) {
-    //        navigator.sendBeacon('<?php //echo ROOT; ?>//logout', new URLSearchParams({
-    //            action: 'logOutOnClose'
-    //        }));
-    //    }
-    //});
-
-</script>
 </html>

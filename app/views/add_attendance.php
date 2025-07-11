@@ -101,57 +101,57 @@ require_once '../app/core/config.php';
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="program" class="block mb-2 text-sm font-medium text-gray-700">Program</label>
+                        <label for="program" class="block mb-2 text-sm font-medium text-gray-700">Program</label>
                     <select name="program[]" class="program-select w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
-                        <option value="">Select program</option>
-                        <option value="AllStudents">All Students</option>
-                        <?php foreach ($programs as $program): ?>
-                            <option value="<?php echo htmlspecialchars($program['program']); ?>">
-                                <?php echo htmlspecialchars($program['program']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                            <option value="">Select program</option>
+                            <option value="AllStudents">All Students</option>
+                            <?php foreach ($programs as $program): ?>
+                                <option value="<?php echo htmlspecialchars($program['program']); ?>">
+                                    <?php echo htmlspecialchars($program['program']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 <div>
-                    <label for="year" class="block mb-2 text-sm font-medium text-gray-700">Year</label>
+                        <label for="year" class="block mb-2 text-sm font-medium text-gray-700">Year</label>
                     <select name="year[]" class="year-select w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                        <option value="">Select year</option>
-                        <?php foreach ($years as $year): ?>
-                            <option value="<?php echo htmlspecialchars($year['acad_year']); ?>">
-                                <?php echo htmlspecialchars($year['acad_year']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                            <option value="">Select year</option>
+                            <?php foreach ($years as $year): ?>
+                                <option value="<?php echo htmlspecialchars($year['acad_year']); ?>">
+                                    <?php echo htmlspecialchars($year['acad_year']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
             </div>
-            <div class="space-y-1 mt-2">
-                <div id="additional-fields"></div>
-                <button type="button"
-                        onclick="addFieldSet()"
+                    <div class="space-y-1 mt-2">
+                        <div id="additional-fields"></div>
+                        <button type="button"
+                                onclick="addFieldSet()"
                         class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                     <i class="fas fa-plus"></i> Add
-                </button>
-            </div>
+                        </button>
+                    </div>
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-700">Required Attendance Record</label>
-                <div class="flex items-center space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="required_attendance[]" value="time_in" checked required
-                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                        <span class="text-sm text-gray-700">Time In (Default)</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="required_attendance[]" value="time_out"
-                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                        <span class="text-sm text-gray-700">Time Out</span>
-                    </label>
-                </div>
-            </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="required_attendance[]" value="time_in" checked required
+                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                <span class="text-sm text-gray-700">Time In (Default)</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="required_attendance[]" value="time_out"
+                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                <span class="text-sm text-gray-700">Time Out</span>
+                            </label>
+                        </div>
+                    </div>
             <div>
-                <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
-                <input type="number" name="sanction" id="sanction"
+                        <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
+                        <input type="number" name="sanction" id="sanction"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
-                       placeholder="Sanction" required>
+                               placeholder="Sanction" required>
             </div>
             
             <div>
@@ -205,8 +205,8 @@ require_once '../app/core/config.php';
                 <div class="mt-3 text-sm text-gray-600">
                     <i class="fas fa-info-circle mr-1"></i>
                     Leave empty to disable geofence restrictions for this attendance event.
-                </div>
-                
+                    </div>
+
                 <!-- Map Preview Section -->
                 <div class="mt-6">
                     <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
@@ -235,7 +235,7 @@ require_once '../app/core/config.php';
                     <i class="fas fa-check"></i> Done
                 </button>
             </div>
-        </form>
+            </form>
     </div>
 </div>
 <script>
