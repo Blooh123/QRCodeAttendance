@@ -26,3 +26,7 @@ $imageSource3 = 'data:image/png;base64,' . $imageData3;
 $imagePath5 = ROOT."assets/Images/Default.png";
 $imageData5 = base64_encode(file_get_contents($imagePath5));
 $imageSource5 = 'data:image/png;base64,' . $imageData5;
+
+$imagePath6 = ROOT."assets/Images/bilat.png";
+$imageData6 = base64_encode(file_get_contents($imagePath6));
+$imageSource6 = 'data:image/png;base64,' . $imageData6; 
