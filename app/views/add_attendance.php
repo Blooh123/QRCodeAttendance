@@ -13,6 +13,9 @@ require_once '../app/core/config.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Quill.js Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <link rel="icon" type="image/x-icon" href="<?php echo ROOT?>assets/images/LOGO_QRCODE_v2.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -42,6 +45,40 @@ require_once '../app/core/config.php';
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+        
+        /* Quill.js Custom Styling */
+        .ql-toolbar {
+            border-top: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: 1px solid #d1d5db !important;
+            background-color: #f9fafb !important;
+            border-radius: 8px 8px 0 0 !important;
+        }
+        
+        .ql-container {
+            border: none !important;
+            border-radius: 0 0 8px 8px !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 14px !important;
+        }
+        
+        .ql-editor {
+            min-height: 150px !important;
+            padding: 12px 15px !important;
+        }
+        
+        .ql-editor.ql-blank::before {
+            color: #9ca3af !important;
+            font-style: italic !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+        
+        .ql-snow .ql-tooltip {
+            border: 1px solid #d1d5db !important;
+            border-radius: 6px !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
         }
     </style>
 </head>
@@ -115,6 +152,18 @@ require_once '../app/core/config.php';
                 <input type="number" name="sanction" id="sanction"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]"
                        placeholder="Sanction" required>
+            </div>
+            
+            <div>
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Event Description <span class="text-red-500">*</span></label>
+                <div id="editor-container" class="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-[#a31d1d]">
+                    <div id="editor" style="height: 200px;"></div>
+                </div>
+                <textarea name="description" id="description" style="display: none;"></textarea>
+                <div class="mt-2 text-sm text-gray-600">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Provide a detailed description including event purpose, requirements, and any important information for attendees.
+                </div>
             </div>
             
             <!-- Geofence Section -->
@@ -370,6 +419,38 @@ require_once '../app/core/config.php';
         });
     }
     
+    // Initialize Quill.js Rich Text Editor
+    let quill;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Quill editor
+        quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Enter detailed description of the attendance event...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['link'],
+                    ['clean']
+                ]
+            },
+            formats: [
+                'header', 'bold', 'italic', 'underline', 'color', 'background',
+                'list', 'bullet', 'align', 'link'
+            ]
+        });
+        
+        // Update hidden textarea when editor content changes
+        quill.on('text-change', function() {
+            const content = quill.root.innerHTML;
+            document.getElementById('description').value = content;
+        });
+    });
+    
     // Add event listeners for coordinate inputs
     document.addEventListener('DOMContentLoaded', function() {
         const latInput = document.getElementById('latitude');
@@ -402,6 +483,23 @@ require_once '../app/core/config.php';
                 }
             });
         }
+        
+        // Form validation for description
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const description = quill.getText().trim();
+            if (!description || description === '') {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Description Required',
+                    text: 'Please provide a detailed description for the attendance event.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                quill.focus();
+                return false;
+            }
+        });
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

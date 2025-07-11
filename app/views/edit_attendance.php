@@ -53,6 +53,62 @@
                 border-radius: 8px;
                 border: 2px solid #d1d5db;
             }
+            
+            /* Description display styles */
+            .prose {
+                color: #374151;
+                line-height: 1.6;
+            }
+            
+            .prose h1, .prose h2, .prose h3 {
+                color: #111827;
+                font-weight: 600;
+                margin-top: 1.5em;
+                margin-bottom: 0.5em;
+            }
+            
+            .prose h1 {
+                font-size: 1.25em;
+            }
+            
+            .prose h2 {
+                font-size: 1.125em;
+            }
+            
+            .prose h3 {
+                font-size: 1em;
+            }
+            
+            .prose p {
+                margin-bottom: 1em;
+            }
+            
+            .prose ul, .prose ol {
+                margin-bottom: 1em;
+                padding-left: 1.5em;
+            }
+            
+            .prose li {
+                margin-bottom: 0.25em;
+            }
+            
+            .prose strong {
+                font-weight: 600;
+                color: #111827;
+            }
+            
+            .prose em {
+                font-style: italic;
+            }
+            
+            .prose a {
+                color: #a31d1d;
+                text-decoration: underline;
+            }
+            
+            .prose a:hover {
+                color: #8a1818;
+            }
         </style>
     </head>
     <body class="p-4 md:p-6 bg-[#f8f9fa]">
@@ -119,6 +175,26 @@
                             <div>
                                 <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
                                 <input type="number" name="sanction" id="sanction" value="<?php echo htmlspecialchars($attendanceDetails['sanction']); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Event Description</label>
+                                <div class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 max-h-48 overflow-y-auto">
+                                    <?php if (!empty($attendanceDetails['description'])): ?>
+                                        <div class="prose prose-sm max-w-none">
+                                            <?php echo $attendanceDetails['description']; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-gray-500 italic">
+                                            <i class="fas fa-info-circle mr-1"></i>
+                                            No description provided for this event.
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-600">
+                                    <i class="fas fa-lock mr-1"></i>
+                                    Description cannot be edited after event creation.
+                                </div>
                             </div>
                         </div>
 

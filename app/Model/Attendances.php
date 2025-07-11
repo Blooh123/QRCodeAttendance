@@ -9,13 +9,13 @@ class Attendances
 {
     use Database;
 
-    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude = null, $longitude = null, $radius = null): false|string
+    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude, $longitude, $radius, $description): false|string
     {
         $status = 'not started';  // default
         
         $requiredAttendanceRecordJson = json_encode($requiredAttendanceRecord);
 
-        $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius)";
+        $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius, :description)";
         $params = [
             ':name' => $name,
             ':status' => $status,
@@ -23,7 +23,8 @@ class Attendances
             ':sanction' => $sanction,
             ':latitude' => $latitude,
             ':longitude' => $longitude,
-            ':radius' => $radius
+            ':radius' => $radius,
+            ':description' => $description
         ];
 
         // Insert attendance and get the new ID

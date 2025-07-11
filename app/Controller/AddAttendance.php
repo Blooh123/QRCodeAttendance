@@ -50,8 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $latitude = !empty($_POST['latitude']) ? floatval($_POST['latitude']) : null;
         $longitude = !empty($_POST['longitude']) ? floatval($_POST['longitude']) : null;
         $radius = !empty($_POST['radius']) ? intval($_POST['radius']) : null;
+
+        $description = !empty($_POST['description']) ? $_POST['description'] : '';
         
-        $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius);
+        // Validate required fields
+        if (empty($_POST['eventName']) || empty($_POST['sanction']) || empty($description)) {
+            echo "<script>alert('Please fill in all required fields including event name, sanction, and description!');</script>";
+            $attendance = new AddAttendance();
+            $attendance->index($data);
+            return;
+        }
+        
+        $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius, $description);
         $last_id = $attendance->getLastAttendanceId();
         
         foreach ($programs as $i => $program) {
