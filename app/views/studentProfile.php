@@ -1,6 +1,7 @@
 <?php
 
 require_once '../app/core/imageConfig.php';
+require_once '../app/core/config.php';
 ?>
 
 <!doctype html>
