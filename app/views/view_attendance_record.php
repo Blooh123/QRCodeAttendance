@@ -58,49 +58,215 @@ $viewNotAttended = $_GET['view'] ?? '';
                 display: none !important;
             }
             
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 12px;
-            }
-            
-            th, td {
-                border: 1px solid black !important;
-                padding: 8px;
-                text-align: left;
-            }
-            
-            th {
-                background-color: #f0f0f0 !important;
-                color: black !important;
-                font-weight: bold;
-            }
-            
             body {
-                background: none;
-                padding: 20px;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-family: 'Arial', sans-serif !important;
             }
             
-            .text-center {
-                text-align: center;
+            .glass-card {
+                background: white !important;
+                backdrop-filter: none !important;
+                border: 1px solid #ddd !important;
+                box-shadow: none !important;
+                outline: none !important;
             }
             
-            .text-4xl {
-                font-size: 20px !important;
-                font-weight: bold;
+            header {
+                background: white !important;
+                border-bottom: 2px solid #333 !important;
+                margin-bottom: 20px !important;
             }
             
-            .text-2xl {
-                font-size: 16px !important;
-                font-weight: bold;
+            h1, h2, h3 {
+                color: black !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .text-[#a31d1d] {
+                color: black !important;
             }
             
             .text-gray-600 {
                 color: black !important;
             }
             
-            tr:nth-child(20n) {
-                page-break-after: always;
+            /* Summary Cards */
+            .grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 15px !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .hover-card {
+                transform: none !important;
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                padding: 15px !important;
+            }
+            
+            /* Table Styles */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 10px !important;
+                margin-top: 20px !important;
+            }
+            
+            th, td {
+                border: 1px solid #333 !important;
+                padding: 6px 8px !important;
+                text-align: left !important;
+                vertical-align: top !important;
+            }
+            
+            th {
+                background-color: #f0f0f0 !important;
+                color: black !important;
+                font-weight: bold !important;
+                font-size: 11px !important;
+            }
+            
+            td {
+                font-size: 10px !important;
+                color: black !important;
+            }
+            
+            /* Remove background colors and badges */
+            .bg-green-100, .bg-blue-100, .bg-yellow-100, .bg-red-100 {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .text-green-800, .text-blue-800, .text-yellow-800, .text-red-800 {
+                color: black !important;
+            }
+            
+            /* Remove icons in print */
+            i {
+                display: none !important;
+            }
+            
+            /* Form elements */
+            form {
+                display: none !important;
+            }
+            
+            /* Hide scrollbars */
+            .hide-scrollbar {
+                overflow: visible !important;
+            }
+            
+            /* Page breaks */
+            tr:nth-child(15n) {
+                page-break-after: always !important;
+            }
+            
+            /* Ensure proper spacing */
+            .space-y-6 > * + * {
+                margin-top: 20px !important;
+            }
+            
+            /* Remove shadows and effects */
+            .shadow-\[0px_4px_0px_1px_rgba\(0,0,0,1\)\] {
+                box-shadow: none !important;
+            }
+            
+            /* Ensure text is readable */
+            .text-sm {
+                font-size: 10px !important;
+            }
+            
+            .text-xl {
+                font-size: 16px !important;
+            }
+            
+            .text-2xl {
+                font-size: 18px !important;
+            }
+            
+            .text-3xl {
+                font-size: 20px !important;
+            }
+            
+            /* Remove rounded corners */
+            .rounded-2xl, .rounded-xl, .rounded-lg {
+                border-radius: 0 !important;
+            }
+            
+            /* Ensure proper margins */
+            .max-w-7xl {
+                max-width: none !important;
+                margin: 0 !important;
+            }
+            
+            /* Remove transitions */
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            /* Ensure links are readable */
+            a {
+                color: black !important;
+                text-decoration: underline !important;
+            }
+            
+            /* Remove background patterns */
+            body {
+                background-image: none !important;
+                background-color: white !important;
+            }
+            
+            /* Ensure proper page margins */
+            @page {
+                margin: 1in;
+                size: A4;
+            }
+            
+            /* Header for each page */
+            .print-header {
+                display: block !important;
+                text-align: center !important;
+                margin-bottom: 20px !important;
+                border-bottom: 2px solid #333 !important;
+                padding-bottom: 10px !important;
+            }
+            
+            .print-header.hidden {
+                display: block !important;
+            }
+            
+            /* Footer for each page */
+            .print-footer {
+                display: block !important;
+                text-align: center !important;
+                margin-top: 20px !important;
+                font-size: 8px !important;
+                color: #666 !important;
+                border-top: 1px solid #ddd !important;
+                padding-top: 10px !important;
+            }
+            
+            .print-footer.hidden {
+                display: block !important;
+            }
+            
+            /* Hide screen header in print */
+            header {
+                display: none !important;
+            }
+            
+            /* Ensure proper page numbering */
+            .page-number:after {
+                content: counter(page);
+            }
+            
+            /* Add page counter */
+            @page {
+                counter-increment: page;
             }
         }
         
@@ -110,6 +276,14 @@ $viewNotAttended = $_GET['view'] ?? '';
     </style>
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
+
+<!-- Print Header (hidden on screen, visible in print) -->
+<div class="print-header hidden">
+    <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">University of Southeastern Philippines</h1>
+    <h2 style="font-size: 18px; margin-bottom: 5px;">Attendance Record Report</h2>
+    <p style="font-size: 14px; color: #666;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <p style="font-size: 12px; color: #666;">Generated on: <?php echo date('F j, Y \a\t g:i A'); ?></p>
+</div>
 
 <!-- Header -->
 <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
@@ -322,6 +496,12 @@ $viewNotAttended = $_GET['view'] ?? '';
         </div>
     <?php endif; ?>
 
+</div>
+
+<!-- Print Footer (hidden on screen, visible in print) -->
+<div class="print-footer hidden">
+    <p>Generated by USep Attendance System | Page <span class="page-number"></span></p>
+    <p>This document contains confidential information and should be handled appropriately.</p>
 </div>
 
 <script>
