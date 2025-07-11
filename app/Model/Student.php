@@ -124,9 +124,9 @@ class Student
         return $this->query($query, $params);
     }
 
-    public function updateStudent($id, $name, $program, $acad_year, $email, $phone): bool|array
+    public function updateStudent($id, $name, $program, $acad_year, $email): bool|array
     {
-        $query = "UPDATE students SET name = :name, program = :program, acad_year = :year, email = :email, contact_num = :contact WHERE student_id = :id";
+        $query = "UPDATE students SET name = :name, program = :program, acad_year = :year, email = :email WHERE student_id = :id";
         $params = [
             ':id' => $id,
             ':name' => $name,
