@@ -69,6 +69,8 @@ $routes = [
     '/public/verify-otp' => '../app/Controller/VerifyOTP.php',
     '/public/download-report' => '../app/Controller/PDFgeneration.php',
 
+    '/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
+
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
 
@@ -151,6 +153,8 @@ $routes = [
     '/QRCodeAttendance/QRCodeAttendance/public/verify-otp' => '../app/Controller/VerifyOTP.php',
     '/QRCodeAttendance/QRCodeAttendance/public/download-report' => '../app/Controller/PDFgeneration.php',
 
+    '/QRCodeAttendance/QRCodeAttendance/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
+
     // For prototype
     '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-register' => '../app/Controller/RegisterUI.php',
@@ -159,6 +163,7 @@ $routes = [
 
 
 ];
+
 
 
 

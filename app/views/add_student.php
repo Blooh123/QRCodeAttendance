@@ -113,7 +113,7 @@
                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" 
                                placeholder="Enter student ID" required>
                     </div>
-                </div>
+            </div>
                 
                 <div class="mt-4">
                     <label for="Email" class="block mb-2 text-sm font-medium text-gray-700">
@@ -152,7 +152,7 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
+                    </div>  
                     
                     <div>
                         <label for="year" class="block mb-2 text-sm font-medium text-gray-700">
@@ -198,7 +198,7 @@
                     <span>Cancel</span>
                 </a>
             </div>
-        </form>
+            </form>
     </div>
 </div>
 

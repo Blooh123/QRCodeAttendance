@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
         body {
@@ -63,6 +64,98 @@
 </head>
 <body class="p-4 md:p-6">
     <div class="max-w-4xl mx-auto space-y-10">
+        <!-- Recent Applications Dropdown -->
+        <div class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 glass-card">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
+                    <i class="fas fa-file-medical"></i>
+                    My Recent Applications
+                </h2>
+                <button onclick="toggleApplicationsDropdown()" class="text-[#a31d1d] hover:text-[#8a1818] transition-colors duration-200">
+                    <i class="fas fa-chevron-down" id="applicationsDropdownIcon"></i>
+                </button>
+            </div>
+            
+            <div id="applicationsDropdown" class="hidden">
+                <div class="space-y-3 max-h-64 overflow-y-auto">
+                    <?php
+                    // Get student's recent applications
+                    require_once '../app/Model/ExcuseApplication.php';
+                    $excuseApp = new \Model\ExcuseApplication();
+                    
+                    // Get user data from session/cookie
+                    if (isset($_COOKIE['user_data'])) {
+                        $userSessions = json_decode($_COOKIE['user_data'], true);
+                        if (is_array($userSessions) && !empty($userSessions)) {
+                            $studentId = $userSessions[0]['user_id'] ?? null;
+                            if ($studentId) {
+                                $studentApplications = $excuseApp->getExcuseApplicationsByStudent($studentId);
+                                
+                                if (empty($studentApplications)): ?>
+                                    <div class="text-center py-6 text-gray-500">
+                                        <i class="fas fa-inbox text-3xl mb-2"></i>
+                                        <p>No applications yet</p>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach (array_slice($studentApplications, 0, 5) as $app): ?>
+                                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors duration-200">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex-1">
+                                                    <h4 class="font-semibold text-gray-800 text-sm">
+                                                        <?php echo htmlspecialchars($app['event_name']); ?>
+                                                    </h4>
+                                                    <p class="text-xs text-gray-500">
+                                                        <?php echo date('M d, Y', strtotime($app['event_date'])); ?>
+                                                    </p>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <?php
+                                                    $statusClass = '';
+                                                    $statusText = '';
+                                                    $statusIcon = '';
+                                                    switch ($app['application_status']) {
+                                                        case 0:
+                                                            $statusClass = 'bg-yellow-100 text-yellow-800';
+                                                            $statusText = 'Pending';
+                                                            $statusIcon = 'fas fa-clock';
+                                                            break;
+                                                        case 1:
+                                                            $statusClass = 'bg-green-100 text-green-800';
+                                                            $statusText = 'Approved';
+                                                            $statusIcon = 'fas fa-check-circle';
+                                                            break;
+                                                        case 2:
+                                                            $statusClass = 'bg-red-100 text-red-800';
+                                                            $statusText = 'Rejected';
+                                                            $statusIcon = 'fas fa-times-circle';
+                                                            break;
+                                                    }
+                                                    ?>
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $statusClass; ?>">
+                                                        <i class="<?php echo $statusIcon; ?> mr-1"></i>
+                                                        <?php echo $statusText; ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    
+                                    <?php if (count($studentApplications) > 5): ?>
+                                        <div class="text-center pt-2">
+                                            <a href="<?php echo ROOT ?>apply_excuse" class="text-[#a31d1d] hover:text-[#8a1818] text-sm font-medium">
+                                                View all <?php echo count($studentApplications); ?> applications →
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif;
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
         <h1 class="text-3xl font-bold text-[#a31d1d] mb-8 event-title">Events</h1>
 
         <?php
@@ -73,7 +166,7 @@
 
         foreach ($allEvents as $event) {
             $eventDate = $event['date_created'] ?? '';
-            if ($eventDate >= $today) {
+            if ($event['atten_status'] === 'not started') {
                 $upcoming[] = $event;
             } else {
                 $recent[] = $event;
@@ -127,7 +220,14 @@
                                 <?php if (!empty($event['description'])): ?>
                                     <div class="event-description mb-2"><?php echo $event['description']; ?></div>
                                 <?php endif; ?>
-                                <!-- <a href="?page=EventDetails&id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">Apply for excuse</a> -->
+                                <?php if ($event['atten_status'] === 'not started'): ?>
+                                    <a href="<?php echo ROOT ?>apply_excuse?id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">Apply for Excuse</a>
+                                <?php else: ?>
+                                    <div class="mt-4 text-sm text-gray-500 italic">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        Excuse applications are only available for events that haven't started yet.
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -161,7 +261,14 @@
                                 <?php if (!empty($event['description'])): ?>
                                     <div class="event-description mb-2"><?php echo $event['description']; ?></div>
                                 <?php endif; ?>
-                                <!-- <a href="?page=EventDetails&id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">Apply for Excuse</a> -->
+                                <?php if ($event['atten_status'] === 'not started'): ?>
+                                    <a href="<?php echo ROOT ?>apply_excuse?id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block">Apply for Excuse</a>
+                                <?php else: ?>
+                                    <div class="mt-4 text-sm text-gray-500 italic">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        Excuse applications are only available for events that haven't started yet.
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -171,5 +278,24 @@
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+        // Toggle applications dropdown
+        function toggleApplicationsDropdown() {
+            const dropdown = document.getElementById('applicationsDropdown');
+            const icon = document.getElementById('applicationsDropdownIcon');
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                dropdown.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+    </script>
 </body>
 </html>

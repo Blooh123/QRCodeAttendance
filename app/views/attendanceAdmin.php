@@ -74,117 +74,61 @@
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8">
         <div class="text-2xl font-bold text-[#a31d1d] mb-4">Attendance Records</div>
 
-        <div id="attendanceCards"></div>
-        <div id="pagination" class="flex justify-center mt-8 gap-2"></div>
+
+
+        <?php if (empty($attendanceList)): ?>
+            <div class="mt-6 text-center text-gray-600 text-lg">
+                <i class="fas fa-inbox text-4xl mb-4 text-gray-400"></i>
+                <p>No attendance records found.</p>
+                <p class="text-sm text-gray-500 mt-2">Try adding some attendance records first.</p>
+            </div>
+        <?php else: ?>
+            <div class="space-y-4">
+                <?php foreach ($attendanceList as $attendance): ?>
+                    <div class="glass-card w-full rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card">
+                        <h2 class="text-lg font-semibold text-[#a31d1d]"><?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?></h2>
+                        <p class="text-gray-700"><strong>Date Created:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
+                        <p class="text-gray-700 flex items-center">
+                            <strong>Status:</strong>
+                            <?php
+                            $status = $attendance['atten_status'] ?? 'unknown';
+                            $statusClass = '';
+                            switch ($status) {
+                                case 'on going': $statusClass = 'bg-blue-500 text-white'; break;
+                                case 'stopped': $statusClass = 'bg-yellow-500 text-white'; break;
+                                case 'finished': $statusClass = 'bg-green-500 text-white'; break;
+                                case 'closed': $statusClass = 'bg-red-500 text-white'; break;
+                                default: $statusClass = 'bg-gray-500 text-white';
+                            }
+                            ?>
+                            <span class="ml-2 px-3 py-1 text-sm font-medium rounded-full <?php echo $statusClass; ?>">
+                                <?php echo htmlspecialchars($status); ?>
+                            </span>
+                        </p>
+                        <div class="flex mt-4 gap-4">
+                            <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                               class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                               class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </a>
+                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                               onclick="return confirmDelete(event, this.href);"
+                               class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
 <script>
-    // Attendance data from PHP
-    const attendanceList = <?php echo json_encode($attendanceList ?? []); ?>;
-    const ROOT = "<?php echo ROOT; ?>";
-    const cardsPerPage = 5;
-    let currentPage = 1;
-    let filteredList = attendanceList;
-
-    function renderCards(list, page) {
-        const start = (page - 1) * cardsPerPage;
-        const end = start + cardsPerPage;
-        const paginated = list.slice(start, end);
-
-        let html = '';
-        if (paginated.length === 0) {
-            html = `<div class="mt-6 text-center text-gray-600 text-lg">No attendance records found.</div>`;
-        } else {
-            html = paginated.map(attendance => `
-                <div class="glass-card w-full rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card mb-4">
-                    <h2 class="text-lg font-semibold text-[#a31d1d]">${escapeHtml(attendance.event_name)}</h2>
-                    <p class="text-gray-700"><strong>Date Created:</strong> ${escapeHtml(attendance.date_created)}</p>
-                    <p class="text-gray-700 flex items-center">
-                        <strong>Status:</strong>
-                        <span class="ml-2 px-3 py-1 text-sm font-medium rounded-full ${getStatusClass(attendance.atten_status)}">
-                            ${escapeHtml(attendance.atten_status)}
-                        </span>
-                    </p>
-                    <div class="flex mt-4 gap-4">
-                        <a href="${ROOT}view_records?id=${encodeURIComponent(attendance.atten_id)}&eventName=${encodeURIComponent(attendance.event_name)}"
-                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                        <a href="${ROOT}edit_attendance?id=${encodeURIComponent(attendance.atten_id)}&eventName=${encodeURIComponent(attendance.event_name)}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                            <i class="fas fa-pencil-alt"></i> Edit
-                        </a>
-                        <a href="${ROOT}delete_attendance?id=${encodeURIComponent(attendance.atten_id)}"
-                           onclick="return confirmDelete(event, this.href);"
-                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                            <i class="fas fa-trash"></i> Delete
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-        document.getElementById('attendanceCards').innerHTML = html;
-        renderPagination(list, page);
-    }
-
-    function renderPagination(list, page) {
-        const totalPages = Math.ceil(list.length / cardsPerPage);
-        let html = '';
-        if (totalPages > 1) {
-            html += `<button onclick="gotoPage(1)" class="px-3 py-1 rounded ${page === 1 ? 'bg-[#a31d1d] text-white' : 'bg-white text-[#a31d1d]'} font-bold border border-[#a31d1d]">First</button>`;
-            for (let i = 1; i <= totalPages; i++) {
-                html += `<button onclick="gotoPage(${i})" class="px-3 py-1 rounded ${page === i ? 'bg-[#a31d1d] text-white' : 'bg-white text-[#a31d1d]'} font-bold border border-[#a31d1d]">${i}</button>`;
-            }
-            html += `<button onclick="gotoPage(${totalPages})" class="px-3 py-1 rounded ${page === totalPages ? 'bg-[#a31d1d] text-white' : 'bg-white text-[#a31d1d]'} font-bold border border-[#a31d1d]">Last</button>`;
-        }
-        document.getElementById('pagination').innerHTML = html;
-    }
-
-    function gotoPage(page) {
-        currentPage = page;
-        renderCards(filteredList, currentPage);
-    }
-
-    function getStatusClass(status) {
-        switch (status) {
-            case 'on going': return 'bg-blue-500 text-white';
-            case 'stopped': return 'bg-yellow-500 text-white';
-            case 'finished': return 'bg-green-500 text-white';
-            case 'closed': return 'bg-red-500 text-white';
-            default: return 'bg-gray-500 text-white';
-        }
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        return text.replace(/[&<>"']/g, function (m) {
-            return ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            })[m];
-        });
-    }
-
-    // JS Search
-    document.getElementById('searchForm').addEventListener('submit', function () {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        filteredList = attendanceList.filter(item =>
-            item.event_name.toLowerCase().includes(query) ||
-            item.date_created.toLowerCase().includes(query) ||
-            item.atten_status.toLowerCase().includes(query)
-        );
-        currentPage = 1;
-        renderCards(filteredList, currentPage);
-    });
-
-    // Initial render
-    renderCards(filteredList, currentPage);
-
-    // Confirm delete (still works for dynamic content)
+    // Confirm delete function
     function confirmDelete(event, url) {
         event.preventDefault();
         Swal.fire({

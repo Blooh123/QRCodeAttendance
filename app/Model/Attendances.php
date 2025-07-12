@@ -131,6 +131,14 @@ class Attendances
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAttendanceByID($id){
+        $query = 'SELECT * FROM attendance WHERE atten_id = :id';
+        $stmt = $this->connect()->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function countAttendanceRecord($eventID){
         $qury = "CALL sp_count_student_attend(:eventID)";
         $stmt = $this->connect()->prepare($qury);

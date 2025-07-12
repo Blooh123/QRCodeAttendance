@@ -212,7 +212,7 @@ require_once '../app/core/config.php';
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Banner Preview -->
                     <div id="banner-preview-container" class="hidden">
                         <label class="block mb-2 text-sm font-medium text-gray-700">

@@ -67,7 +67,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             .no-print, .no-print * {
                 display: none !important;
             }
-            
+
             /* Hide filter and search sections */
             .filter-section,
             .search-section,
@@ -135,14 +135,14 @@ $viewNotAttended = $_GET['view'] ?? '';
                 font-size: 9px !important;
                 margin-top: 15px !important;
             }
-            
+
             th, td {
                 border: 1px solid #333 !important;
                 padding: 4px 6px !important;
                 text-align: left !important;
                 vertical-align: top !important;
             }
-            
+
             th {
                 background-color: #f0f0f0 !important;
                 color: black !important;
@@ -154,7 +154,7 @@ $viewNotAttended = $_GET['view'] ?? '';
                 font-size: 9px !important;
                 color: black !important;
             }
-            
+
             /* Remove background colors and badges */
             .bg-green-100, .bg-blue-100, .bg-yellow-100, .bg-red-100 {
                 background: white !important;
@@ -174,7 +174,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             .hide-scrollbar {
                 overflow: visible !important;
             }
-            
+
             /* Page breaks */
             tr:nth-child(20n) {
                 page-break-after: always !important;
@@ -189,7 +189,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             .shadow-\[0px_4px_0px_1px_rgba\(0,0,0,1\)\] {
                 box-shadow: none !important;
             }
-            
+
             /* Ensure text is readable */
             .text-sm {
                 font-size: 9px !important;
@@ -198,7 +198,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             .text-xl {
                 font-size: 14px !important;
             }
-            
+
             .text-2xl {
                 font-size: 16px !important;
             }
@@ -217,7 +217,7 @@ $viewNotAttended = $_GET['view'] ?? '';
                 max-width: none !important;
                 margin: 0 !important;
             }
-            
+
             /* Remove transitions */
             * {
                 transition: none !important;
@@ -229,7 +229,7 @@ $viewNotAttended = $_GET['view'] ?? '';
                 color: black !important;
                 text-decoration: underline !important;
             }
-            
+
             /* Remove background patterns */
             body {
                 background-image: none !important;
@@ -293,7 +293,7 @@ $viewNotAttended = $_GET['view'] ?? '';
     <h2 style="font-size: 18px; margin-bottom: 5px;">Attendance Record Report</h2>
     <p style="font-size: 14px; color: #666;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
     <p style="font-size: 12px; color: #666;">Generated on: <?php echo date('F j, Y \a\t g:i A'); ?></p>
-</div>
+    </div>
 
 <!-- Header -->
 <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
@@ -330,36 +330,36 @@ $viewNotAttended = $_GET['view'] ?? '';
             <i class="fas fa-filter"></i> Filter Records
         </h2>
         <form action="" method="post" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Program</label>
                     <select name="program" class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" required>
-                        <option value="">Select program</option>
-                        <?php foreach ($programList as $program): ?>
+                <option value="">Select program</option>
+                <?php foreach ($programList as $program): ?>
                             <option value="<?= htmlspecialchars($program['program']); ?>" <?= (isset($_POST['program']) && $_POST['program'] === $program['program']) ? 'selected' : ''; ?>>
                                 <?= htmlspecialchars($program['program']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    </option>
+                <?php endforeach; ?>
+            </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
                     <select name="year" class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" required>
-                        <option value="">Select year</option>
-                        <?php foreach ($year as $yr): ?>
+                <option value="">Select year</option>
+                <?php foreach ($year as $yr): ?>
                             <option value="<?= htmlspecialchars($yr['acad_year']); ?>" <?= (isset($_POST['year']) && $_POST['year'] === $yr['acad_year']) ? 'selected' : ''; ?>>
                                 <?= htmlspecialchars($yr['acad_year']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    </option>
+                <?php endforeach; ?>
+            </select>
                 </div>
                 <div class="flex items-end">
                     <button type="submit" class="w-full bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                         <i class="fas fa-eye"></i> View Records
                     </button>
                 </div>
-            </div>
-        </form>
+        </div>
+    </form>
     </div>
 
     <!-- Summary Cards -->
@@ -415,7 +415,7 @@ $viewNotAttended = $_GET['view'] ?? '';
                 <i class="fas fa-search"></i> Search
             </button>
         </form>
-    </div>
+        </div>
 
     <!-- Attendance Records Table -->
     <?php if (!empty($attendanceList)): ?>
@@ -436,15 +436,15 @@ $viewNotAttended = $_GET['view'] ?? '';
                             <th class="px-6 py-4 text-left text-sm font-semibold">Program</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold">Year</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold">Email</th>
-                            <?php if ($viewNotAttended !== 'not_attended'): ?>
+                    <?php if ($viewNotAttended !== 'not_attended'): ?>
                                 <th class="px-6 py-4 text-left text-sm font-semibold">Time In</th>
                                 <th class="px-6 py-4 text-left text-sm font-semibold">Time Out</th>
                                 <th class="px-6 py-4 text-left text-sm font-semibold no-print">Actions</th>
-                            <?php endif; ?>
-                        </tr>
-                    </thead>
+                    <?php endif; ?>
+                </tr>
+                </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <?php foreach ($attendanceList as $record): ?>
+                <?php foreach ($attendanceList as $record): ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-200">
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                     <?= htmlspecialchars($record['student_id']); ?>
@@ -463,8 +463,8 @@ $viewNotAttended = $_GET['view'] ?? '';
                                 <td class="px-6 py-4 text-sm text-gray-600">
                                     <a href="mailto:<?= htmlspecialchars($record['email']); ?>" class="text-blue-600 hover:text-blue-800">
                                         <?= htmlspecialchars($record['email']); ?>
-                                    </a>
-                                </td>
+                            </a>
+                        </td>
                                 <?php if ($viewNotAttended !== 'not_attended'): ?>
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -490,9 +490,9 @@ $viewNotAttended = $_GET['view'] ?? '';
                                         </button>
                                     </td>
                                 <?php endif; ?>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
                 </table>
             </div>
         </div>
@@ -514,43 +514,43 @@ $viewNotAttended = $_GET['view'] ?? '';
     <p>This document contains confidential information and should be handled appropriately.</p>
 </div>
 
-<script>
+                <script>
 function deleteRecord(deleteUrl) {
-    Swal.fire({
+                                Swal.fire({
         title: "Delete Attendance Record?",
         text: "This action cannot be undone. The record will be permanently deleted.",
-        icon: "warning",
-        showCancelButton: true,
+                                    icon: "warning",
+                                    showCancelButton: true,
         confirmButtonColor: "#dc2626",
         cancelButtonColor: "#6b7280",
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
         reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(deleteUrl, { method: "GET" })
-                .then(response => response.text())
-                .then(data => {
-                    Swal.fire({
-                        title: "Deleted!",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        fetch(deleteUrl, { method: "GET" })
+                                            .then(response => response.text())
+                                            .then(data => {
+                                                Swal.fire({
+                                                    title: "Deleted!",
                         text: "The attendance record has been successfully deleted.",
-                        icon: "success",
+                                                    icon: "success",
                         timer: 2000,
-                        showConfirmButton: false
-                    });
-                    setTimeout(() => {
-                        window.location.reload();
+                                                    showConfirmButton: false
+                                                });
+                                                setTimeout(() => {
+                                                    window.location.reload();
                     }, 2100);
-                })
-                .catch(error => {
-                    Swal.fire({
-                        title: "Error!",
+                                            })
+                                            .catch(error => {
+                                                Swal.fire({
+                                                    title: "Error!",
                         text: "Something went wrong while deleting the record.",
-                        icon: "error"
-                    });
-                });
-        }
-    });
+                                                    icon: "error"
+                                                });
+                                            });
+                                    }
+                                });
 }
 
 // Add smooth scrolling for better UX
@@ -564,10 +564,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
                 submitBtn.disabled = true;
             }
-        });
-    });
-});
-</script>
+                            });
+                        });
+                    });
+                </script>
 
 </body>
 </html>

@@ -17,6 +17,9 @@ class Attendance extends Controller
         if (!empty($_GET['search'])){
             $attendanceList =$attendance->searchAttendance($_GET['search']);
         }
+        
+
+        
         $data = [
             'attendanceList' => $attendanceList
         ];
