@@ -41,6 +41,23 @@ class ExcuseApplication
         }
     }
 
+    public function getApprovedExcuseApplicationsByStudent($studentId){
+        try{
+            $query = "SELECT ea.*, a.event_name, a.date_created as event_date 
+                      FROM excuse_application ea 
+                      INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      WHERE ea.student_id = :student_id AND ea.application_status = 1
+                      ORDER BY ea.id DESC";
+            $params = [':student_id' => $studentId];
+            $result = $this->query($query, $params);
+            return is_array($result) ? $result : [];
+        }
+        catch(Exception $e){
+            error_log("Error getting approved excuse applications by student: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getExcuseApplicationsByStudent($studentId): array
     {
         try {

@@ -178,7 +178,31 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <?php endif; ?>
             </div>
 
-            
+        <!-- Excuse Applications -->
+        <div>
+            <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 mt-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+                Approved Excuse Applications
+            </h3>
+            <div class="space-y-4">
+                <?php if (empty($excuseApplications)): ?>
+                    <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        No approved excuse applications found.
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($excuseApplications as $idx => $application): ?>
+                        <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3">
+                            <h4 class="text-lg font-bold text-[#a31d1d]">
+                                <?= htmlspecialchars($application['event_name'] ?? 'N/A'); ?>
+                            </h4>
+                            <!-- status -->
+                            <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                                Approved
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
         </div>
     </div>
 </body>
