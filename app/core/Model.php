@@ -29,7 +29,7 @@ Trait Model
         // Clone the $now object to calculate expiry
         $expiry = clone $now;
         if ($role === 'student') {
-            $expiry->modify('+10 minutes');
+            $expiry->modify('+20 minutes');
         } else {
             $expiry->modify('+2 days');
         }

@@ -91,7 +91,7 @@ class LoginPage extends Controller
                     ];
 
                     // Set cookie expiration based on role
-                    $cookieExpiry = ($role == 'student') ? time() + (60 * 10) : time() + (60 * 60 * 24 * 2);
+                    $cookieExpiry = ($role == 'student') ? time() + (60 * 20) : time() + (60 * 60 * 24 * 2);
 
 
 

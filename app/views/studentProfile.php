@@ -178,7 +178,7 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                                 <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
                                 <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">BSIT</span></div>
                                 <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer</span></div>
-                                <div class="text-gray-600 text-base">A passionate developer dedicated to building modern, user-friendly, and robust web applications. Always striving for clean code and great user experience.</div>
+                                <div class="text-gray-600 text-base">💻 A passionate developer dedicated to building modern, user-friendly, and robust web applications. Always striving for clean code and great user experience.</div>
                             </div>
                         </div>
                     </div>

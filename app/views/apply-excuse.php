@@ -129,7 +129,7 @@ require_once '../app/core/config.php';
             <i class="fas fa-file-medical text-[#a31d1d] text-3xl"></i>
             <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Apply for Excuse</h1>
         </div>
-        <div class="flex items-center space-x-4">
+        <!-- <div class="flex items-center space-x-4">
             <span class="text-gray-600">
                 <i class="fas fa-user mr-2"></i>
                 <?php echo htmlspecialchars($userData['username'] ?? 'Student'); ?>
@@ -138,7 +138,7 @@ require_once '../app/core/config.php';
                 <i class="fas fa-home"></i>
                 Home
             </a>
-        </div>
+        </div> -->
     </div>
 </header>
 
