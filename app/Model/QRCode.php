@@ -87,7 +87,7 @@ class QRCode
 
     public function getQRData($data): bool|array
     {
-        $query = 'SELECT * FROM qr_code WHERE qr_value = ?';
+        $query = 'SELECT q.*, s.name, s.program, s.acad_year FROM qr_code q INNER JOIN students s ON q.student_id = s.student_id WHERE qr_value = ?';
         return $this->query($query, [$data]);
     }
 

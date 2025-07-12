@@ -36,6 +36,7 @@ class QRScanner extends Controller
 
             if (!empty($result) && isset($result[0]['student_id'])) {
                 $studentId = $result[0]['student_id'];
+                $studentName = $result[0]['name'];
 
                 $studentData = $qrcode->getStudentData($studentId);
 
@@ -104,7 +105,7 @@ class QRScanner extends Controller
                             if ($onTimeCheck == 0){
                                 $qrcode->recordAttendance($attenId, $studentId);
 
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time in)',$EventName);
+                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentName . ' (Time in)',$EventName);
                                 echo json_encode([
                                     "status" => "success",
                                     "student" => $name,
@@ -112,7 +113,7 @@ class QRScanner extends Controller
                                 ]);
                             }else{
                                 $qrcode->recordAttendance2($attenId, $studentId);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentId . ' (Time out)',$EventName );
+                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentName . ' (Time out)',$EventName );
                                 echo json_encode([
                                     "status" => "success",
                                     "student" => $name,
