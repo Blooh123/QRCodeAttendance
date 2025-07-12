@@ -106,29 +106,27 @@
         <!-- Filter and Stats Row -->
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <!-- Status Filter -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <label class="text-sm md:text-base font-medium text-gray-700 flex items-center">
-                    <i class="fas fa-filter mr-2 text-[#a31d1d]"></i>
-                    Filter by Status:
-                </label>
-                <form method="POST" action="" class="flex flex-wrap gap-2">
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <form method="POST" action="" class="w-full">
                     <input type="hidden" name="action" value="filter">
-                    <button type="submit" name="filter" value="all" 
-                            class="filter-btn <?php echo ($currentFilter === 'all') ? 'active bg-[#a31d1d] text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'; ?> px-3 md:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base min-w-[60px]">
-                        All
-                    </button>
-                    <button type="submit" name="filter" value="0" 
-                            class="filter-btn <?php echo ($currentFilter === '0') ? 'active bg-[#a31d1d] text-white' : 'bg-yellow-500 text-white hover:bg-yellow-600'; ?> px-3 md:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base min-w-[80px]">
-                        Pending
-                    </button>
-                    <button type="submit" name="filter" value="1" 
-                            class="filter-btn <?php echo ($currentFilter === '1') ? 'active bg-[#a31d1d] text-white' : 'bg-green-500 text-white hover:bg-green-600'; ?> px-3 md:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base min-w-[90px]">
-                        Approved
-                    </button>
-                    <button type="submit" name="filter" value="2" 
-                            class="filter-btn <?php echo ($currentFilter === '2') ? 'active bg-[#a31d1d] text-white' : 'bg-red-500 text-white hover:bg-red-600'; ?> px-3 md:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base min-w-[80px]">
-                        Rejected
-                    </button>
+                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full">
+                        <button type="submit" name="filter" value="all" 
+                                class="filter-btn <?php echo ($currentFilter === 'all') ? 'active bg-[#a31d1d] text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[70px] focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                            <i class="fas fa-list mr-1"></i> All
+                        </button>
+                        <button type="submit" name="filter" value="0" 
+                                class="filter-btn <?php echo ($currentFilter === '0') ? 'active bg-yellow-500 text-white shadow-lg' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                            <i class="fas fa-clock mr-1"></i> Pending
+                        </button>
+                        <button type="submit" name="filter" value="1" 
+                                class="filter-btn <?php echo ($currentFilter === '1') ? 'active bg-green-600 text-white shadow-lg' : 'bg-green-100 text-green-800 hover:bg-green-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[100px] focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <i class="fas fa-check mr-1"></i> Approved
+                        </button>
+                        <button type="submit" name="filter" value="2" 
+                                class="filter-btn <?php echo ($currentFilter === '2') ? 'active bg-red-600 text-white shadow-lg' : 'bg-red-100 text-red-800 hover:bg-red-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-red-400">
+                            <i class="fas fa-times mr-1"></i> Rejected
+                        </button>
+                    </div>
                 </form>
             </div>
             

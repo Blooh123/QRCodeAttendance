@@ -18,7 +18,8 @@ if (!in_array($page, $allowed_pages)) {
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/x-icon" href="<?php echo $imageSource ?>">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-image: 
@@ -26,7 +27,93 @@ if (!in_array($page, $allowed_pages)) {
                 linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
             background-size: 24px 24px;
             background-color: #f8f9fa;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(163, 29, 29, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            line-height: 1.2;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(163, 29, 29, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .nav-link.active {
+            background: #a31d1d;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(163, 29, 29, 0.3);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #a31d1d;
+            border-radius: 50%;
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            box-shadow: 0 4px 12px rgba(163, 29, 29, 0.2);
+            line-height: 1.2;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 4px 0px 1px rgba(0,0,0,1);
+            outline: 1px solid #000;
+            transition: all 0.2s ease;
+        }
+        
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            transform: translateY(-1px);
+        }
+        
+        .mobile-menu-btn {
+            background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
+            box-shadow: 0 4px 0px 1px rgba(0,0,0,1);
+            outline: 1px solid #000;
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: linear-gradient(135deg, #8a1818 0%, #7c1515 100%);
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 1024px) {
+            .nav-link {
+                padding: 0.75rem 1rem;
+                margin-bottom: 0.5rem;
+                text-align: center;
+                border-radius: 0.75rem;
+                box-shadow: 0 4px 0px 1px rgba(0,0,0,1);
+                outline: 1px solid #000;
+            }
+            
+            .nav-link.active {
+                background: #a31d1d;
+                color: white !important;
+            }
         }
     </style>
     <title>Attendance System • Admin</title>
@@ -34,64 +121,92 @@ if (!in_array($page, $allowed_pages)) {
 <body class="bg-[#f8f9fa] font-['Poppins']">
 
 <!-- Responsive Header -->
-<header class="w-full shadow-lg sticky top-0 z-50 bg-white/90 backdrop-blur-lg">
-    <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <img class="h-14 w-auto" src="<?php echo $imageSource ?>" alt="Logo" />
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-6">
+<header class="w-full shadow-lg sticky top-0 z-50 glass-header">
+    <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+        <!-- Left Section: Logo & Brand -->
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <img 
+                    src="<?php echo $imageSource ?>" 
+                    alt="Logo" 
+                    style="height: 100px; width: auto; max-width: 100%; object-fit: contain; display: block;"
+                    class="block"
+                />
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center gap-1">
                 <?php
                 $navPages = [
-                    'Dashboard' => 'Dashboard',
-                    'Students' => 'Students',
-                    'Attendance' => 'Attendance',
-                    'Users' => 'Accounts',
-                    'StudentApplication' => 'Excuse Applications',
-                    'ProfileAdmin' => 'Profile'
+                    'Dashboard' => ['Dashboard', 'fas fa-tachometer-alt'],
+                    'Students' => ['Students', 'fas fa-user-graduate'],
+                    'Attendance' => ['Attendance', 'fas fa-clipboard-check'],
+                    'Users' => ['Accounts', 'fas fa-users-cog'],
+                    'StudentApplication' => ['Excuse Applications', 'fas fa-file-medical'],
+                    'ProfileAdmin' => ['Profile', 'fas fa-user-circle']
                 ];
-                foreach ($navPages as $key => $label): ?>
+                foreach ($navPages as $key => $navItem): ?>
                     <a href="?page=<?php echo $key; ?>"
-                       class="nav-link text-lg font-semibold transition-colors <?php echo $page === $key ? 'text-[#a31d1d] active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
-                        <?php echo $label; ?>
+                       class="nav-link text-sm font-semibold transition-all duration-300 flex items-center gap-2 px-3 py-2 <?php echo $page === $key ? 'active' : 'text-[#515050] hover:text-[#a31d1d]'; ?>">
+                        <i class="<?php echo $navItem[1]; ?> text-sm"></i>
+                        <span class="whitespace-nowrap"><?php echo $navItem[0]; ?></span>
                     </a>
                 <?php endforeach; ?>
             </nav>
         </div>
-        <div class="flex items-center gap-4">
-            <img src="<?php echo $OSASLogo ?>" alt="Profile" class="h-12 w-12 rounded-full border-2 border-[#a31d1d] object-cover">
-            <span class="font-bold text-[#515050] hidden md:inline"><?php echo $username ?></span>
+        
+        <!-- Right Section: Profile & Actions -->
+        <div class="flex items-center gap-4 ml-4">
+            <!-- Profile Card (Desktop) -->
+            <div class="hidden lg:flex items-center gap-4 profile-card px-4 py-2" style="min-width:220px;">
+                <img src="<?php echo $OSASLogo ?>" alt="Profile" class="h-12 w-12 rounded-full border-2 border-white object-cover">
+                <div class="text-white">
+                    <p class="font-semibold text-base"><?php echo $username ?></p>
+                    <p class="text-sm opacity-90">Administrator</p>
+                </div>
+            </div>
+            
+            <!-- Logout Button -->
             <a href="<?php echo ROOT ?>logout"
-               class="px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-[#a31d1d] text-white hover:bg-[#8a1818] ml-2">
-                Logout
+               class="logout-btn px-5 py-3 rounded-xl text-sm font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-sign-out-alt text-sm"></i>
+                <span class="hidden lg:inline whitespace-nowrap">Logout</span>
             </a>
-            <!-- Mobile menu button -->
-            <button id="openSidebarBtn" class="md:hidden p-2 rounded-lg bg-[#a31d1d] text-white hover:bg-[#8a1818]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
+            
+            <!-- Mobile Menu Button -->
+            <button id="openSidebarBtn" class="mobile-menu-btn lg:hidden p-4 rounded-xl text-white">
+                <i class="fas fa-bars text-lg"></i>
             </button>
         </div>
     </div>
     <!-- Mobile Sidebar -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
-    <aside id="sidebarMenu" class="fixed z-50 left-0 top-0 h-full w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out rounded-r-3xl">
-        <div class="flex items-center gap-4 px-6 py-6 border-b border-gray-200 bg-white">
-            <img class="h-14 w-auto" src="<?php echo $imageSource ?>" alt="Logo" />
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden backdrop-blur-sm"></div>
+    <aside id="sidebarMenu" class="fixed z-50 left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-lg shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex items-center gap-4 px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-[#a31d1d] to-red-900">
+            <img class="h-12 w-auto" src="<?php echo $imageSource ?>" alt="Logo" />
+            <div class="text-white">
+                <h2 class="font-bold text-lg">Admin Panel</h2>
+                <p class="text-sm opacity-90">Navigation Menu</p>
+            </div>
         </div>
-        <nav class="flex-1 flex flex-col gap-2 px-4 py-6 bg-white">
-            <?php foreach ($navPages as $key => $label): ?>
+        <nav class="flex-1 flex flex-col gap-3 px-4 py-6 bg-white">
+            <?php foreach ($navPages as $key => $navItem): ?>
                 <a href="?page=<?php echo $key; ?>"
-                   class="mb-1 px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black
+                   class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-200
                    <?php echo $page === $key
-                       ? 'bg-[#a31d1d] text-white hover:bg-[#8a1818]'
-                       : 'bg-white text-[#515050] hover:bg-[#a31d1d] hover:text-white'; ?>">
-                    <?php echo $label; ?>
+                       ? 'bg-[#a31d1d] text-white shadow-lg'
+                       : 'bg-gray-50 text-[#515050] hover:bg-[#a31d1d] hover:text-white hover:shadow-md'; ?>">
+                    <i class="<?php echo $navItem[1]; ?> text-lg"></i>
+                    <?php echo $navItem[0]; ?>
                 </a>
             <?php endforeach; ?>
-            <a href="<?php echo ROOT ?>logout"
-               class="mt-4 px-6 py-2 rounded-xl text-lg font-semibold transition-all duration-200 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-[#a31d1d] text-white hover:bg-[#8a1818]">
-                Logout
-            </a>
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="<?php echo ROOT ?>logout"
+                   class="logout-btn w-full px-4 py-3 rounded-xl text-base font-semibold text-white flex items-center gap-3 justify-center">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
         </nav>
     </aside>
 </header>
