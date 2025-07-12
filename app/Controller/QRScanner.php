@@ -93,8 +93,6 @@ class QRScanner extends Controller
                             ]);
                             exit;
                         }
-
-
                     }
 
                     // Check if student is required to attend based on required_attendees table
