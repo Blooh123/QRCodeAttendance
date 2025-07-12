@@ -100,6 +100,8 @@ class Attendances
         $query = "DELETE FROM attendance WHERE atten_id = :id";
         $query2 = "DELETE FROM attendance_record WHERE atten_id = :id";
         $query3 = "DELETE FROM required_attendees WHERE atten_id = :id";
+        $query4 = "DELETE FROM excuse_application WHERE atten_id = :id";
+
         $params2 = [
             ':id' => $id
         ];
@@ -109,6 +111,11 @@ class Attendances
         $params3 = [
             ':id' => $id
         ];
+        $params4 = [
+            ':id' => $id
+        ];
+
+        $this->query($query4, $params4);    
         $this->query($query3, $params3);    
         $this->query($query2, $params2);
         return $this->query($query, $params);

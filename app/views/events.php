@@ -105,8 +105,18 @@
                                                         <?php echo htmlspecialchars($app['event_name']); ?>
                                                     </h4>
                                                     <p class="text-xs text-gray-500">
-                                                        <?php echo date('M d, Y', strtotime($app['event_date'])); ?>
+                                                        <?php echo date('M d, Y', strtotime($app['date_submitted'])); ?>
                                                     </p>
+                                                    <?php if (!empty($app['admin_remarks'])): ?>
+                                                        <div class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 rounded">
+                                                            <p class="text-xs text-blue-800 font-medium mb-1">
+                                                                <i class="fas fa-comment mr-1"></i>Admin Remarks:
+                                                            </p>
+                                                            <p class="text-xs text-blue-700">
+                                                                <?php echo htmlspecialchars($app['admin_remarks']); ?>
+                                                            </p>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="ml-4">
                                                     <?php

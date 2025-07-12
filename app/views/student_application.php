@@ -222,7 +222,7 @@
                         <div>
                             <h4 class="font-semibold text-gray-800 mb-2 text-sm md:text-base">Application Details</h4>
                             <div class="space-y-1 text-xs md:text-sm">
-                                <p><strong>Submitted:</strong> <?php echo date('M d, Y g:i A', strtotime($app['id'])); ?></p>
+                                <p><strong>Submitted:</strong> <?php echo date('M d, Y g:i A', strtotime($app['date_submitted'])); ?></p>
                                 <p><strong>Application ID:</strong> #<?php echo $app['id']; ?></p>
                             </div>
                         </div>

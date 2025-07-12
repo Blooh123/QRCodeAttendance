@@ -119,6 +119,8 @@ $routes = [
     '/public/face-recognize' => '../app/Controller/FaceRecognize.php',
 
     // localhost
+    //home page
+    '/QRCodeAttendance/QRCodeAttendance/public/' => '../app/Controller/LandingPage.php',
     '/QRCodeAttendance/QRCodeAttendance/public/login' => '../app/Controller/LoginPage.php',
     '/QRCodeAttendance/QRCodeAttendance/public/logout' => '../app/Controller/Logout.php',
     '/QRCodeAttendance/QRCodeAttendance/public/logout2' => '../app/Controller/Logout2.php',

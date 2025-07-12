@@ -16,15 +16,21 @@ class ExcuseApplication
     public function insertExcuseApplication($attenId, $studentId, $description, $document1 = null, $document2 = null): bool
     {
         try {
-            $query = "INSERT INTO excuse_application (atten_id, student_id, application_description, document1, document2, application_status) 
-                      VALUES (:atten_id, :student_id, :description, :document1, :document2, 0)";
+            // date time asia/manila
+            $dateTime = new \DateTime('Asia/Manila');
+            $dateTime->setTimezone(new \DateTimeZone('Asia/Manila'));
+            $dateTimeString = $dateTime->format('Y-m-d H:i:s');
+            
+            $query = "INSERT INTO excuse_application (atten_id, student_id, application_description, document1, document2, application_status, date_submitted) 
+                      VALUES (:atten_id, :student_id, :description, :document1, :document2, 0, :date_submitted)";
             
             $params = [
                 ':atten_id' => $attenId,
                 ':student_id' => $studentId,
                 ':description' => $description,
                 ':document1' => $document1,
-                ':document2' => $document2
+                ':document2' => $document2,
+                ':date_submitted' => $dateTimeString,
             ];
             
             $result = $this->query($query, $params);
