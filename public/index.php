@@ -70,6 +70,7 @@ $routes = [
     '/public/download-report' => '../app/Controller/PDFgeneration.php',
 
     '/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
+    '/public/student_application' => '../app/Controller/StudentApplication.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -154,11 +155,13 @@ $routes = [
     '/QRCodeAttendance/QRCodeAttendance/public/download-report' => '../app/Controller/PDFgeneration.php',
 
     '/QRCodeAttendance/QRCodeAttendance/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
+    '/QRCodeAttendance/QRCodeAttendance/public/student_application' => '../app/Controller/StudentApplication.php',
 
     // For prototype
     '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-register' => '../app/Controller/RegisterUI.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-recognize' => '../app/Controller/FaceRecognize.php',
+
     
 
 

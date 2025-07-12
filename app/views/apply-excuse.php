@@ -258,18 +258,18 @@ require_once '../app/core/config.php';
                         </div>
                     </div>
 
-                    <!-- Document Upload Section -->
+                    <!-- Image Upload Section -->
                     <div class="border-t pt-6 mt-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-file-upload text-[#a31d1d] mr-2"></i>
-                            Supporting Documents
+                            <i class="fas fa-image text-[#a31d1d] mr-2"></i>
+                            Supporting Images
                         </h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Document 1 -->
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">
-                                    <i class="fas fa-file mr-1"></i>Document 1 (Optional)
+                                    <i class="fas fa-image mr-1"></i>Image 1 (Optional)
                                 </label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="document1" class="file-upload-zone flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200">
@@ -278,9 +278,9 @@ require_once '../app/core/config.php';
                                             <p class="mb-2 text-sm text-gray-500">
                                                 <span class="font-semibold">Click to upload</span> or drag and drop
                                             </p>
-                                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG, GIF up to 10MB</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG, GIF up to 10MB</p>
                                         </div>
-                                        <input id="document1" name="document1" type="file" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" />
+                                        <input id="document1" name="document1" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
                                     </label>
                                 </div>
                                 <div id="filePreview1" class="file-preview mt-3 hidden"></div>
@@ -289,7 +289,7 @@ require_once '../app/core/config.php';
                             <!-- Document 2 -->
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">
-                                    <i class="fas fa-file mr-1"></i>Document 2 (Optional)
+                                    <i class="fas fa-image mr-1"></i>Image 2 (Optional)
                                 </label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="document2" class="file-upload-zone flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200">
@@ -298,9 +298,9 @@ require_once '../app/core/config.php';
                                             <p class="mb-2 text-sm text-gray-500">
                                                 <span class="font-semibold">Click to upload</span> or drag and drop
                                             </p>
-                                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG, GIF up to 10MB</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG, GIF up to 10MB</p>
                                         </div>
-                                        <input id="document2" name="document2" type="file" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" />
+                                        <input id="document2" name="document2" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
                                     </label>
                                 </div>
                                 <div id="filePreview2" class="file-preview mt-3 hidden"></div>
@@ -517,11 +517,11 @@ require_once '../app/core/config.php';
 
         function showFilePreview(file, previewElement, input) {
             // Validate file type
-            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
                     title: 'Invalid File Type',
-                    text: 'Please upload a valid file (PDF, DOC, DOCX, JPG, PNG, or GIF).',
+                    text: 'Please upload a valid image file (JPG, PNG, or GIF).',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -546,7 +546,7 @@ require_once '../app/core/config.php';
                 <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-file text-blue-500 text-lg"></i>
+                            <i class="fas fa-image text-blue-500 text-lg"></i>
                             <div>
                                 <p class="text-sm font-medium text-gray-900">${file.name}</p>
                                 <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>

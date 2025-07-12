@@ -76,13 +76,14 @@ class ExcuseApplication
         }
     }
 
-    public function updateExcuseApplicationStatus($id, $status): bool
+    public function updateExcuseApplicationStatus($id, $status, $remarks = ''): bool
     {
         try {
-            $query = "UPDATE excuse_application SET application_status = :status WHERE id = :id";
+            $query = "UPDATE excuse_application SET application_status = :status, admin_remarks = :remarks WHERE id = :id";
             $params = [
                 ':id' => $id,
-                ':status' => $status
+                ':status' => $status,
+                ':remarks' => $remarks
             ];
             
             $result = $this->query($query, $params);
@@ -97,7 +98,7 @@ class ExcuseApplication
     {
         try {
             $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
-                             s.f_name, s.l_name, s.program, s.acad_year
+                             s.name, s.program, s.acad_year
                       FROM excuse_application ea 
                       INNER JOIN attendance a ON ea.atten_id = a.atten_id 
                       INNER JOIN students s ON ea.student_id = s.student_id 
@@ -115,7 +116,7 @@ class ExcuseApplication
     {
         try {
             $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
-                             s.f_name, s.l_name, s.program, s.acad_year
+                             s.name, s.program, s.acad_year
                       FROM excuse_application ea 
                       INNER JOIN attendance a ON ea.atten_id = a.atten_id 
                       INNER JOIN students s ON ea.student_id = s.student_id 
@@ -126,6 +127,86 @@ class ExcuseApplication
             return is_array($result) ? $result : [];
         } catch (Exception $e) {
             error_log("Error getting pending excuse applications: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getApprovedExcuseApplications(): array
+    {
+        try {
+            $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
+                             s.name, s.program, s.acad_year
+                      FROM excuse_application ea 
+                      INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      INNER JOIN students s ON ea.student_id = s.student_id 
+                      WHERE ea.application_status = 1
+                      ORDER BY ea.id DESC";
+            
+            $result = $this->query($query);
+            return is_array($result) ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error getting approved excuse applications: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getRejectedExcuseApplications(): array
+    {
+        try {
+            $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
+                             s.name, s.program, s.acad_year
+                      FROM excuse_application ea 
+                      INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      INNER JOIN students s ON ea.student_id = s.student_id 
+                      WHERE ea.application_status = 2
+                      ORDER BY ea.id DESC";
+            
+            $result = $this->query($query);
+            return is_array($result) ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error getting rejected excuse applications: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function searchApplication($searchQuery){
+        try{
+            $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
+                      s.name, s.program, s.acad_year
+                      FROM excuse_application ea 
+                      INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      INNER JOIN students s ON ea.student_id = s.student_id 
+                      WHERE ea.application_description LIKE '%$searchQuery%' OR
+                      a.event_name LIKE '%$searchQuery%' OR
+                      s.name LIKE '%$searchQuery%' OR
+                      s.program LIKE '%$searchQuery%' OR
+                      s.acad_year LIKE '%$searchQuery%'
+                      ORDER BY ea.id DESC";
+            $result = $this->query($query);         
+            return is_array($result) ? $result : [];
+        }
+        catch(Exception $e){
+            error_log("Error searching application: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getExcuseApplicationsByStatus($status): array
+    {
+        try {
+            $query = "SELECT ea.*, a.event_name, a.date_created as event_date, 
+                             s.name, s.program, s.acad_year
+                      FROM excuse_application ea 
+                      INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      INNER JOIN students s ON ea.student_id = s.student_id 
+                      WHERE ea.application_status = :status
+                      ORDER BY ea.id DESC";
+            
+            $params = [':status' => $status];
+            $result = $this->query($query, $params);
+            return is_array($result) ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error getting excuse applications by status: " . $e->getMessage());
             return [];
         }
     }
@@ -164,13 +245,99 @@ class ExcuseApplication
             $result = $this->query($query, $params);
             
             if (is_array($result) && !empty($result) && isset($result[0][$column])) {
-                return $result[0][$column];
+                $document = $result[0][$column];
+                // Debug: Check if document is not null and has content
+                if ($document && strlen($document) > 0) {
+                    return $document;
+                } else {
+                    error_log("Document is empty or null for ID: $id, Document: $documentNumber");
+                    return null;
+                }
             }
             
+            error_log("No document found for ID: $id, Document: $documentNumber");
             return null;
         } catch (Exception $e) {
             error_log("Error getting document: " . $e->getMessage());
             return null;
+        }
+    }
+
+    public function getDocumentInfo($id, $documentNumber): ?array
+    {
+        try {
+            $document = $this->getDocument($id, $documentNumber);
+            if (!$document) {
+                return null;
+            }
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_buffer($finfo, $document);
+            finfo_close($finfo);
+
+            $size = strlen($document);
+            $extension = 'bin';
+            $icon = 'fas fa-file';
+
+            switch ($mimeType) {
+                case 'application/pdf':
+                    $extension = 'pdf';
+                    $icon = 'fas fa-file-pdf';
+                    break;
+                case 'image/jpeg':
+                case 'image/jpg':
+                    $extension = 'jpg';
+                    $icon = 'fas fa-file-image';
+                    break;
+                case 'image/png':
+                    $extension = 'png';
+                    $icon = 'fas fa-file-image';
+                    break;
+                case 'image/gif':
+                    $extension = 'gif';
+                    $icon = 'fas fa-file-image';
+                    break;
+                case 'application/msword':
+                    $extension = 'doc';
+                    $icon = 'fas fa-file-word';
+                    break;
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    $extension = 'docx';
+                    $icon = 'fas fa-file-word';
+                    break;
+                case 'application/vnd.ms-excel':
+                    $extension = 'xls';
+                    $icon = 'fas fa-file-excel';
+                    break;
+                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                    $extension = 'xlsx';
+                    $icon = 'fas fa-file-excel';
+                    break;
+            }
+
+            return [
+                'mime_type' => $mimeType,
+                'extension' => $extension,
+                'size' => $size,
+                'size_formatted' => $this->formatFileSize($size),
+                'icon' => $icon
+            ];
+        } catch (Exception $e) {
+            error_log("Error getting document info: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function formatFileSize($bytes): string
+    {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
         }
     }
 } 
