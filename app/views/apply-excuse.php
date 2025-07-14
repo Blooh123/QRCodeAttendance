@@ -413,6 +413,9 @@ require_once '../app/core/config.php';
         let quill;
         
         document.addEventListener('DOMContentLoaded', function() {
+            // Show notice popup on page load
+            showNoticePopup();
+            
             // Initialize Quill editor
             quill = new Quill('#editor', {
                 theme: 'snow',
@@ -731,6 +734,92 @@ require_once '../app/core/config.php';
             } else {
                 dropdown.classList.add('hidden');
             }
+        }
+
+        // Show notice popup function
+        function showNoticePopup() {
+            Swal.fire({
+                title: '<div class="flex items-center justify-center"><i class="fas fa-exclamation-triangle text-yellow-500 text-3xl mr-3"></i><span class="text-xl font-bold text-gray-800">Important Notice</span></div>',
+                html: `
+                    <div class="text-left space-y-4">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                            <div class="flex items-start">
+                                <i class="fas fa-info-circle text-yellow-600 mt-1 mr-3"></i>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-yellow-800 mb-2">One-Time Submission Policy</h3>
+                                    <ul class="text-sm text-yellow-700 space-y-2">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-yellow-600 mt-1 mr-2 text-xs"></i>
+                                            <span>You can only submit <strong>ONE</strong> excuse application per event</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-yellow-600 mt-1 mr-2 text-xs"></i>
+                                            <span><strong>No re-submission</strong> is allowed once submitted</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-yellow-600 mt-1 mr-2 text-xs"></i>
+                                            <span>Please ensure all information is <strong>accurate and complete</strong></span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-yellow-600 mt-1 mr-2 text-xs"></i>
+                                            <span>Only submit applications for <strong>valid and legitimate</strong> excuses</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Before You Submit</h3>
+                                    <ul class="text-sm text-blue-700 space-y-1">
+                                        <li>• Double-check all information for accuracy</li>
+                                        <li>• Ensure supporting documents are clear and relevant</li>
+                                        <li>• Make sure your excuse is legitimate and well-documented</li>
+                                        <li>• Review your application thoroughly before submission</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+                            <div class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-red-600 mt-1 mr-3"></i>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-red-800 mb-2">Important Reminder</h3>
+                                    <p class="text-sm text-red-700">
+                                        This feature is designed to help students with legitimate absences. 
+                                        <strong>Misuse of this system may result in disciplinary action.</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                icon: 'warning',
+                confirmButtonText: '<i class="fas fa-check mr-2"></i>I Understand',
+                confirmButtonColor: '#a31d1d',
+                showCancelButton: true,
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                cancelButtonColor: '#6b7280',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: 'rounded-2xl',
+                    title: 'text-xl font-bold',
+                    content: 'text-gray-600',
+                    confirmButton: 'rounded-xl font-semibold',
+                    cancelButton: 'rounded-xl font-semibold'
+                },
+                width: '600px'
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.cancel) {
+                    // If user clicks cancel, redirect back to student home
+                    window.location.href = '<?php echo ROOT?>student';
+                }
+            });
         }
 
 
