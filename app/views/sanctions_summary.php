@@ -50,7 +50,7 @@ require "../app/core/imageConfig.php";
         
         /* Loading overlay styles */
         .loading-overlay {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -122,13 +122,7 @@ require "../app/core/imageConfig.php";
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
 
-<!-- Loading Overlay -->
-<div id="loadingOverlay" class="loading-overlay">
-    <div class="loading-container">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading...</div>
-    </div>
-</div>
+
 
 <!-- Header -->
 <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
@@ -210,7 +204,7 @@ require "../app/core/imageConfig.php";
     </div>
 
     <!-- Sanctions Table -->
-    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black overflow-hidden">
+    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black overflow-hidden relative">
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
                 <i class="fas fa-table"></i> Sanctions Records
@@ -220,7 +214,14 @@ require "../app/core/imageConfig.php";
             </h2>
         </div>
         
-        <div class="overflow-x-auto hide-scrollbar">
+        <div class="overflow-x-auto hide-scrollbar relative">
+            <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="loading-overlay">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Loading...</div>
+                </div>
+            </div>
             <table class="w-full">
                 <thead class="bg-[#a31d1d] text-white">
                     <tr>
