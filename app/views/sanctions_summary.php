@@ -168,7 +168,7 @@ require "../app/core/imageConfig.php";
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 hover-card">
+        <!-- <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 hover-card">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Total Students</p>
@@ -178,12 +178,12 @@ require "../app/core/imageConfig.php";
                     <i class="fas fa-users text-blue-600 text-xl"></i>
                 </div>
             </div>
-        </div>
+        </div> -->
         
         <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 hover-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">With Sanctions</p>
+                    <p class="text-sm font-medium text-gray-600">Student With Sanctions</p>
                     <p class="text-3xl font-bold text-red-600">
                         <?= count(array_filter($data['sanctionSummary'], function($item) { return $item['hours'] > 0; })) ?>
                     </p>
