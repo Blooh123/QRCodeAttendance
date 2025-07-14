@@ -29,4 +29,4 @@ $imageSource5 = 'data:image/png;base64,' . $imageData5;
 
 $imagePath6 = ROOT."assets/Images/bilat.jpg";
 $imageData6 = base64_encode(file_get_contents($imagePath6));
-$imageSource6 = 'data:image/png;base64,' . $imageData6; 
+$imageSource6 = 'data:image/png;base64,' . $imageData6;
