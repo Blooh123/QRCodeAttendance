@@ -172,12 +172,14 @@
         $allEvents = $allEvents ?? [];
         $today = date('Y-m-d');
         $upcoming = [];
+        $ongoing = [];
         $recent = [];
 
         foreach ($allEvents as $event) {
-            $eventDate = $event['date_created'] ?? '';
             if ($event['atten_status'] === 'not started') {
                 $upcoming[] = $event;
+            } elseif ($event['atten_status'] === 'on going') {
+                $ongoing[] = $event;
             } else {
                 $recent[] = $event;
             }
@@ -204,6 +206,44 @@
             return null;
         }
         ?>
+
+                <!-- Ongoing Events -->
+        <div>
+            <h2 class="text-2xl font-bold text-yellow-700 mb-6 flex items-center gap-2">
+                <svg class="h-7 w-7 text-yellow-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="16" r="2" fill="currentColor"/>
+                </svg>
+                Ongoing Activities
+            </h2>
+            <?php if (count($ongoing)): ?>
+                <div class="space-y-8">
+                    <?php foreach ($ongoing as $event): ?>
+                        <div class="glass-card rounded-2xl overflow-hidden p-0">
+                            <?php $banner = getBannerBase64($event); ?>
+                            <?php if ($banner): ?>
+                                <img src="<?php echo htmlspecialchars($banner); ?>" alt="Event Banner" class="event-banner">
+                            <?php endif; ?>
+                            <div class="p-8">
+                                <div class="text-xl font-bold text-[#a31d1d] mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
+                                <div class="text-gray-600 text-base mb-1 font-medium">Date: <?php echo htmlspecialchars($event['date_created']); ?></div>
+                                <div class="text-yellow-700 text-sm mb-2 font-semibold">Status: Ongoing</div>
+                                <?php if (!empty($event['description'])): ?>
+                                    <div class="event-description mb-2"><?php echo $event['description']; ?></div>
+                                <?php endif; ?>
+                                <div class="mt-4 text-sm text-yellow-700 italic">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    This event is currently ongoing.
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="text-gray-500 italic">No ongoing activities.</div>
+            <?php endif; ?>
+        </div>
 
         <!-- Upcoming Events -->
         <div>
@@ -246,6 +286,8 @@
                 <div class="text-gray-500 italic">No upcoming activities.</div>
             <?php endif; ?>
         </div>
+
+
 
         <!-- Recent Events -->
         <div>
