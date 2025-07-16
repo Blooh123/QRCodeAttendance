@@ -122,11 +122,13 @@ require "../app/core/imageConfig.php";
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <a href="<?php echo htmlspecialchars(ROOT); ?>remove_sanction?id=<?php echo htmlspecialchars($sanction['sanction_id']); ?>&studentID=<?php echo htmlspecialchars($_GET['student_id']); ?>"
-                                           class="text-red-500 hover:text-red-700 transition-colors duration-200"
-                                           onclick="return confirmDelete(event, this.href);">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
+                                        <form method="POST" action="" name="remove_sanction" id="remove_sanction" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this sanction?');">
+                                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($sanction['sanction_id']); ?>">
+                                            <input type="hidden" name="studentID" value="<?php echo htmlspecialchars($_GET['student_id']); ?>">
+                                            <button type="submit" class="text-red-500 hover:text-red-700 transition-colors duration-200" style="background:none; border:none; padding:0; cursor:pointer;">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

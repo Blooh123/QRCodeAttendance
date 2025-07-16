@@ -27,6 +27,10 @@ class StudentAttendanceSummary extends \Controller
         $attendanceRecord = $attendance->StudentAttendanceRecord($userID);
         $studentInfo = $student->getStudentData($userID);
 
+        if(isset($_POST['remove_sanction'])){
+            $sanction->deleteSanction($_POST['id']);
+        }
+
         $data = [
             'sanctionList' => $sanctionList,
             'attendanceRecord' => $attendanceRecord,
