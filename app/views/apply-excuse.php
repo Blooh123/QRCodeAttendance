@@ -143,7 +143,7 @@ require_once '../app/core/config.php';
 </header>
 
 <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Apply for Excuse Form -->
         <div class="lg:col-span-2">
             <div class="glass-card rounded-2xl p-8 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
@@ -326,73 +326,72 @@ require_once '../app/core/config.php';
                 </div>
 
         <!-- My Applications -->
-        <div class="lg:col-span-1">
+        <div class="lg:col-span-2">
             <div class="glass-card rounded-2xl p-6 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-list text-[#a31d1d] mr-2"></i>
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-list text-[#a31d1d]"></i>
                     My Applications
                 </h3>
                 
                 <?php if (empty($studentApplications)): ?>
-                    <div class="text-center py-8">
-                        <i class="fas fa-inbox text-4xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-500">No applications yet</p>
+                    <div class="flex flex-col items-center justify-center py-12">
+                        <i class="fas fa-inbox text-5xl text-gray-300 mb-4"></i>
+                        <p class="text-lg text-gray-500 font-medium">No applications yet</p>
                     </div>
                 <?php else: ?>
-                    <div class="space-y-4 max-h-96 overflow-y-auto hide-scrollbar">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto hide-scrollbar">
                         <?php foreach ($studentApplications as $app): ?>
-                            <div class="application-card bg-white rounded-lg p-4 border border-gray-200">
-                                <div class="space-y-3">
+                            <div class="application-card bg-gradient-to-br from-gray-50 to-white rounded-xl p-5 border border-gray-200 shadow hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
+                                <div class="flex items-center justify-between mb-2">
                                     <div>
-                                        <h4 class="font-semibold text-gray-800 text-sm">
+                                        <h4 class="font-bold text-gray-900 text-base truncate max-w-[12rem]">
                                             <?php echo htmlspecialchars($app['event_name']); ?>
                                         </h4>
                                         <p class="text-xs text-gray-500">
+                                            <i class="fas fa-calendar-alt mr-1"></i>
                                             <?php echo date('M d, Y', strtotime($app['event_date'])); ?>
                                         </p>
                                     </div>
-                                    
-                                    <div>
-                                        <?php
-                                        $statusClass = '';
-                                        $statusText = '';
-                                        $statusIcon = '';
-                                        switch ($app['application_status']) {
-                                            case 0:
-                                                $statusClass = 'bg-yellow-100 text-yellow-800';
-                                                $statusText = 'Pending';
-                                                $statusIcon = 'fas fa-clock';
-                                                break;
-                                            case 1:
-                                                $statusClass = 'bg-green-100 text-green-800';
-                                                $statusText = 'Approved';
-                                                $statusIcon = 'fas fa-check-circle';
-                                                break;
-                                            case 2:
-                                                $statusClass = 'bg-red-100 text-red-800';
-                                                $statusText = 'Rejected';
-                                                $statusIcon = 'fas fa-times-circle';
-                                                break;
-                                        }
-                                        ?>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $statusClass; ?>">
-                                            <i class="<?php echo $statusIcon; ?> mr-1"></i>
-                                            <?php echo $statusText; ?>
-                                        </span>
-                                    </div>
-                                    
+                                    <?php
+                                    $statusClass = '';
+                                    $statusText = '';
+                                    $statusIcon = '';
+                                    switch ($app['application_status']) {
+                                        case 0:
+                                            $statusClass = 'bg-yellow-100 text-yellow-800 border-yellow-300';
+                                            $statusText = 'Pending';
+                                            $statusIcon = 'fas fa-clock';
+                                            break;
+                                        case 1:
+                                            $statusClass = 'bg-green-100 text-green-800 border-green-300';
+                                            $statusText = 'Approved';
+                                            $statusIcon = 'fas fa-check-circle';
+                                            break;
+                                        case 2:
+                                            $statusClass = 'bg-red-100 text-red-800 border-red-300';
+                                            $statusText = 'Rejected';
+                                            $statusIcon = 'fas fa-times-circle';
+                                            break;
+                                    }
+                                    ?>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border <?php echo $statusClass; ?>">
+                                        <i class="<?php echo $statusIcon; ?> mr-1"></i>
+                                        <?php echo $statusText; ?>
+                                    </span> 
+                                </div>
+                                <div class="flex-1">
                                     <?php if ($app['document1'] || $app['document2']): ?>
-                                        <div class="flex gap-2">
+                                        <div class="flex gap-2 mt-2">
                                             <?php if ($app['document1']): ?>
                                                 <a href="?action=viewDocument&id=<?php echo $app['id']; ?>&doc=1" 
-                                                   class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
-                                                    <i class="fas fa-file mr-1"></i>Doc 1
+                                                   class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                                                    <i class="fas fa-file-image mr-1 text-[#a31d1d]"></i>Doc 1
                                                 </a>
                                             <?php endif; ?>
                                             <?php if ($app['document2']): ?>
                                                 <a href="?action=viewDocument&id=<?php echo $app['id']; ?>&doc=2" 
-                                                   class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
-                                                    <i class="fas fa-file mr-1"></i>Doc 2
+                                                   class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                                                    <i class="fas fa-file-image mr-1 text-[#a31d1d]"></i>Doc 2
                                                 </a>
                                             <?php endif; ?>
                                         </div>
