@@ -22,7 +22,7 @@ require "../app/core/imageConfig.php";
                 <h1 class="text-3xl font-bold text-gray-900">Student Attendance Summary</h1>
             </div>
             <div class="flex items-center space-x-3">
-                <a href="<?php echo htmlspecialchars(ROOT); ?>sanction_summary?>"
+                <a href="<?php echo htmlspecialchars(ROOT); ?>sanction_summary"
                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Back
