@@ -152,6 +152,10 @@ canvas {
     height: 100% !important;
 }
 
+#video, canvas {
+    transform: scaleX(1); /* No mirror */
+}
+
 /* Status message styling */
 #status {
     position: absolute;
@@ -224,7 +228,6 @@ canvas {
     <div class="w-full flex flex-col items-center">
         <div class="video-container scanning-border">
             <video id="video" width="600" height="450" autoplay muted playsinline></video>
-
             <div id="status"></div>
         </div>
         <div class="flex justify-center mt-4 relative" style="position: relative; z-index: 10;">
