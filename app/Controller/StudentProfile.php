@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_picture'])) {
         $uploadError = "Invalid file or student ID missing.";
     }
 }elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
-    $currentPassword = $_POST['current_password'];
-    $newPassword = $_POST['new_password'];
-    $confirmPassword = $_POST['confirm_password'];
+    $currentPassword = trim($_POST['current_password']);
+    $newPassword = trim($_POST['new_password']);
+    $confirmPassword = trim($_POST['confirm_password']);
 
     // Fetch user password from database
     $user = new User();
