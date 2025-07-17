@@ -58,7 +58,7 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
     <div class="max-w-5xl mx-auto space-y-8">
         <!-- Profile Section -->
         <div>
-            <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Student Profile
             </h3>
 
@@ -80,7 +80,7 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                     </div>
 
                     <!-- take a photo -->
-                    <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>" class="bg-[#a31d1d] text-white mt-2 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
+                    <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>" class="bg-[#a31d1d] text-white mt-2 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
                         Take a Photo
                     </a>
 
@@ -103,35 +103,35 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
             <!-- Personal Information Card -->
             <?php if (!empty($studentInfo)): ?>
                 <div class="mt-8 glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                    <h4 class="text-xl font-bold text-[#a31d1d] mb-6">Personal Information</h4>
+                    <h4 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-6">Personal Information</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Full Name</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['name'] ?? 'N/A'); ?></p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium">Full Name</p>
+                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['name'] ?? 'N/A'); ?></p>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Email</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['email'] ?? 'N/A'); ?></p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium">Email</p>
+                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['email'] ?? 'N/A'); ?></p>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Student ID</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium">Student ID</p>
+                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
                         </div>
                         <!-- <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Contact</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['contact_num'] ?? 'N/A'); ?></p>
                         </div> -->
                         <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Program</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?></p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium">Program</p>
+                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?></p>
                         </div>
                         <!-- <div class="space-y-2">
                             <p class="text-gray-500 font-medium">Section</p>
                             <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['section'] ?? 'N/A'); ?></p>
                         </div> -->
                         <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Year</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?></p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium">Year</p>
+                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -144,27 +144,27 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
 
             </div>
             <div class="glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                <h4 class="text-xl font-bold text-[#a31d1d] mb-6">Change Password</h4>
+                <h4 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-6">Change Password</h4>
                 <form method="POST" class="space-y-4">
                     <div class="space-y-4">
                         <div>
-                            <label class="text-gray-500 font-medium">Current Password</label>
+                            <label class="text-xs md:text-sm text-gray-500 font-medium">Current Password</label>
                             <input type="password" name="current_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="text-gray-500 font-medium">New Password</label>
+                            <label class="text-xs md:text-sm text-gray-500 font-medium">New Password</label>
                             <input type="password" name="new_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="text-gray-500 font-medium">Confirm New Password</label>
+                            <label class="text-xs md:text-sm text-gray-500 font-medium">Confirm New Password</label>
                             <input type="password" name="confirm_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
                         </div>
                     </div>
                     <button type="submit" name="change_password" 
-                            class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
+                            class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
                         Update Password
                     </button>
                 </form>
