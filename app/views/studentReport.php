@@ -50,7 +50,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
     <div class="max-w-5xl mx-auto space-y-8">
         <!-- Sanctions Section -->
         <div>
-            <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Sanctions Overview
             </h3>
             
@@ -63,14 +63,14 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                     <?php foreach ($sanctionList as $sanction): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:shadow-lg transition-all duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <p class="text-sm font-medium text-[#a31d1d]">
+                                <p class="text-xs md:text-sm font-medium text-[#a31d1d]">
                                     <?= date('F j, Y', strtotime($sanction['date_applied'])); ?>
                                 </p>
-                                <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
+                                <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs md:text-sm font-semibold">
                                     <?= htmlspecialchars($sanction['sanction_hours']); ?> Hours
                                 </span>
                             </div>
-                            <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                            <h4 class="text-base md:text-lg font-semibold text-gray-800 mb-2">
                                 <?= htmlspecialchars($sanction['sanction_reason']); ?>
                             </h4>
                         </div>
@@ -78,20 +78,20 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <?php endif; ?>
             </div>
             <!-- Total Hours Card -->
-            <div class="mt-6 glass-card bg-[#a31d1d] text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
-                Total Sanction Hours: <span class="text-2xl ml-2"><?= htmlspecialchars($totalHours); ?></span>
+            <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
+                Total Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalHours); ?></span>
             </div>
         </div>
 
         <!-- Recent Attended Activities -->
         <div>
-            <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Recent Attended Activities
             </h3>
             <!-- Download Report Button -->
             <div class="mt-6 flex justify-end">
                 <a href="<?php echo ROOT ?>download-report" 
-                   class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 flex items-center gap-2">
+                   class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 flex items-center gap-2 text-sm md:text-base">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -105,10 +105,10 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                     <table class="min-w-full">
                         <thead class="bg-gray-50/50">
                             <tr>
-                                <th class="py-4 px-6 text-left text-sm font-bold text-[#a31d1d]">Event Name</th>
-                                <th class="py-4 px-6 text-left text-sm font-bold text-[#a31d1d]">Date</th>
-                                <th class="py-4 px-6 text-left text-sm font-bold text-[#a31d1d]">Time In</th>
-                                <th class="py-4 px-6 text-left text-sm font-bold text-[#a31d1d]">Time Out</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-[#a31d1d]">Event Name</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-[#a31d1d]">Date</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-[#a31d1d]">Time In</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-[#a31d1d]">Time Out</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -119,10 +119,10 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                             <?php else: ?>
                                 <?php foreach ($attendanceRecord as $record): ?>
                                     <tr class="hover:bg-gray-50/50 transition-colors">
-                                        <td class="py-4 px-6 text-sm text-gray-800 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-600"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-600"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-600">
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-800 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-600"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-600"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-600">
                                             <p class="text-gray-800">
                                                 <?= !empty($record['time_out']) 
                                                     ? date('g:i A', strtotime($record['time_out'])) 
@@ -146,10 +146,10 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <?php else: ?>
                     <?php foreach ($attendanceRecord as $record): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3">
-                            <h4 class="text-lg font-bold text-[#a31d1d]">
+                            <h4 class="text-base md:text-lg font-bold text-[#a31d1d]">
                                 <?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?>
                             </h4>
-                            <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="grid grid-cols-2 gap-4 text-xs md:text-sm">
                                 <div>
                                     <p class="text-gray-500 font-medium">Date</p>
                                     <p class="text-gray-800"><?= date('F j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></p>
@@ -180,7 +180,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
 
         <!-- Excuse Applications -->
         <div>
-            <h3 class="text-2xl font-bold text-[#a31d1d] mb-6 mt-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 mt-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Approved Excuse Applications
             </h3>
             <div class="space-y-4">
@@ -191,7 +191,7 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <?php else: ?>
                     <?php foreach ($excuseApplications as $idx => $application): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3">
-                            <h4 class="text-lg font-bold text-[#a31d1d]">
+                            <h4 class="text-base md:text-lg font-bold text-[#a31d1d]">
                                 <?= htmlspecialchars($application['event_name'] ?? 'N/A'); ?>
                             </h4>
                             <!-- status -->
