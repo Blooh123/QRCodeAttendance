@@ -265,7 +265,7 @@
                             <?php endif; ?>
                             <div class="p-8">
                                 <div class="text-xl font-bold text-[#a31d1d] mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
-                                <div class="text-gray-600 text-base mb-1 font-medium">Date: <?php echo htmlspecialchars($event['date_created']); ?></div>
+                                <div class="text-gray-600 text-base mb-1 font-medium">Date created: <?php echo htmlspecialchars($event['date_created']); ?></div>
                                 <div class="text-gray-500 text-sm mb-2">Status: <?php echo htmlspecialchars($event['atten_status']); ?></div>
                                 <?php if (!empty($event['description'])): ?>
                                     <div class="event-description mb-2"><?php echo $event['description']; ?></div>
