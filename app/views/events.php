@@ -266,10 +266,10 @@
                             <div class="p-8">
                                 <div class="text-xl font-bold text-[#a31d1d] mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
                                 <div class="text-gray-600 text-base mb-1 font-medium">
-                                    Date created: 
+                                    Date Created: 
                                     <?php 
                                         $date = DateTime::createFromFormat('Y-m-d H:i:s', $event['date_created']);
-                                        echo htmlspecialchars($date ? $date->format('F j, Y \a\t g:i A') : $event['date_created']); 
+                                        echo htmlspecialchars($date ? $date->format('F j, Y') : $event['date_created']); 
                                     ?>
                                 </div>
                                 <div class="text-gray-500 text-sm mb-2">Status: <?php echo htmlspecialchars($event['atten_status']); ?></div>
