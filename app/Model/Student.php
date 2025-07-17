@@ -215,8 +215,19 @@ class Student
     // Update profile picture in database
     public function updateProfilePicture($student_id, $imageData): bool
     {
-        $sql = "UPDATE students SET studentProfile = :profile_picture WHERE student_id = :student_id";
-        $stmt = $this->connect()->prepare($sql);
-        return $stmt->execute([':profile_picture' => $imageData, ':student_id' => $student_id]);
+        try {
+            $sql = "UPDATE students SET studentProfile = :profile_picture WHERE student_id = :student_id";
+            $stmt = $this->connect()->prepare($sql);
+            $result = $stmt->execute([':profile_picture' => $imageData, ':student_id' => $student_id]);
+            
+            // Debug: Log the result
+            error_log("UpdateProfilePicture - Student ID: $student_id, Result: " . ($result ? 'true' : 'false'));
+            error_log("UpdateProfilePicture - Rows affected: " . $stmt->rowCount());
+            
+            return $result;
+        } catch (Exception $e) {
+            error_log("UpdateProfilePicture Error: " . $e->getMessage());
+            return false;
+        }
     }
 }

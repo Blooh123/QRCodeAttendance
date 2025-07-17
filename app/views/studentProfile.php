@@ -79,8 +79,13 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                         <?php endif; ?>
                     </div>
 
+                    <!-- take a photo -->
+                    <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>" class="bg-[#a31d1d] text-white mt-2 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
+                        Take a Photo
+                    </a>
+
                     <!-- Upload Form -->
-                    <form id="profile-form" class="mt-6 flex flex-col items-center gap-4">
+                    <!-- <form id="profile-form" class="mt-6 flex flex-col items-center gap-4">
                         <label for="file-upload"
                                class="cursor-pointer bg-white text-[#515050] px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#a31d1d] hover:text-white transition-all duration-200">
                             Choose File
@@ -91,7 +96,7 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                             Upload
                         </button>
                         <p id="file-name" class="text-gray-500 text-sm hidden"></p>
-                    </form>
+                    </form> -->
                 </div>
             </div>
 
@@ -169,7 +174,9 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                 <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-6">
                     <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-6 py-4 text-lg font-semibold text-[#a31d1d] focus:outline-none">
                         <span>Developer Info</span>
-                        <svg id="devInfoChevron" class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        <svg id="devInfoChevron" class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
                     </button>
                     <div id="devInfoPanel" class="px-6 pb-6 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none">
                         <div class="flex flex-col md:flex-row items-center gap-6 mt-4">
@@ -183,6 +190,38 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                         </div>
                     </div>
                 </div>
+                <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const devInfoToggle = document.getElementById('devInfoToggle');
+                    const devInfoPanel = document.getElementById('devInfoPanel');
+                    const devInfoChevron = document.getElementById('devInfoChevron');
+
+                    devInfoToggle.addEventListener('click', function () {
+                        const isOpen = devInfoPanel.classList.contains('pointer-events-auto');
+                        if (!isOpen) {
+                            devInfoPanel.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+                            devInfoPanel.classList.add('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
+                            devInfoChevron.style.transform = 'rotate(180deg)';
+                        } else {
+                            devInfoPanel.classList.remove('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
+                            devInfoPanel.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+                            devInfoChevron.style.transform = '';
+                        }
+                    });
+                });
+                </script>
+                <style>
+                    /* For smooth max-height transition */
+                    #devInfoPanel.max-h-\[500px\] {
+                        max-height: 500px !important;
+                    }
+                    #devInfoPanel.opacity-100 {
+                        opacity: 1 !important;
+                    }
+                    #devInfoPanel.pointer-events-auto {
+                        pointer-events: auto !important;
+                    }
+                </style>
         </div>
     </div>
 
