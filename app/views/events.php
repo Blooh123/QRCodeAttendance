@@ -268,7 +268,11 @@
                                 <div class="text-gray-600 text-base mb-1 font-medium">
                                     Date Created: 
                                     <?php 
+                                        // Try to parse with time, fallback to Y-m-d only
                                         $date = DateTime::createFromFormat('Y-m-d H:i:s', $event['date_created']);
+                                        if (!$date) {
+                                            $date = DateTime::createFromFormat('Y-m-d', $event['date_created']);
+                                        }
                                         echo htmlspecialchars($date ? $date->format('F j, Y') : $event['date_created']); 
                                     ?>
                                 </div>
