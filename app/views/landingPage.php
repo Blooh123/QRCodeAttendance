@@ -9,304 +9,401 @@ require "../app/core/imageConfig.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="<?php echo $imageSource ?>">
-    <title>Attendance System • Welcome</title>
+    <title>QR Code Attendance System • USeP Tagum-Mabini Campus</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         body {
-            font-family: 'Poppins', sans-serif;
-            background-image:
-                radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
-                linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
-            background-size: 24px 24px;
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10), 0 1.5px 0px 1px #000;
-            outline: 1px solid #000;
+        .hero-gradient {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%);
         }
         
-        .hover-card {
-            transition: transform 0.3s, box-shadow 0.3s;
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         
-        .hover-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
         }
         
-        .floating {
-            animation: floating 3s ease-in-out infinite;
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        .process-step {
+            position: relative;
         }
         
-        .event-btn {
-            background: #a31d1d;
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            outline: 1px solid #000;
-            box-shadow: 0 4px 0px 1px rgba(0,0,0,1);
-            transition: background 0.2s;
+        .process-step::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -2rem;
+            width: 1rem;
+            height: 2px;
+            background: #dc2626;
+            transform: translateY(-50%);
         }
         
-        .event-btn:hover {
-            background: #8a1818;
+        .process-step:first-child::before {
+            display: none;
         }
         
-        @media (max-width: 640px) {
-            .glass-card {
-                padding: 1rem !important;
-            }
-            
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        @media (max-width: 768px) {
             .mobile-hero {
-                height: 60vh !important;
-                min-height: 400px !important;
+                min-height: 60vh;
             }
             
             .mobile-text {
-                font-size: 1.5rem !important;
-                line-height: 1.3 !important;
+                font-size: 1.75rem;
+                line-height: 1.2;
             }
             
             .mobile-subtitle {
-                font-size: 1rem !important;
-                line-height: 1.4 !important;
-            }
-            
-            .mobile-btn {
-                padding: 0.75rem 1.5rem !important;
-                font-size: 1rem !important;
-            }
-            
-            .mobile-card {
-                padding: 1.5rem !important;
-            }
-            
-            .mobile-icon {
-                width: 3rem !important;
-                height: 3rem !important;
-            }
-            
-            .mobile-icon i {
-                font-size: 1.25rem !important;
-            }
-            
-            .mobile-header {
-                padding: 1rem !important;
-            }
-            
-            .mobile-header h1 {
-                font-size: 1.25rem !important;
-            }
-            
-            .mobile-header p {
-                font-size: 0.875rem !important;
-            }
-            
-            .mobile-logo {
-                height: 3rem !important;
-            }
-            
-            .mobile-footer {
-                padding: 1rem !important;
-                text-align: center !important;
-            }
-            
-            .mobile-footer .flex {
-                flex-direction: column !important;
-                gap: 1rem !important;
-            }
-            
-            .mobile-footer a {
-                font-size: 0.875rem !important;
+                font-size: 1rem;
+                line-height: 1.5;
             }
         }
     </style>
 </head>
-<body class="p-4 md:p-6">
+<body>
 
     <!-- Header -->
-    <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto mobile-header">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <!-- Mobile: Centered Logo Only -->
-            <div class="flex justify-center md:hidden">
-                <img src="<?php echo $imageSource4 ?>" alt="Logo" class="h-16 w-auto floating mobile-logo">
-            </div>
-            
-            <!-- Desktop: Logo with Text -->
-            <div class="hidden md:flex items-center space-x-3">
-                <img src="<?php echo $imageSource4 ?>" alt="Logo" class="h-12 w-auto floating">
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-[#a31d1d] tracking-tight">USeP QR Code Attendance System</h1>
-                    <p class="text-gray-600 font-medium">University of Southeastern Philippines Tagum-Mabini Campus</p>
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center space-x-4">
+                    <img src="<?php echo $imageSource4 ?>" alt="USeP Logo" class="h-12 w-auto">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">QR Code Attendance System</h1>
+                        <p class="text-sm text-gray-600">USeP Tagum-Mabini Campus</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="<?php echo ROOT ?>login" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        Sign In
+                    </a>
+                    <a href="<?php echo ROOT ?>register" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors">
+                        Register
+                    </a>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto space-y-10">
-
-        <!-- Main Welcome Section -->
-        <div class="glass-card rounded-2xl overflow-hidden p-0">
-            <div class="relative">
-                <img src="<?php echo $imageSource2 ?>" alt="Illustration" class="w-full h-64 md:h-96 object-cover mobile-hero">
-                <div class="absolute inset-0 bg-gradient-to-r from-[#a31d1d]/80 to-red-900/80 flex items-center justify-center">
-                    <div class="text-center text-white p-4 md:p-8">
-                        <h2 class="text-2xl md:text-5xl font-bold mb-4 text-shadow-lg mobile-text">
-                            Welcome to QR Code Attendance System
-                        </h2>
-                        <p class="text-base md:text-xl mb-6 max-w-2xl mx-auto mobile-subtitle">
-                            Experience seamless attendance tracking through secure QR code scanning technology.
-                        </p>
-                        <a href="<?php echo ROOT ?>login" 
-                           class="event-btn px-6 md:px-8 py-3 md:py-4 text-lg md:text-xl font-bold transition-all duration-200 flex items-center gap-2 mx-auto w-fit mobile-btn">
-                            <i class="fas fa-rocket"></i> Get Started
-                        </a>
-                    </div>
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20 mobile-hero">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 mobile-text">
+                    Secure Attendance Management
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto mobile-subtitle">
+                    Advanced QR code attendance system with facial recognition authentication and geofencing for enhanced security and accuracy.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#how-it-works" class="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors">
+                        Learn How It Works
+                    </a>
+                    <a href="<?php echo ROOT ?>login" class="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-lg font-semibold transition-colors">
+                        Get Started
+                    </a>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Features Section -->
-        <div>
-            <h2 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 flex items-center gap-2">
-                <i class="fas fa-star"></i>
-                Key Features
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <div class="glass-card rounded-2xl p-4 md:p-6 hover-card mobile-card">
-                    <div class="text-center">
-                        <div class="bg-blue-100 p-3 md:p-4 rounded-full w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 flex items-center justify-center mobile-icon">
-                            <i class="fas fa-qrcode text-blue-600 text-xl md:text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-2">QR Code Scanning</h3>
-                        <p class="text-sm md:text-base text-gray-600">Quick and efficient attendance tracking using modern QR technology with instant verification.</p>
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    How Our System Works
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Our secure attendance system uses a facilitator-based approach with multiple layers of authentication to ensure accuracy and prevent fraud.
+                </p>
+            </div>
+
+            <!-- Process Steps -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="process-step text-center">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-shield text-red-600 text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">1. Facilitator Authentication</h3>
+                    <p class="text-gray-600">
+                        Facilitators must pass facial recognition authentication to access the system, preventing unauthorized access and ensuring accountability.
+                    </p>
                 </div>
-                
-                <div class="glass-card rounded-2xl p-4 md:p-6 hover-card mobile-card">
-                    <div class="text-center">
-                        <div class="bg-green-100 p-3 md:p-4 rounded-full w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 flex items-center justify-center mobile-icon">
-                            <i class="fas fa-chart-line text-green-600 text-xl md:text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-2">Real-time Analytics</h3>
-                        <p class="text-sm md:text-base text-gray-600">Comprehensive attendance data and insights with detailed reporting and statistics.</p>
+
+                <div class="process-step text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">2. Location Verification</h3>
+                    <p class="text-gray-600">
+                        Geofencing technology verifies that attendance is being recorded within designated campus areas, preventing remote attendance fraud.
+                    </p>
                 </div>
-                
-                <div class="glass-card rounded-2xl p-4 md:p-6 hover-card mobile-card">
-                    <div class="text-center">
-                        <div class="bg-purple-100 p-3 md:p-4 rounded-full w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 flex items-center justify-center mobile-icon">
-                            <i class="fas fa-cogs text-purple-600 text-xl md:text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-2">Automated Tracking</h3>
-                        <p class="text-sm md:text-base text-gray-600">Streamlined attendance management for school activities with automated processing.</p>
+
+                <div class="process-step text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-qrcode text-green-600 text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">3. QR Code Scanning</h3>
+                    <p class="text-gray-600">
+                        Facilitators scan each student's unique QR code to record attendance, ensuring accurate tracking and preventing self-scanning fraud.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">System Overview</h3>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/l7Kj-QySG9s?si=gr0H2bRiXAbbWtdc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Benefits Section -->
-        <div>
-            <h2 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 flex items-center gap-2">
-                <i class="fas fa-check-circle"></i>
-                Why Choose Our System?
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div class="glass-card rounded-2xl p-4 md:p-6 mobile-card">
-                    <h3 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-3 md:mb-4 flex items-center gap-2">
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Key Features
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Advanced security features designed for educational institutions
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-red-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-face-id text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Facial Recognition</h3>
+                    <p class="text-gray-600">
+                        Biometric authentication ensures only authorized facilitators can access the system, preventing unauthorized attendance recording.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-map-marked-alt text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Geofencing</h3>
+                    <p class="text-gray-600">
+                        Location-based verification ensures attendance is recorded within designated campus areas, preventing remote attendance fraud.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-user-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Facilitator Control</h3>
+                    <p class="text-gray-600">
+                        Only authenticated facilitators can scan student QR codes, ensuring accountability and preventing self-attendance fraud.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Real-time Analytics</h3>
+                    <p class="text-gray-600">
+                        Comprehensive attendance reports and analytics with detailed insights for better decision-making and monitoring.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-yellow-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure Data</h3>
+                    <p class="text-gray-600">
+                        Encrypted data transmission and storage with regular backups ensure the security and integrity of attendance records.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 feature-card">
+                    <div class="bg-indigo-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Mobile Friendly</h3>
+                    <p class="text-gray-600">
+                        Responsive design works seamlessly on all devices, making it easy for facilitators to record attendance anywhere on campus.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Why Choose Our System?
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Designed specifically for educational institutions with security and accuracy in mind
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-3">
                         <i class="fas fa-shield-alt text-green-600"></i>
-                        Secure & Reliable
+                        Enhanced Security
                     </h3>
-                    <ul class="space-y-2 text-sm md:text-base text-gray-600">
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Facial Recognition Authentication
+                    <ul class="space-y-4 text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Facial recognition prevents unauthorized access to the system</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Real-time attendance verification
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Geofencing ensures attendance is recorded within campus boundaries</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Geofencing Attendance
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Facilitator-based scanning prevents self-attendance fraud</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Encrypted data transmission and secure storage</span>
                         </li>
                     </ul>
                 </div>
-                
-                <div class="glass-card rounded-2xl p-4 md:p-6 mobile-card">
-                    <h3 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-3 md:mb-4 flex items-center gap-2">
+
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-3">
                         <i class="fas fa-clock text-blue-600"></i>
-                        Time Efficient
+                        Efficiency & Accuracy
                     </h3>
-                    <ul class="space-y-2 text-sm md:text-base text-gray-600">
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Instant attendance recording
+                    <ul class="space-y-4 text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Quick QR code scanning for instant attendance recording</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Automated report generation
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Automated report generation saves administrative time</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-check text-green-500"></i>
-                            Quick data access and retrieval
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Real-time attendance tracking and monitoring</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span>Comprehensive analytics for better decision-making</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Call to Action -->
-        <div class="glass-card rounded-2xl p-6 md:p-8 text-center mobile-card">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#a31d1d] mb-4">Ready to Get Started?</h2>
-            <p class="text-gray-600 text-base md:text-lg mb-6 max-w-2xl mx-auto">
-                Join thousands of students and faculty who trust our QR Code Attendance System for efficient attendance management.
+    <!-- Call to Action -->
+    <section class="py-20 bg-red-600 text-white">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                Ready to Transform Your Attendance Management?
+            </h2>
+            <p class="text-xl mb-8 opacity-90">
+                Join educational institutions that trust our secure QR Code Attendance System for accurate and reliable attendance tracking.
             </p>
-            <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="<?php echo ROOT ?>login" 
-                   class="event-btn px-6 md:px-8 py-3 md:py-4 text-lg md:text-xl font-bold transition-all duration-200 flex items-center gap-2 justify-center mobile-btn">
-                    <i class="fas fa-sign-in-alt"></i> Sign In Now
+                   class="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In Now
                 </a>
                 <a href="<?php echo ROOT ?>register" 
-                   class="bg-gray-600 hover:bg-gray-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 justify-center mobile-btn">
-                    <i class="fas fa-user-plus"></i> Register
+                   class="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-user-plus mr-2"></i>Create Account
                 </a>
             </div>
         </div>
-
-    </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 md:p-6 mt-12 max-w-7xl mx-auto mobile-footer">
-        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div class="flex items-center space-x-3">
-                <img src="<?php echo $imageSource4 ?>" alt="Logo" class="h-6 md:h-8 w-auto mobile-logo">
-                <p class="text-xs md:text-sm text-gray-600">&copy; <?php echo date('Y'); ?> QRCode Attendance System. All rights reserved.</p>
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="<?php echo $imageSource4 ?>" alt="USeP Logo" class="h-8 w-auto">
+                        <div>
+                            <h3 class="text-lg font-semibold">QR Code Attendance System</h3>
+                            <p class="text-gray-400 text-sm">USeP Tagum-Mabini Campus</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Advanced attendance management system with facial recognition authentication and geofencing for enhanced security and accuracy.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a></li>
+                        <li><a href="<?php echo ROOT ?>login" class="hover:text-white transition-colors">Sign In</a></li>
+                        <li><a href="<?php echo ROOT ?>register" class="hover:text-white transition-colors">Register</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>support@usep.edu.ph</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-phone"></i>
+                            <span>+63 XXX XXX XXXX</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Tagum-Mabini Campus</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <a href="#" class="text-gray-600 hover:text-[#a31d1d] transition-colors text-xs md:text-sm">
-                    <i class="fas fa-shield-alt mr-1"></i>Privacy Policy
-                </a>
-                <a href="#" class="text-gray-600 hover:text-[#a31d1d] transition-colors text-xs md:text-sm">
-                    <i class="fas fa-file-contract mr-1"></i>Terms of Service
-                </a>
-                <a href="#" class="text-gray-600 hover:text-[#a31d1d] transition-colors text-xs md:text-sm">
-                    <i class="fas fa-envelope mr-1"></i>Contact
-                </a>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; <?php echo date('Y'); ?> University of Southeastern Philippines. All rights reserved.</p>
             </div>
         </div>
     </footer>
