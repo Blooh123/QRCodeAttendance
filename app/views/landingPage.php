@@ -104,11 +104,7 @@ require "../app/core/imageConfig.php";
                         <p class="text-xs sm:text-sm text-gray-600 text-center sm:text-left">USeP Tagum-Mabini Campus</p>
                     </div>
                 </div>
-                <div class="w-full sm:w-auto flex justify-center sm:justify-end">
-                    <a href="<?php echo ROOT ?>login" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto text-center">
-                        Sign In
-                    </a>
-                </div>
+
             </div>
         </div>
     </header>
