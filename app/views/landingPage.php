@@ -96,16 +96,16 @@ require "../app/core/imageConfig.php";
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-6">
-                <div class="flex items-center space-x-4">
-                    <img src="<?php echo $imageSource4 ?>" alt="USeP Logo" class="h-12 w-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center py-4 sm:py-6 gap-4 sm:gap-0">
+                <div class="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-start">
+                    <img src="<?php echo $imageSource4 ?>" alt="USeP Logo" class="h-10 sm:h-12 w-auto">
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900">QR Code Attendance System</h1>
-                        <p class="text-sm text-gray-600">USeP Tagum-Mabini Campus</p>
+                        <h1 class="text-lg sm:text-xl font-bold text-gray-900 text-center sm:text-left">QR Code Attendance System</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 text-center sm:text-left">USeP Tagum-Mabini Campus</p>
                     </div>
                 </div>
-                <div class="flex space-x-4">
-                    <a href="<?php echo ROOT ?>login" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                <div class="w-full sm:w-auto flex justify-center sm:justify-end">
+                    <a href="<?php echo ROOT ?>login" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto text-center">
                         Sign In
                     </a>
                 </div>
