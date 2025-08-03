@@ -171,21 +171,54 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
             </div>
 
                 <!-- Developer Info Dropdown -->
-                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-6">
-                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-6 py-4 text-lg font-semibold text-[#a31d1d] focus:outline-none">
-                        <span>Developer Info</span>
-                        <svg id="devInfoChevron" class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="glass-card rounded-2xl shadow-[0px_6px_0px_2px_rgba(163,29,29,0.15)] outline outline-2 outline-[#a31d1d] mt-8">
+                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-8 py-5 text-xl font-bold text-[#a31d1d] bg-[#f8f9fa] rounded-t-2xl focus:outline-none transition-colors hover:bg-[#f3eaea]">
+                        <span class="flex items-center gap-2">
+                            <svg class="h-7 w-7 text-[#a31d1d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01" />
+                            </svg>
+                            Developer Info
+                        </span>
+                        <svg id="devInfoChevron" class="h-7 w-7 text-[#a31d1d] transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div id="devInfoPanel" class="px-6 pb-6 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none">
-                        <div class="flex flex-col md:flex-row items-center gap-6 mt-4">
-                            <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
-                            <div class="flex-1 text-center">
-                                <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
-                                <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">Bachelor of Science in Information Technology</span></div>
-                                <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer, UI/UX Designer, Database Administrator</span></div>
-                                <div class="text-gray-600 text-base">Takbong pogi</div>
+                    <div id="devInfoPanel" class="px-8 pb-8 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none bg-gradient-to-br from-[#fff] via-[#f8f9fa] to-[#ffeaea] rounded-b-2xl">
+                        <div class="flex flex-col md:flex-row items-center gap-8 mt-6">
+                            <div class="relative group">
+                                <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-32 h-32 rounded-full border-4 border-[#a31d1d] shadow-xl object-cover transition-transform duration-300 group-hover:scale-105">
+                                <span class="absolute bottom-2 right-2 bg-[#a31d1d] text-white text-xs px-2 py-0.5 rounded-full shadow-md font-semibold">Dev</span>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="text-2xl font-extrabold text-[#a31d1d] mb-1 tracking-wide">Dave D. Tiongson</div>
+                                <div class="flex flex-col md:flex-row md:items-center md:gap-4 mb-2">
+                                    <span class="text-gray-700 font-medium">Program:</span>
+                                    <span class="font-semibold text-[#a31d1d]">Bachelor of Science in Information Technology</span>
+                                </div>
+                                <div class="flex flex-col md:flex-row md:items-center md:gap-4 mb-2">
+                                    <span class="text-gray-700 font-medium">Skills:</span>
+                                    <span class="font-semibold text-[#a31d1d]">Fullstack Developer, UI/UX Designer, Database Administrator</span>
+                                </div>
+                                <div class="flex items-center justify-center md:justify-start gap-2 mt-2">
+                                    <span class="text-gray-600 text-base italic">"Takbong pogi"</span>
+                                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex justify-center md:justify-start gap-4 mt-4">
+                                    <a href="mailto:dave.tiongson@usep.edu.ph" class="inline-flex items-center gap-1 text-[#a31d1d] hover:underline font-medium transition-colors">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 12H8m8 0a4 4 0 11-8 0 4 4 0 018 0zm2 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1" />
+                                        </svg>
+                                        Email
+                                    </a>
+                                    <a href="https://github.com/davedevt" target="_blank" class="inline-flex items-center gap-1 text-[#a31d1d] hover:underline font-medium transition-colors">
+                                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.919.678 1.852 0 1.336-.012 2.417-.012 2.747 0 .267.18.577.688.48C19.138 20.203 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/>
+                                        </svg>
+                                        GitHub
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
