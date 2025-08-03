@@ -333,12 +333,12 @@ require "../app/core/imageConfig.php";
             <p class="text-xl mb-8 opacity-90">
                 Join educational institutions that trust our secure QR Code Attendance System for accurate and reliable attendance tracking.
             </p>
-            <div class="flex justify-center">
+            <!-- <div class="flex justify-center">
                 <a href="<?php echo ROOT ?>login" 
                    class="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors">
                     <i class="fas fa-sign-in-alt mr-2"></i>Sign In Now
                 </a>
-            </div>
+            </div> -->
         </div>
     </section>
 
@@ -372,11 +372,7 @@ require "../app/core/imageConfig.php";
                     <ul class="space-y-2 text-gray-400">
                         <li class="flex items-center gap-2">
                             <i class="fas fa-envelope"></i>
-                            <span>support@usep.edu.ph</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-phone"></i>
-                            <span>+63 XXX XXX XXXX</span>
+                            <span>ddtiongson00006@usep.edu.ph</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <i class="fas fa-map-marker-alt"></i>
@@ -387,7 +383,7 @@ require "../app/core/imageConfig.php";
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; <?php echo date('Y'); ?> University of Southeastern Philippines. All rights reserved.</p>
+                <p>&copy; <?php echo date('Y'); ?> QRCode Attendance System. All rights reserved.</p>
             </div>
         </div>
     </footer>
