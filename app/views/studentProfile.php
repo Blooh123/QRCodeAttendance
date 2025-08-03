@@ -183,8 +183,8 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                             <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-28 h-28 rounded-full border-4 border-[#a31d1d] shadow-lg object-cover">
                             <div class="flex-1 text-center">
                                 <div class="text-xl font-bold text-[#a31d1d]">Dave D. Tiongson</div>
-                                <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">BSIT</span></div>
-                                <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer</span></div>
+                                <div class="text-gray-700 font-medium mb-1">Program: <span class="font-semibold">Bachelor of Science in Information Technology</span></div>
+                                <div class="text-gray-700 font-medium mb-1">Skills: <span class="font-semibold">Fullstack Developer, UI/UX Designer, Database Administrator</span></div>
                                 <div class="text-gray-600 text-base">Takbong pogi</div>
                             </div>
                         </div>
