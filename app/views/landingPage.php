@@ -181,7 +181,7 @@ require "../app/core/imageConfig.php";
 
         </div>
     </section>
-    <section id="system-overview">
+    <section id="system-overview" class="py-20 bg-white">
         <!-- Video Section -->
         <div class="max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1000">
             <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">System Overview</h3>
