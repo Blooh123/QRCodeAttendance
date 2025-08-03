@@ -108,9 +108,6 @@ require "../app/core/imageConfig.php";
                     <a href="<?php echo ROOT ?>login" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                         Sign In
                     </a>
-                    <a href="<?php echo ROOT ?>register" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors">
-                        Register
-                    </a>
                 </div>
             </div>
         </div>
@@ -208,7 +205,7 @@ require "../app/core/imageConfig.php";
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="bg-white rounded-xl p-8 feature-card">
                     <div class="bg-red-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-                        <i class="fas fa-face-id text-red-600 text-xl"></i>
+                        <i class="fas fa-user-circle text-red-600 text-xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-4">Facial Recognition</h3>
                     <p class="text-gray-600">
@@ -246,15 +243,7 @@ require "../app/core/imageConfig.php";
                     </p>
                 </div>
 
-                <div class="bg-white rounded-xl p-8 feature-card">
-                    <div class="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-                        <i class="fas fa-shield-alt text-yellow-600 text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure Data</h3>
-                    <p class="text-gray-600">
-                        Encrypted data transmission and storage with regular backups ensure the security and integrity of attendance records.
-                    </p>
-                </div>
+
 
                 <div class="bg-white rounded-xl p-8 feature-card">
                     <div class="bg-indigo-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
@@ -344,14 +333,10 @@ require "../app/core/imageConfig.php";
             <p class="text-xl mb-8 opacity-90">
                 Join educational institutions that trust our secure QR Code Attendance System for accurate and reliable attendance tracking.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <div class="flex justify-center">
                 <a href="<?php echo ROOT ?>login" 
                    class="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors">
                     <i class="fas fa-sign-in-alt mr-2"></i>Sign In Now
-                </a>
-                <a href="<?php echo ROOT ?>register" 
-                   class="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-lg font-semibold transition-colors">
-                    <i class="fas fa-user-plus mr-2"></i>Create Account
                 </a>
             </div>
         </div>
@@ -376,11 +361,10 @@ require "../app/core/imageConfig.php";
                 
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a></li>
-                        <li><a href="<?php echo ROOT ?>login" class="hover:text-white transition-colors">Sign In</a></li>
-                        <li><a href="<?php echo ROOT ?>register" class="hover:text-white transition-colors">Register</a></li>
-                    </ul>
+                                         <ul class="space-y-2 text-gray-400">
+                         <li><a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a></li>
+                         <li><a href="<?php echo ROOT ?>login" class="hover:text-white transition-colors">Sign In</a></li>
+                     </ul>
                 </div>
                 
                 <div>
