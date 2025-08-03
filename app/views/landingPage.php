@@ -95,7 +95,6 @@ require "../app/core/imageConfig.php";
 </head>
 <body>
 
-    <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row justify-between items-center py-4 sm:py-6 gap-4 sm:gap-0">
@@ -111,7 +110,6 @@ require "../app/core/imageConfig.php";
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero-gradient text-white py-20 mobile-hero">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center" data-aos="fade-up" data-aos-duration="1000">
@@ -133,7 +131,6 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
 
-    <!-- How It Works Section -->
     <section id="how-it-works" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="800">
@@ -144,8 +141,6 @@ require "../app/core/imageConfig.php";
                     Our secure attendance system uses a facilitator-based approach with multiple layers of authentication to ensure accuracy and prevent fraud.
                 </p>
             </div>
-
-            <!-- Process Steps -->
             <div class="grid md:grid-cols-3 gap-8 mb-16">
                 <div class="process-step text-center" data-aos="fade-up" data-aos-delay="200">
                     <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -180,7 +175,6 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
     <section id="system-overview" class="py-20 bg-white">
-        <!-- Video Section -->
         <div class="max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1000">
             <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">System Overview</h3>
             <div class="video-container">
@@ -190,7 +184,6 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="800">
@@ -256,7 +249,7 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
 
-    <!-- Benefits Section -->
+
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="800">
@@ -322,7 +315,6 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
 
-    <!-- Call to Action -->
     <section class="py-20 bg-red-600 text-white">
         <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="text-3xl md:text-4xl font-bold mb-6">
@@ -340,7 +332,7 @@ require "../app/core/imageConfig.php";
         </div>
     </section>
 
-    <!-- Footer -->
+
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-8">
@@ -393,6 +385,17 @@ require "../app/core/imageConfig.php";
             easing: 'ease-in-out',
             once: true,
             offset: 100
+        });
+        // Prevent context menu and dev tools
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
