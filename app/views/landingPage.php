@@ -178,12 +178,15 @@ require "../app/core/imageConfig.php";
                 </div>
             </div>
 
-            <!-- Video Section -->
-            <div class="max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1000">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">System Overview</h3>
-                <div class="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/l7Kj-QySG9s?si=gr0H2bRiXAbbWtdc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
+
+        </div>
+    </section>
+    <section id="system-overview">
+        <!-- Video Section -->
+        <div class="max-w-4xl mx-auto" data-aos="zoom-in" data-aos-duration="1000">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">System Overview</h3>
+            <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/l7Kj-QySG9s?si=gr0H2bRiXAbbWtdc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
     </section>
