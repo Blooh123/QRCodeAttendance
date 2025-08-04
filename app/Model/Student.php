@@ -107,7 +107,7 @@ class Student
         return $this->query($query, $params);
     }
 
-    public function insertStudent($id, $f_name, $program, $acad_year, $email): bool|array
+    public function insertStudent($id, $name, $program, $acad_year, $email): bool|array
     {
         // Define the SQL query
         $query = "INSERT INTO students (student_id, name, program, acad_year, email, notified) 
@@ -116,7 +116,7 @@ class Student
         // Define the parameters
         $params = [
             ':id' => $id,
-            ':name' => $f_name,
+            ':name' => $name,
             ':program' => $program,
             ':acad_year' => $acad_year, // Added missing parameter
             ':email' => $email

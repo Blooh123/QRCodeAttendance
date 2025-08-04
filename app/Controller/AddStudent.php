@@ -85,7 +85,7 @@ class AddStudent extends \Controller
 
         // Required headers
         $requiredHeaders = [
-            'email', 'student id', 'first name', 'last name', 'program', 'year', 'contact number'
+            'email', 'student id', 'name', 'program', 'year'
         ];
 
         // Get the header row (1st row)
@@ -119,12 +119,10 @@ class AddStudent extends \Controller
             $row = $data[$i];
 
             $student_id = trim($row[$indices['student id']]);
-            $first_name = $row[$indices['first name']];
-            $last_name = $row[$indices['last name']];
+            $name = $row[$indices['name']];
             $program = $row[$indices['program']];
             $year = $row[$indices['year']];
             $email = trim($row[$indices['email']]);
-            $contact = $row[$indices['contact number']];
 
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_ends_with($email, '@usep.edu.ph')) {
@@ -134,14 +132,14 @@ class AddStudent extends \Controller
 
             if ($student->getStudentId($student_id)) {
                 // Update student if exists
-                $student->updateStudent($student_id, $first_name, $last_name, $program, $year, $email, $contact);
+                $student->updateStudent($student_id, $name, $program, $year, $email);
                 $user->updateUser($student_id, $email);
                 $qrcode->updateQrCode($student_id);
                 continue;
             }
 
             // Insert new student
-            $student->insertStudent($student_id, $first_name, $last_name, $program, $year, $email, $contact);
+            $student->insertStudent($student_id, $name, $program, $year, $email);
             $qrCode = $qrcode->generateQRCode($student_id);
             $qrcode->insertQRCode($qrCode, $student_id);
             $user->insertUser($student_id, $email, $student_id, 'student');
