@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Update personal information
             $personalInfoUpdated = $user->updatePersonalInfo($userId, $newName, $newEmail);
+
             
             if ($usernameUpdated && $personalInfoUpdated) {
                 header("Location: edit_user?id=$userId&success=1");

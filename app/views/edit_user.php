@@ -62,12 +62,12 @@
             </div>
             <div>
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Full Name</label>
-                <input name="name" id="name" type="text" value="<?php echo htmlspecialchars($userData[0]['name'] ?? ''); ?>"
+                <input name="name" id="name" type="text" value="<?php echo htmlspecialchars($userData['name'] ?? ''); ?>"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
             </div>
             <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
-                <input name="email" id="email" type="email" value="<?php echo htmlspecialchars($userData[0]['email'] ?? ''); ?>"
+                <input name="email" id="email" type="email" value="<?php echo htmlspecialchars($userData['email'] ?? ''); ?>"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
             </div>
             <div>
