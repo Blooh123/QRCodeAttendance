@@ -147,7 +147,7 @@ require '../app/core/config.php';
     <!-- Warning Message -->
     <div id="warning-message" class="warning">
         ⚠ <strong>Important:</strong> The Excel file must contain the following headers:
-        <br><strong>student id, first name, last name, program, year, email, contact number</strong>
+        <br><strong>student id, name, program, year, email</strong>
     </div>
 
     <label for="excelFile">Import Excel File</label>
