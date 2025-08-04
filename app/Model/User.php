@@ -206,7 +206,7 @@ class User
 
     public function getUserDataWithPersonalInfo($id): array
     {
-        $sql = 'CALL sp_get_user_data_with_personal_info(:id)';
+        $sql = 'SELECT * FROM user_personal_info WHERE id = :id';
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
