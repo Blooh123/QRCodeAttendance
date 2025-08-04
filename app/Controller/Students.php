@@ -25,11 +25,19 @@ $yearList = $student->getAllYear();
 $allStudents = $student->getAllStudents();
 $numOfStudent = count($allStudents);
 
+// Check if there are any filters applied
+$isFiltered = !empty($_GET['search']) || !empty($_GET['program']) || !empty($_GET['year']);
+
+// Initialize studentsList with all students for JavaScript processing
+$studentsList = $allStudents;
+
 $data = [
     'programList' => $programList,
     'yearList' => $yearList,
     'allStudents' => $allStudents,
-    'numOfStudent' => $numOfStudent
+    'studentsList' => $studentsList,
+    'numOfStudent' => $numOfStudent,
+    'isFiltered' => $isFiltered
 ];
 
 $studentsInstance->index($data);
