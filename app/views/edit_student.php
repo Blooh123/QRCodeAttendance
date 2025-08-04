@@ -100,6 +100,13 @@ $totalSanctionHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                 <h2 class="text-lg font-semibold text-[#a31d1d]">Student Account</h2>
                 <p class="text-gray-700 mt-2"><strong>Username:</strong> <?php echo htmlspecialchars($studentData['email']); ?></p>
             </div>
+            <!-- anchor tag t edit account -->
+            <div class="mt-6 text-right">
+                <a href="<?php echo ROOT ?>edit_user?id=<?php echo htmlspecialchars($studentData['student_id']) ?>"
+                        class="px-6 py-2 bg-[#a31d1d] hover:bg-[#8a1818] text-white rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+                    <i class="fas fa-edit"></i> Manage Account
+                </a>
+            </div>
             <div class="mt-6 text-right">
                 <button type="submit"
                         class="px-6 py-2 bg-[#a31d1d] hover:bg-[#8a1818] text-white rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">

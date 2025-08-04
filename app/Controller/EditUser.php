@@ -90,7 +90,7 @@ $data = [
     'userData' => $userData,
     'userSession' => $userSession
 ];
-print_r($userSession);
+
 
 $editUser = new EditUser();
 $editUser->index($data);
