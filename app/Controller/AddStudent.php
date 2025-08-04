@@ -85,7 +85,7 @@ class AddStudent extends \Controller
 
         // Required headers
         $requiredHeaders = [
-            'email', 'student id', 'name', 'program', 'year'
+            'email',  'name','student id', 'program', 'year'
         ];
 
         // Get the header row (1st row)
