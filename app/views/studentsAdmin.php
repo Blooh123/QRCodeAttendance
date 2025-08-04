@@ -194,7 +194,7 @@ if (empty($_SESSION['csrf_token'])) {
                 </button>
             </div>
             <div class="text-gray-600 text-sm">
-                Number of Students: <span class="font-bold" id="studentCount"><?php echo $numOfStudent ?></span>
+                Number of Students: <span class="font-bold"><?php echo $numOfStudent ?></span>
             </div>
         </form>
 
@@ -217,7 +217,7 @@ if (empty($_SESSION['csrf_token'])) {
                         <?php echo (isset($_GET['year']) && $_GET['year'] === $year['acad_year']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($year['acad_year']); ?>
                     </option>
-                <?php endforeach ?>
+                <?php endforeach; ?>
             </select>
 
             <button type="submit" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
@@ -232,151 +232,46 @@ if (empty($_SESSION['csrf_token'])) {
     </div>
 
     <!-- Students Grid -->
-    <div id="studentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <?php foreach ($studentsList as $student): ?>
-            <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card student-card" 
-                 data-name="<?php echo htmlspecialchars(strtolower($student['name'])); ?>"
-                 data-id="<?php echo htmlspecialchars(strtolower($student['student_id'])); ?>"
-                 data-email="<?php echo htmlspecialchars(strtolower($student['email'])); ?>"
-                 data-program="<?php echo htmlspecialchars(strtolower($student['program'])); ?>"
-                 data-year="<?php echo htmlspecialchars(strtolower($student['acad_year'])); ?>">
-                <div class="flex items-center space-x-3 mb-2">
-                    <i class="fas fa-user-graduate text-[#a31d1d] text-2xl"></i>
-                    <h2 class="text-xl font-semibold text-[#a31d1d]">
-                        <?php echo htmlspecialchars($student['name']); ?>
-                    </h2>
+    <?php if (!empty($studentsList)): ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            <?php foreach ($studentsList as $student): ?>
+                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <i class="fas fa-user-graduate text-[#a31d1d] text-2xl"></i>
+                        <h2 class="text-xl font-semibold text-[#a31d1d]">
+                            <?php echo htmlspecialchars($student['name']); ?>
+                        </h2>
+                    </div>
+                    <p class="text-gray-700"><strong>ID:</strong> <?php echo htmlspecialchars($student['student_id']); ?></p>
+                    <p class="text-gray-700"><strong>Program:</strong> <?php echo htmlspecialchars($student['program']); ?></p>
+                    <p class="text-gray-700"><strong>Year:</strong> <?php echo htmlspecialchars($student['acad_year']); ?></p>
+                    <p class="text-gray-700"><strong>Email:</strong> <?php echo htmlspecialchars($student['email']); ?></p>
+                    <div class="flex justify-between mt-4">
+                        <a href="<?php echo ROOT?>edit_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
+                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
+                           onclick="return confirmDelete(event, this.href);"
+                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
                 </div>
-                <p class="text-gray-700"><strong>ID:</strong> <?php echo htmlspecialchars($student['student_id']); ?></p>
-                <p class="text-gray-700"><strong>Program:</strong> <?php echo htmlspecialchars($student['program']); ?></p>
-                <p class="text-gray-700"><strong>Year:</strong> <?php echo htmlspecialchars($student['acad_year']); ?></p>
-                <p class="text-gray-700"><strong>Email:</strong> <?php echo htmlspecialchars($student['email']); ?></p>
-                <div class="flex justify-between mt-4">
-                    <a href="<?php echo ROOT?>edit_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
-                       class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
-                       onclick="return confirmDelete(event, this.href);"
-                       class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                        <i class="fas fa-trash"></i> Delete
-                    </a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-    
-    <!-- No Results Message -->
-    <div id="noResults" class="hidden text-center text-gray-600 mt-6">
-        <p>No students found for the selected filters.</p>
-    </div>
+            <?php endforeach; ?>
+        </div>
+    <?php elseif ($isFiltered): ?>
+        <p class="text-center text-gray-600 mt-6">No students found for the selected filters.</p>
+    <?php elseif(!$isFiltered):?>
+        <p class="text-center text-gray-600 mt-6">Student Information will be displayed here.</p>
+    <?php endif; ?>
 </div>
 
 <script>
-    // Student data from PHP
-    const allStudents = <?php echo json_encode($allStudents); ?>;
-    const totalStudents = <?php echo $numOfStudent; ?>;
-    
-    // JavaScript-based search and filter functionality
-    class StudentFilter {
-        constructor() {
-            this.searchInput = document.getElementById('search-input');
-            this.programFilter = document.getElementById('program-filter');
-            this.yearFilter = document.getElementById('year-filter');
-            this.studentCount = document.getElementById('studentCount');
-            this.studentsGrid = document.getElementById('studentsGrid');
-            this.noResults = document.getElementById('noResults');
-            this.studentCards = document.querySelectorAll('.student-card');
-            
-            this.initializeEventListeners();
-        }
-        
-        initializeEventListeners() {
-            // Search input with debouncing
-            let searchTimeout;
-            this.searchInput.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    this.filterStudents();
-                }, 300);
-            });
-            
-            // Filter selects
-            this.programFilter.addEventListener('change', () => {
-                this.filterStudents();
-            });
-            
-            this.yearFilter.addEventListener('change', () => {
-                this.filterStudents();
-            });
-            
-            // Prevent form submission for client-side filtering
-            document.querySelector('form[action*="adminHome"]').addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.filterStudents();
-            });
-            
-            document.querySelector('.filter-container').addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.filterStudents();
-            });
-        }
-        
-        filterStudents() {
-            const searchTerm = this.searchInput.value.toLowerCase();
-            const programFilter = this.programFilter.value.toLowerCase();
-            const yearFilter = this.yearFilter.value.toLowerCase();
-            
-            let visibleCount = 0;
-            
-            this.studentCards.forEach(card => {
-                const name = card.getAttribute('data-name');
-                const id = card.getAttribute('data-id');
-                const email = card.getAttribute('data-email');
-                const program = card.getAttribute('data-program');
-                const year = card.getAttribute('data-year');
-                
-                // Check search term
-                const matchesSearch = !searchTerm || 
-                    name.includes(searchTerm) ||
-                    id.includes(searchTerm) ||
-                    email.includes(searchTerm) ||
-                    program.includes(searchTerm) ||
-                    year.includes(searchTerm);
-                
-                // Check program filter
-                const matchesProgram = !programFilter || program === programFilter;
-                
-                // Check year filter
-                const matchesYear = !yearFilter || year === yearFilter;
-                
-                // Show/hide card based on filters
-                if (matchesSearch && matchesProgram && matchesYear) {
-                    card.style.display = '';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Update student count
-            this.studentCount.textContent = visibleCount;
-            
-            // Show/hide no results message
-            if (visibleCount === 0) {
-                this.noResults.style.display = 'block';
-                this.studentsGrid.style.display = 'none';
-            } else {
-                this.noResults.style.display = 'none';
-                this.studentsGrid.style.display = 'grid';
-            }
-        }
-    }
-    
     function changePage(pageNumber) {
         document.getElementById('pageInput').value = pageNumber;
         document.getElementById('paginationForm').submit();
     }
-    
     function confirmDelete(event, url) {
         event.preventDefault(); // Prevents immediate navigation
 
@@ -396,11 +291,8 @@ if (empty($_SESSION['csrf_token'])) {
         });
     }
 
-    // Initialize student filter when DOM is loaded
+    // Add loading screen functionality for search and filter
     document.addEventListener('DOMContentLoaded', function() {
-        new StudentFilter();
-        
-        // Add loading screen functionality for search and filter
         const searchLoadingOverlay = document.getElementById('searchLoadingOverlay');
         const searchLoadingText = document.getElementById('searchLoadingText');
         let loadingInterval = null;
@@ -427,6 +319,16 @@ if (empty($_SESSION['csrf_token'])) {
             searchLoadingOverlay.style.display = 'none';
             clearInterval(loadingInterval);
         }
+
+        // Show loading for search form
+        document.querySelector('form[action*="adminHome"]').addEventListener('submit', function() {
+            startLoading();
+        });
+
+        // Show loading for filter form
+        document.querySelector('.filter-container').addEventListener('submit', function() {
+            startLoading();
+        });
 
         // Hide loading when page is fully loaded
         window.addEventListener('load', function() {
