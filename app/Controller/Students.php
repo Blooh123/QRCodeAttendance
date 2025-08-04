@@ -14,8 +14,6 @@ class Students extends Controller
     public function index($data){
         $this->loadViewWithData("studentsAdmin", $data);
     }
-
-
 }
 
 $studentsInstance = new Students();
@@ -23,35 +21,15 @@ $student = new Student();
 $programList = $student->getAllProgram();
 $yearList = $student->getAllYear();
 
-//pagination stuff
-//$limit = 6; // Number of users per page
-//$page = isset($_POST['page1']) ? (int)$_POST['page1'] : 1;
-//$offset = ($page - 1) * $limit;
-//$totalUsers = $student->getUserCount();
-//$totalPages = ceil($totalUsers / $limit);
-//
-$studentsList = '';
-$numOfStudent  = $student->getUserCount();
-$isFiltered = !empty($_GET['search']) || !empty($_GET['program']) || !empty($_GET['year']);
-
-//searching stuff
-
-    if (!empty($_GET['search'])) {
-        $searchQuery = $_GET['search'];
-        $studentsList = $student->searchStudents($searchQuery);
-    } else if (!empty($_GET['program']) || !empty($_GET['year'])){
-        $program = $_GET['program'] ?? null;
-        $year = $_GET['year'] ?? null;
-        $studentsList = $student->getFilteredStudents($program, $year);
-        $numOfStudent =$student->countFilteredStudents($program, $year);
-
-    }
+// Load all students data for JavaScript-based filtering
+$allStudents = $student->getAllStudents();
+$numOfStudent = count($allStudents);
 
 $data = [
     'programList' => $programList,
     'yearList' => $yearList,
-    'isFiltered' => $isFiltered,
-    'studentsList' => $studentsList,
+    'allStudents' => $allStudents,
     'numOfStudent' => $numOfStudent
 ];
+
 $studentsInstance->index($data);
