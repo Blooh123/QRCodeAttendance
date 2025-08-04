@@ -318,17 +318,11 @@ require "../app/core/imageConfig.php";
     <section class="py-20 bg-red-600 text-white">
         <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="text-3xl md:text-4xl font-bold mb-6">
-                Ready to Transform Your Attendance Management?
+                Developed by Students of USeP Tagum-Mabini Campus
             </h2>
             <p class="text-xl mb-8 opacity-90">
-                Join educational institutions that trust our secure QR Code Attendance System for accurate and reliable attendance tracking.
+                This QR Code Attendance System was created by students of the University of Southeastern Philippines Tagum-Mabini Campus, showcasing innovation and dedication to secure and reliable attendance management.
             </p>
-            <!-- <div class="flex justify-center">
-                <a href="<?php echo ROOT ?>login" 
-                   class="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In Now
-                </a>
-            </div> -->
         </div>
     </section>
 
