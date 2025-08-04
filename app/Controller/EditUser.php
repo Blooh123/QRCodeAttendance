@@ -84,10 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 $userData = $user->getUserDataWithPersonalInfo($_GET['id']);
+$userSession = $user->getUserSession($_GET['id']);
 
 $data = [
-    'userData' => $userData
+    'userData' => $userData,
+    'userSession' => $userSession
 ];
+print_r($userSession);
 
 $editUser = new EditUser();
 $editUser->index($data);

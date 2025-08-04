@@ -57,7 +57,7 @@
         <form id="userForm" action="edit_user?id=<?php echo $_GET['id']; ?>" method="POST" class="space-y-4">
             <div>
                 <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
-                <input name="username" id="username" type="text" value="<?php echo htmlspecialchars($userData[0]['username']); ?>"
+                <input name="username" id="username" type="text" value="<?php echo htmlspecialchars($userData['username']); ?>"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]" required>
             </div>
             <div>
@@ -108,15 +108,28 @@
         </h3>
         <div class="max-h-96 overflow-y-auto space-y-4 pr-2">
             <?php foreach ($userData as $userSession): ?>
+                <?php
+                    $ip = $userSession['ip_address'] ?? null;
+                    $device = $userSession['deviceInfo'] ?? null;
+                    $login = $userSession['created_at'] ?? null;
+                ?>
+                <?php if ($ip !== null || $device !== null || $login !== null): ?>
                 <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex flex-col border border-gray-200 mb-2">
-                    <p class="text-gray-700"><strong>IP Address:</strong> <?php echo $userSession['ip_address']; ?></p>
-                    <p class="text-gray-700"><strong>Device Info:</strong> <?php echo $userSession['deviceInfo']; ?></p>
-                    <p class="text-gray-700"><strong>Last Login:</strong> <?php echo $userSession['created_at']; ?></p>
-                    <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($userSession['SessionID']) ?>&user_id=<?php echo urlencode($userSession['id']) ?>"
+                    <?php if ($ip !== null): ?>
+                        <p class="text-gray-700"><strong>IP Address:</strong> <?php echo htmlspecialchars($ip); ?></p>
+                    <?php endif; ?>
+                    <?php if ($device !== null): ?>
+                        <p class="text-gray-700"><strong>Device Info:</strong> <?php echo htmlspecialchars($device); ?></p>
+                    <?php endif; ?>
+                    <?php if ($login !== null): ?>
+                        <p class="text-gray-700"><strong>Last Login:</strong> <?php echo htmlspecialchars($login); ?></p>
+                    <?php endif; ?>
+                    <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($userSession['id']) ?>&user_id=<?php echo urlencode($userSession['id']) ?>"
                        class="mt-3 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>

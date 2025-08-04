@@ -206,7 +206,17 @@ class User
 
     public function getUserDataWithPersonalInfo($id): array
     {
-        $sql = 'SELECT * FROM user_personal_info WHERE id = :id';
+        $sql = 'SELECT * FROM users LEFT JOIN user_personal_info ON users.id = user_personal_info.id WHERE users.id = :id';
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // get session
+    public function getUserSession($id): array
+    {
+        $sql = 'SELECT * FROM user_sessions WHERE user_id = :id';
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
