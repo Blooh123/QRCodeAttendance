@@ -107,11 +107,11 @@
             <i class="fas fa-desktop text-[#a31d1d]"></i> Session Details
         </h3>
         <div class="max-h-96 overflow-y-auto space-y-4 pr-2">
-            <?php foreach ($userData as $userSession): ?>
+            <?php foreach ($userSession as $session): ?>
                 <?php
-                    $ip = $userSession['ip_address'] ?? null;
-                    $device = $userSession['deviceInfo'] ?? null;
-                    $login = $userSession['created_at'] ?? null;
+                    $ip = $session['ip_address'] ?? null;
+                    $device = $session['deviceInfo'] ?? null;
+                    $login = $session['created_at'] ?? null;
                 ?>
                 <?php if ($ip !== null || $device !== null || $login !== null): ?>
                 <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex flex-col border border-gray-200 mb-2">
@@ -124,7 +124,7 @@
                     <?php if ($login !== null): ?>
                         <p class="text-gray-700"><strong>Last Login:</strong> <?php echo htmlspecialchars($login); ?></p>
                     <?php endif; ?>
-                    <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($userSession['id']) ?>&user_id=<?php echo urlencode($userSession['id']) ?>"
+                    <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($session['id']) ?>&user_id=<?php echo urlencode($session['id']) ?>"
                        class="mt-3 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
