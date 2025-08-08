@@ -268,7 +268,7 @@
 
         <!-- Upcoming Events -->
         <div>
-            <h2 class="text-lg md:text-2xl font-bold text-green-700 mb-6 flex items-center gap-2">
+            <h2 class="text-lg md:text-2xl font-bold text-green-700 mb-6 flex items-center gap-2 mt-10">
                 <svg class="h-5 w-5 md:h-7 md:w-7 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <rect x="3" y="4" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
                   <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
