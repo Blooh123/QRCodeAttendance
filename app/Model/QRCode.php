@@ -20,6 +20,16 @@ class QRCode
         ];
         return $this->query($query, $params);
     }
+    public function updateStudentQrCode($id): bool|array
+    {
+        $query = "UPDATE qr_code SET qr_value = :newQRCode WHERE student_id = :id";
+        $newQRCode = $this->generateQRCode($id);
+        $params = [
+            ':id' => $id,
+            ':newQRCode' => $newQRCode
+        ];
+        return $this->query($query, $params);
+    }
     public function getQRValue($username) {
         $id = $this->getStudentId($username);
 

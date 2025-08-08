@@ -135,6 +135,7 @@ class AddStudent extends \Controller
                 $student->updateStudent($student_id, $name, $program, $year, $email);
                 $user->updateUser($student_id, $email);
                 $qrcode->updateQrCode($student_id);
+                $qrcode->updateStudentQrCode($student_id);
                 continue;
             }
 
