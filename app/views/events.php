@@ -320,22 +320,14 @@
 
         <!-- Recent Events -->
         <div>
-            <button onclick="toggleArchive('recentEvents')" class="w-full text-left">
-                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
-                    <h2 class="text-lg md:text-2xl font-bold text-gray-700 flex items-center gap-2">
-                        <svg class="h-5 w-5 md:h-7 md:w-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
-                          <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Recent Activities (<?= count($recent); ?> events)
-                    </h2>
-                    <svg id="recentEventsIcon" class="w-5 h-5 md:w-6 md:h-6 text-gray-700 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-            </button>
-            
-            <div id="recentEvents" class="hidden space-y-8 mt-4">
+            <h2 class="text-lg md:text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2">
+                <svg class="h-5 w-5 md:h-7 md:w-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Recent Activities (<?= count($recent); ?> events)
+            </h2>
+            <div id="recentEvents" class="space-y-8 mt-4">
                 <?php if (count($recent)): ?>
                     <?php foreach ($recent as $event): ?>
                         <div class="glass-card rounded-2xl overflow-hidden p-0">
