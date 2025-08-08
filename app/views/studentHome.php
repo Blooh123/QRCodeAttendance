@@ -1,7 +1,7 @@
 <?php
 
 
-global $imageSource, $imageSource4, $imageSource2, $imageSource6;
+global $imageSource, $imageSource4, $imageSource2, $imageSource5,$imageSource6;
 require_once '../app/core/imageConfig.php'; // Include your configuration file
 
 $page = $_GET['page'] ?? 'StudentProfile'; // Default to 'studentProfile'
