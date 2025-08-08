@@ -53,7 +53,7 @@ $name = htmlspecialchars($studentData['name'] ?? 'N/A');
                 Student QR Code
             </h3>
 
-            <?php if ($checker): ?>
+            <?php if ($checker && strpos($name, ',') !== false): ?>
                 <!-- QR Code Card -->
                 <div class="glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-6">
                     <div class="flex flex-col items-center">
