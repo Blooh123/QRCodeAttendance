@@ -171,17 +171,38 @@
         <?php
         $allEvents = $allEvents ?? [];
         $today = date('Y-m-d');
+        $currentYear = date('Y');
+        $juneDate = "$currentYear-06-01";
+        
         $upcoming = [];
         $ongoing = [];
         $recent = [];
+        $archivedUpcoming = [];
+        $archivedOngoing = [];
+        $archivedRecent = [];
 
         foreach ($allEvents as $event) {
+            $eventDate = strtotime($event['date_created']);
+            $isArchived = $eventDate < strtotime($juneDate);
+            
             if ($event['atten_status'] === 'not started') {
-                $upcoming[] = $event;
+                if ($isArchived) {
+                    $archivedUpcoming[] = $event;
+                } else {
+                    $upcoming[] = $event;
+                }
             } elseif ($event['atten_status'] === 'on going') {
-                $ongoing[] = $event;
+                if ($isArchived) {
+                    $archivedOngoing[] = $event;
+                } else {
+                    $ongoing[] = $event;
+                }
             } else {
-                $recent[] = $event;
+                if ($isArchived) {
+                    $archivedRecent[] = $event;
+                } else {
+                    $recent[] = $event;
+                }
             }
         }
 
@@ -255,6 +276,63 @@
             <?php endif; ?>
         </div>
 
+        <!-- Archived Ongoing Events -->
+        <div>
+            <button onclick="toggleArchive('archivedOngoing')" class="w-full text-left">
+                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
+                    <h2 class="text-2xl font-bold text-gray-600 flex items-center gap-2">
+                        <svg class="h-7 w-7 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <rect x="3" y="4" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
+                          <circle cx="12" cy="16" r="2" fill="currentColor"/>
+                        </svg>
+                        Archived Ongoing Activities (Before June <?= $currentYear ?>)
+                        <span class="text-sm font-normal text-gray-500">(<?= count($archivedOngoing); ?> events)</span>
+                    </h2>
+                    <svg id="archivedOngoingIcon" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <div id="archivedOngoing" class="hidden space-y-8 mt-4">
+                <?php if (count($archivedOngoing)): ?>
+                    <?php foreach ($archivedOngoing as $event): ?>
+                        <div class="glass-card rounded-2xl overflow-hidden p-0 opacity-75">
+                            <?php $banner = getBannerBase64($event); ?>
+                            <?php if ($banner): ?>
+                                <img src="<?php echo htmlspecialchars($banner); ?>" alt="Event Banner" class="event-banner">
+                            <?php endif; ?>
+                            <div class="p-8">
+                                <div class="text-xl font-bold text-gray-600 mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
+                                <div class="text-gray-500 text-base mb-1 font-medium">
+                                    Date Created: 
+                                    <?php 
+                                        // Try to parse with time, fallback to Y-m-d only
+                                        $date = DateTime::createFromFormat('Y-m-d H:i:s', $event['date_created']);
+                                        if (!$date) {
+                                            $date = DateTime::createFromFormat('Y-m-d', $event['date_created']);
+                                        }
+                                        echo htmlspecialchars($date ? $date->format('F j, Y') : $event['date_created']); 
+                                    ?>
+                                </div>
+                                <div class="text-gray-500 text-sm mb-2 font-semibold">Status: Archived - Ongoing</div>
+                                <?php if (!empty($event['description'])): ?>
+                                    <div class="event-description mb-2 text-gray-600"><?php echo $event['description']; ?></div>
+                                <?php endif; ?>
+                                <div class="mt-4 text-sm text-gray-500 italic">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    This archived event was ongoing.
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-gray-500 italic">No archived ongoing activities.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- Upcoming Events -->
         <div>
             <h2 class="text-2xl font-bold text-green-700 mb-6 flex items-center gap-2">
@@ -307,7 +385,62 @@
             <?php endif; ?>
         </div>
 
-
+        <!-- Archived Upcoming Events -->
+        <div>
+            <button onclick="toggleArchive('archivedUpcoming')" class="w-full text-left">
+                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
+                    <h2 class="text-2xl font-bold text-gray-600 flex items-center gap-2">
+                        <svg class="h-7 w-7 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <rect x="3" y="4" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/>
+                          <path d="M9.5 16l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Archived Upcoming Activities (Before June <?= $currentYear ?>)
+                        <span class="text-sm font-normal text-gray-500">(<?= count($archivedUpcoming); ?> events)</span>
+                    </h2>
+                    <svg id="archivedUpcomingIcon" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <div id="archivedUpcoming" class="hidden space-y-8 mt-4">
+                <?php if (count($archivedUpcoming)): ?>
+                    <?php foreach ($archivedUpcoming as $event): ?>
+                        <div class="glass-card rounded-2xl overflow-hidden p-0 opacity-75">
+                            <?php $banner = getBannerBase64($event); ?>
+                            <?php if ($banner): ?>
+                                <img src="<?php echo htmlspecialchars($banner); ?>" alt="Event Banner" class="event-banner">
+                            <?php endif; ?>
+                            <div class="p-8">
+                                <div class="text-xl font-bold text-gray-600 mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
+                                <div class="text-gray-500 text-base mb-1 font-medium">
+                                    Date Created: 
+                                    <?php 
+                                        // Try to parse with time, fallback to Y-m-d only
+                                        $date = DateTime::createFromFormat('Y-m-d H:i:s', $event['date_created']);
+                                        if (!$date) {
+                                            $date = DateTime::createFromFormat('Y-m-d', $event['date_created']);
+                                        }
+                                        echo htmlspecialchars($date ? $date->format('F j, Y') : $event['date_created']); 
+                                    ?>
+                                </div>
+                                <div class="text-gray-500 text-sm mb-2">Status: <?php echo htmlspecialchars($event['atten_status']); ?></div>
+                                <?php if (!empty($event['description'])): ?>
+                                    <div class="event-description mb-2 text-gray-600"><?php echo $event['description']; ?></div>
+                                <?php endif; ?>
+                                <div class="mt-4 text-sm text-gray-500 italic">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    This archived event was upcoming.
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-gray-500 italic">No archived upcoming activities.</div>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <!-- Recent Events -->
         <div>
@@ -359,6 +492,62 @@
                 <div class="text-gray-500 italic">No recent activities.</div>
             <?php endif; ?>
         </div>
+
+        <!-- Archived Recent Events -->
+        <div>
+            <button onclick="toggleArchive('archivedRecent')" class="w-full text-left">
+                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
+                    <h2 class="text-2xl font-bold text-gray-600 flex items-center gap-2">
+                        <svg class="h-7 w-7 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Archived Recent Activities (Before June <?= $currentYear ?>)
+                        <span class="text-sm font-normal text-gray-500">(<?= count($archivedRecent); ?> events)</span>
+                    </h2>
+                    <svg id="archivedRecentIcon" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </button>
+            
+            <div id="archivedRecent" class="hidden space-y-8 mt-4">
+                <?php if (count($archivedRecent)): ?>
+                    <?php foreach ($archivedRecent as $event): ?>
+                        <div class="glass-card rounded-2xl overflow-hidden p-0 opacity-75">
+                            <?php $banner = getBannerBase64($event); ?>
+                            <?php if ($banner): ?>
+                                <img src="<?php echo htmlspecialchars($banner); ?>" alt="Event Banner" class="event-banner">
+                            <?php endif; ?>
+                            <div class="p-8">
+                                <div class="text-xl font-bold text-gray-600 mb-2 event-title"><?php echo htmlspecialchars($event['event_name']); ?></div>
+                                <div class="text-gray-500 text-base mb-1 font-medium">
+                                    Date Created: 
+                                    <?php 
+                                        // Try to parse with time, fallback to Y-m-d only
+                                        $date = DateTime::createFromFormat('Y-m-d H:i:s', $event['date_created']);
+                                        if (!$date) {
+                                            $date = DateTime::createFromFormat('Y-m-d', $event['date_created']);
+                                        }
+                                        echo htmlspecialchars($date ? $date->format('F j, Y') : $event['date_created']); 
+                                    ?>
+                                </div>
+                                <div class="text-gray-500 text-sm mb-2">Status: <?php echo htmlspecialchars($event['atten_status']); ?></div>
+                                <?php if (!empty($event['description'])): ?>
+                                    <div class="event-description mb-2 text-gray-600"><?php echo $event['description']; ?></div>
+                                <?php endif; ?>
+                                <div class="mt-4 text-sm text-gray-500 italic">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    This archived event was recent.
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-gray-500 italic">No archived recent activities.</div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -376,6 +565,20 @@
                 dropdown.classList.add('hidden');
                 icon.classList.remove('fa-chevron-up');
                 icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Toggle archive sections
+        function toggleArchive(elementId) {
+            const element = document.getElementById(elementId);
+            const icon = document.getElementById(elementId + 'Icon');
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                element.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
             }
         }
     </script>
