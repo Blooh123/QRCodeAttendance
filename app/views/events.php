@@ -320,7 +320,7 @@
 
         <!-- Recent Events -->
         <div>
-            <h2 class="text-lg md:text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2">
+            <h2 class="text-lg md:text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2 mt-10">
                 <svg class="h-5 w-5 md:h-7 md:w-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
                   <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -371,7 +371,7 @@
 
         <!-- Archived Recent Events -->
         <div>
-            <button onclick="toggleArchive('archivedRecent')" class="w-full text-left">
+            <button onclick="toggleArchive('archivedRecent')" class="w-full text-left mt-10">
                 <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
                     <h2 class="text-lg md:text-2xl font-bold text-gray-600 flex items-center gap-2">
                         <svg class="h-5 w-5 md:h-7 md:w-7 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
