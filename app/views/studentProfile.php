@@ -1,7 +1,5 @@
 <?php
 
-require_once '../app/core/imageConfig.php'; // Include your configuration file
-
 
 ?>
 
@@ -73,7 +71,7 @@ require_once '../app/core/imageConfig.php'; // Include your configuration file
                                  alt="Profile Picture">
                         <?php else: ?>
                             <img id="profile-img"
-                                 src="<?php echo $imageSource6 ?>"
+                                 src="<?php echo $imageSource5 ?>"
                                  class="w-full h-full object-cover"
                                  alt="Default Profile">
                         <?php endif; ?>
