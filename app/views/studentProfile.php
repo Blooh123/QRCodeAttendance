@@ -1,5 +1,5 @@
 <?php
-
+    global $imageSource5, $imageSource6;
 
 ?>
 
