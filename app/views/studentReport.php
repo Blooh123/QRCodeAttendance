@@ -1,5 +1,34 @@
 <?php
 $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
+
+// Filter current and archived records (before June)
+$currentYear = date('Y');
+$juneDate = "$currentYear-06-01";
+
+// Filter sanctions
+$currentSanctions = [];
+$archivedSanctions = [];
+foreach ($sanctionList as $sanction) {
+    if (strtotime($sanction['date_applied']) >= strtotime($juneDate)) {
+        $currentSanctions[] = $sanction;
+    } else {
+        $archivedSanctions[] = $sanction;
+    }
+}
+
+// Filter attendance records
+$currentAttendance = [];
+$archivedAttendance = [];
+foreach ($attendanceRecord as $record) {
+    if (strtotime($record['atten_started']) >= strtotime($juneDate)) {
+        $currentAttendance[] = $record;
+    } else {
+        $archivedAttendance[] = $record;
+    }
+}
+
+$totalCurrentHours = array_sum(array_column($currentSanctions, 'sanction_hours'));
+$totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours'));
 ?>
 
 <!DOCTYPE html>
@@ -48,19 +77,19 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
 </head>
 <body class="p-4 md:p-6">
     <div class="max-w-5xl mx-auto space-y-8">
-        <!-- Sanctions Section -->
+        <!-- Current Sanctions Section -->
         <div>
             <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Sanctions Overview
+                Current Sanctions (June <?= $currentYear ?> onwards)
             </h3>
             
             <div class="space-y-4">
-                <?php if (empty($sanctionList)): ?>
+                <?php if (empty($currentSanctions)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                        No sanctions found.
+                        No current sanctions found.
                     </div>
                 <?php else: ?>
-                    <?php foreach ($sanctionList as $sanction): ?>
+                    <?php foreach ($currentSanctions as $sanction): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:shadow-lg transition-all duration-300">
                             <div class="flex justify-between items-start mb-2">
                                 <p class="text-xs md:text-sm font-medium text-[#a31d1d]">
@@ -77,16 +106,51 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <!-- Total Hours Card -->
+            <!-- Current Total Hours Card -->
             <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
-                Total Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalHours); ?></span>
+                Current Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalCurrentHours); ?></span>
             </div>
         </div>
 
-        <!-- Recent Attended Activities -->
+        <!-- Archived Sanctions Section -->
+        <div>
+            <h3 class="text-xl md:text-2xl font-bold text-gray-600 mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+                Archived Sanctions (Before June <?= $currentYear ?>)
+            </h3>
+            
+            <div class="space-y-4">
+                <?php if (empty($archivedSanctions)): ?>
+                    <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        No archived sanctions found.
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($archivedSanctions as $sanction): ?>
+                        <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:shadow-lg transition-all duration-300 opacity-75">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-xs md:text-sm font-medium text-gray-500">
+                                    <?= date('F j, Y', strtotime($sanction['date_applied'])); ?>
+                                </p>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs md:text-sm font-semibold">
+                                    <?= htmlspecialchars($sanction['sanction_hours']); ?> Hours
+                                </span>
+                            </div>
+                            <h4 class="text-base md:text-lg font-semibold text-gray-600 mb-2">
+                                <?= htmlspecialchars($sanction['sanction_reason']); ?>
+                            </h4>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+            <!-- Archived Total Hours Card -->
+            <div class="mt-6 glass-card bg-gray-500 text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
+                Archived Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalArchivedHours); ?></span>
+            </div>
+        </div>
+
+        <!-- Current Attended Activities -->
         <div>
             <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Recent Attended Activities
+                Current Attended Activities (June <?= $currentYear ?> onwards)
             </h3>
             <!-- Download Report Button -->
             <div class="mt-6 flex justify-end">
@@ -112,12 +176,12 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            <?php if (empty($attendanceRecord)): ?>
+                            <?php if (empty($currentAttendance)): ?>
                                 <tr>
-                                    <td colspan="4" class="py-4 px-6 text-center text-gray-500">No attendance records found.</td>
+                                    <td colspan="4" class="py-4 px-6 text-center text-gray-500">No current attendance records found.</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($attendanceRecord as $record): ?>
+                                <?php foreach ($currentAttendance as $record): ?>
                                     <tr class="hover:bg-gray-50/50 transition-colors">
                                         <td class="py-4 px-6 text-xs md:text-sm text-gray-800 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
                                         <td class="py-4 px-6 text-xs md:text-sm text-gray-600"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
@@ -139,12 +203,12 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
 
             <!-- Mobile Cards -->
             <div class="md:hidden space-y-4 mt-6">
-                <?php if (empty($attendanceRecord)): ?>
+                <?php if (empty($currentAttendance)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                        No attendance records found.
+                        No current attendance records found.
                     </div>
                 <?php else: ?>
-                    <?php foreach ($attendanceRecord as $record): ?>
+                    <?php foreach ($currentAttendance as $record): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3">
                             <h4 class="text-base md:text-lg font-bold text-[#a31d1d]">
                                 <?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?>
@@ -177,6 +241,93 @@ $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+        </div>
+
+        <!-- Archived Attended Activities -->
+        <div>
+            <h3 class="text-xl md:text-2xl font-bold text-gray-600 mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+                Archived Attended Activities (Before June <?= $currentYear ?>)
+            </h3>
+            
+            <!-- Desktop Table -->
+            <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-6">
+                <div class="overflow-x-auto glass-card">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50/50">
+                            <tr>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Event Name</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Date</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time In</th>
+                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time Out</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <?php if (empty($archivedAttendance)): ?>
+                                <tr>
+                                    <td colspan="4" class="py-4 px-6 text-center text-gray-500">No archived attendance records found.</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($archivedAttendance as $record): ?>
+                                    <tr class="hover:bg-gray-50/50 transition-colors opacity-75">
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-600 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></td>
+                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500">
+                                            <p class="text-gray-600">
+                                                <?= !empty($record['time_out']) 
+                                                    ? date('g:i A', strtotime($record['time_out'])) 
+                                                    : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile Cards -->
+            <div class="md:hidden space-y-4 mt-6">
+                <?php if (empty($archivedAttendance)): ?>
+                    <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        No archived attendance records found.
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($archivedAttendance as $record): ?>
+                        <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3 opacity-75">
+                            <h4 class="text-base md:text-lg font-bold text-gray-600">
+                                <?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?>
+                            </h4>
+                            <div class="grid grid-cols-2 gap-4 text-xs md:text-sm">
+                                <div>
+                                    <p class="text-gray-500 font-medium">Date</p>
+                                    <p class="text-gray-600"><?= date('F j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-gray-500 font-medium">Status</p>
+                                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
+                                        Present
+                                    </span>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 font-medium">Time In</p>
+                                    <p class="text-gray-600"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 font-medium">Time Out</p>
+                                    <p class="text-gray-600">
+                                        <?= !empty($record['time_out']) 
+                                            ? date('g:i A', strtotime($record['time_out'])) 
+                                            : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <!-- Excuse Applications -->
         <div>
