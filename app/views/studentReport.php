@@ -114,11 +114,19 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
 
         <!-- Archived Sanctions Section -->
         <div>
-            <h3 class="text-xl md:text-2xl font-bold text-gray-600 mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Archived Sanctions (Before June <?= $currentYear ?>)
-            </h3>
+            <button onclick="toggleArchive('archivedSanctions')" class="w-full text-left">
+                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-600 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+                        Archived Sanctions (Before June <?= $currentYear ?>) 
+                        <span class="text-sm font-normal text-gray-500">(<?= count($archivedSanctions); ?> records)</span>
+                    </h3>
+                    <svg id="archivedSanctionsIcon" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </button>
             
-            <div class="space-y-4">
+            <div id="archivedSanctions" class="hidden space-y-4 mt-4">
                 <?php if (empty($archivedSanctions)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                         No archived sanctions found.
@@ -140,10 +148,10 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
-            <!-- Archived Total Hours Card -->
-            <div class="mt-6 glass-card bg-gray-500 text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
-                Archived Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalArchivedHours); ?></span>
+                <!-- Archived Total Hours Card -->
+                <div class="mt-6 glass-card bg-gray-500 text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
+                    Archived Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalArchivedHours); ?></span>
+                </div>
             </div>
         </div>
 
@@ -245,87 +253,97 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
 
         <!-- Archived Attended Activities -->
         <div>
-            <h3 class="text-xl md:text-2xl font-bold text-gray-600 mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Archived Attended Activities (Before June <?= $currentYear ?>)
-            </h3>
-            
-            <!-- Desktop Table -->
-            <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black mt-6">
-                <div class="overflow-x-auto glass-card">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50/50">
-                            <tr>
-                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Event Name</th>
-                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Date</th>
-                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time In</th>
-                                <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time Out</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <?php if (empty($archivedAttendance)): ?>
-                                <tr>
-                                    <td colspan="4" class="py-4 px-6 text-center text-gray-500">No archived attendance records found.</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($archivedAttendance as $record): ?>
-                                    <tr class="hover:bg-gray-50/50 transition-colors opacity-75">
-                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-600 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
-                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
-                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></td>
-                                        <td class="py-4 px-6 text-xs md:text-sm text-gray-500">
-                                            <p class="text-gray-600">
-                                                <?= !empty($record['time_out']) 
-                                                    ? date('g:i A', strtotime($record['time_out'])) 
-                                                    : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
-                                            </p>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+            <button onclick="toggleArchive('archivedAttendance')" class="w-full text-left">
+                <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-600 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
+                        Archived Attended Activities (Before June <?= $currentYear ?>) 
+                        <span class="text-sm font-normal text-gray-500">(<?= count($archivedAttendance); ?> records)</span>
+                    </h3>
+                    <svg id="archivedAttendanceIcon" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
                 </div>
-            </div>
-
-            <!-- Mobile Cards -->
-            <div class="md:hidden space-y-4 mt-6">
-                <?php if (empty($archivedAttendance)): ?>
-                    <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                        No archived attendance records found.
+            </button>
+            
+            <div id="archivedAttendance" class="hidden space-y-4 mt-4">
+                <!-- Desktop Table -->
+                <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                    <div class="overflow-x-auto glass-card">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50/50">
+                                <tr>
+                                    <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Event Name</th>
+                                    <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Date</th>
+                                    <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time In</th>
+                                    <th class="py-4 px-6 text-left text-xs md:text-sm font-bold text-gray-600">Time Out</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <?php if (empty($archivedAttendance)): ?>
+                                    <tr>
+                                        <td colspan="4" class="py-4 px-6 text-center text-gray-500">No archived attendance records found.</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($archivedAttendance as $record): ?>
+                                        <tr class="hover:bg-gray-50/50 transition-colors opacity-75">
+                                            <td class="py-4 px-6 text-xs md:text-sm text-gray-600 font-medium"><?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?></td>
+                                            <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('M j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></td>
+                                            <td class="py-4 px-6 text-xs md:text-sm text-gray-500"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></td>
+                                            <td class="py-4 px-6 text-xs md:text-sm text-gray-500">
+                                                <p class="text-gray-600">
+                                                    <?= !empty($record['time_out']) 
+                                                        ? date('g:i A', strtotime($record['time_out'])) 
+                                                        : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
-                <?php else: ?>
-                    <?php foreach ($archivedAttendance as $record): ?>
-                        <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3 opacity-75">
-                            <h4 class="text-base md:text-lg font-bold text-gray-600">
-                                <?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?>
-                            </h4>
-                            <div class="grid grid-cols-2 gap-4 text-xs md:text-sm">
-                                <div>
-                                    <p class="text-gray-500 font-medium">Date</p>
-                                    <p class="text-gray-600"><?= date('F j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-500 font-medium">Status</p>
-                                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
-                                        Present
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 font-medium">Time In</p>
-                                    <p class="text-gray-600"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 font-medium">Time Out</p>
-                                    <p class="text-gray-600">
-                                        <?= !empty($record['time_out']) 
-                                            ? date('g:i A', strtotime($record['time_out'])) 
-                                            : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
-                                    </p>
+                </div>
+
+                <!-- Mobile Cards -->
+                <div class="md:hidden space-y-4">
+                    <?php if (empty($archivedAttendance)): ?>
+                        <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                            No archived attendance records found.
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($archivedAttendance as $record): ?>
+                            <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-3 opacity-75">
+                                <h4 class="text-base md:text-lg font-bold text-gray-600">
+                                    <?= htmlspecialchars($record['event_name'] ?? 'N/A'); ?>
+                                </h4>
+                                <div class="grid grid-cols-2 gap-4 text-xs md:text-sm">
+                                    <div>
+                                        <p class="text-gray-500 font-medium">Date</p>
+                                        <p class="text-gray-600"><?= date('F j, Y', strtotime($record['atten_started'] ?? 'N/A')); ?></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-gray-500 font-medium">Status</p>
+                                        <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
+                                            Present
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 font-medium">Time In</p>
+                                        <p class="text-gray-600"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 font-medium">Time Out</p>
+                                        <p class="text-gray-600">
+                                            <?= !empty($record['time_out']) 
+                                                ? date('g:i A', strtotime($record['time_out'])) 
+                                                : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
@@ -356,5 +374,20 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
         </div>
         </div>
     </div>
+
+    <script>
+        function toggleArchive(elementId) {
+            const element = document.getElementById(elementId);
+            const icon = document.getElementById(elementId + 'Icon');
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                element.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
 </body>
 </html>
