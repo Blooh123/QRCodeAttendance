@@ -14,8 +14,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <title>Take Photo</title>
-  <script defer src="<?= ROOT ?>assets/js/face-api.min.js"></script>
-  <script defer src="<?= ROOT ?>assets/js/script2.js"></script>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -146,19 +144,6 @@
         height: auto;
     }
 
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 16px;
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    #video, canvas {
-        transform: scaleX(1); /* No mirror */
-    }
-
     /* Status message styling */
     #status {
         position: absolute;
@@ -222,7 +207,7 @@
         <i class="fas fa-camera text-[#a31d1d] text-3xl"></i>
         <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Take Profile Photo</h1>
     </div>
-    <p class="text-gray-600 mt-2">Position your face in the camera and click capture when ready</p>
+    <p class="text-gray-600 mt-2">Position yourself in the camera and click capture when ready</p>
 </header>
 
 <div class="max-w-2xl mx-auto glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col items-center space-y-6 main-container">
@@ -234,24 +219,24 @@
             <div id="status"></div>
         </div>
         <div class="flex justify-center mt-4 relative" style="position: relative; z-index: 10;">
-                <button id="captureBtn" class="bg-[#4CAF50] hover:bg-[#45a049] text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
-                    <i class="fas fa-camera"></i>
-                    <span>Take Photo</span>
-                </button>
-            </div>
+            <button id="captureBtn" class="bg-[#4CAF50] hover:bg-[#45a049] text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-camera"></i>
+                <span>Take Photo</span>
+            </button>
+        </div>
         
         <!-- Status indicator -->
         <div id="statusIndicator" class="status-indicator mt-6 px-6 py-3 rounded-lg bg-blue-100 text-blue-700 font-semibold text-center border border-blue-200">
             <div class="flex items-center justify-center space-x-2">
                 <div class="w-2 h-2 bg-blue-500 rounded-full pulse"></div>
-                <span>Detecting face…</span>
+                <span>Camera ready</span>
             </div>
         </div>
     </div>
 
     <!-- Info section -->
     <div class="w-full text-center space-y-4">
-        <p class="text-gray-600 text-sm pulse">AI-Powered Face Detection System</p>
+        <p class="text-gray-600 text-sm pulse">Simple Camera Capture System</p>
         
         <!-- Back button -->
         <a href="<?= ROOT ?>student?page=StudentProfile" class="inline-block bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 mx-auto w-fit">
@@ -264,6 +249,162 @@
 <script>
     // Pass student ID to JavaScript
     window.studentID = '<?= $studentID ?>';
+    
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('captureBtn');
+    const statusDiv = document.getElementById('status');
+    const statusIndicator = document.getElementById('statusIndicator');
+    
+    let isCapturing = false;
+    
+    // iOS-optimized video constraints
+    const videoConstraints = {
+        video: {
+            width: { ideal: 640, max: 1280 },
+            height: { ideal: 480, max: 720 },
+            frameRate: { ideal: 15, max: 30 },
+            facingMode: "user"
+        }
+    };
+    
+    // Start camera
+    function startCamera() {
+        updateStatusIndicator('Starting camera...', 'detecting');
+        
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia(videoConstraints)
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                    updateStatusIndicator('Camera ready - Click to capture', 'success');
+                })
+                .catch(err => {
+                    console.error("Camera access error:", err);
+                    updateStatusIndicator('Camera access denied. Please allow camera permissions.', 'error');
+                });
+        } else {
+            // Fallback for older browsers
+            console.warn('getUserMedia not supported, trying legacy API');
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia(
+                    { video: videoConstraints.video },
+                    stream => {
+                        video.srcObject = stream;
+                        updateStatusIndicator('Camera ready - Click to capture', 'success');
+                    },
+                    err => {
+                        console.error(err);
+                        updateStatusIndicator('Camera access denied', 'error');
+                    }
+                );
+            } else {
+                updateStatusIndicator('Camera not supported on this device', 'error');
+            }
+        }
+    }
+    
+    // Capture button event listener
+    captureBtn.addEventListener('click', capturePhoto);
+    
+    function capturePhoto() {
+        if (isCapturing) return;
+        
+        isCapturing = true;
+        captureBtn.disabled = true;
+        captureBtn.classList.add('capturing');
+        captureBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Capturing...</span>';
+        
+        // Create a canvas to capture the video frame
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw the current video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert canvas to base64 image data
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Send the image data to server
+        const formData = new FormData();
+        formData.append('image_data', imageData);
+        
+        updateStatusIndicator('Uploading photo...', 'detecting');
+        
+        fetch('?action=capture&id=' + window.studentID, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showStatus(data.message, 'success');
+                updateStatusIndicator('Photo captured successfully!', 'success');
+                
+                // Redirect back to student profile after successful capture
+                setTimeout(() => {
+                    window.location.href = '../public/student';
+                }, 2000);
+            } else {
+                showStatus(data.message, 'error');
+                updateStatusIndicator('Failed to capture photo', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showStatus('Failed to capture photo. Please try again.', 'error');
+            updateStatusIndicator('Network error occurred', 'error');
+        })
+        .finally(() => {
+            isCapturing = false;
+            captureBtn.disabled = false;
+            captureBtn.classList.remove('capturing');
+            captureBtn.innerHTML = '<i class="fas fa-camera"></i><span>Take Photo</span>';
+        });
+    }
+    
+    function showStatus(message, type) {
+        statusDiv.textContent = message;
+        statusDiv.className = type;
+        statusDiv.style.display = 'block';
+        
+        // Auto-hide success messages after 3 seconds
+        if (type === 'success') {
+            setTimeout(hideStatus, 3000);
+        }
+    }
+    
+    function hideStatus() {
+        statusDiv.style.display = 'none';
+    }
+    
+    function updateStatusIndicator(message, type) {
+        const statusText = statusIndicator.querySelector('span');
+        const statusDot = statusIndicator.querySelector('.w-2');
+        
+        statusText.textContent = message;
+        
+        // Update colors based on type
+        switch(type) {
+            case 'success':
+                statusIndicator.className = 'status-indicator mt-6 px-6 py-3 rounded-lg bg-green-100 text-green-700 font-semibold text-center border border-green-200';
+                statusDot.className = 'w-2 h-2 bg-green-500 rounded-full pulse';
+                break;
+            case 'error':
+                statusIndicator.className = 'status-indicator mt-6 px-6 py-3 rounded-lg bg-red-100 text-red-700 font-semibold text-center border border-red-200';
+                statusDot.className = 'w-2 h-2 bg-red-500 rounded-full pulse';
+                break;
+            case 'detecting':
+            default:
+                statusIndicator.className = 'status-indicator mt-6 px-6 py-3 rounded-lg bg-blue-100 text-blue-700 font-semibold text-center border border-blue-200';
+                statusDot.className = 'w-2 h-2 bg-blue-500 rounded-full pulse';
+                break;
+        }
+    }
+    
+    // Start camera when page loads
+    window.addEventListener('load', startCamera);
 </script>
 
 </body>
