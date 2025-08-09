@@ -112,7 +112,18 @@ class LoginPage extends Controller
                         );
                         $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
-                        $uri = str_replace('/login', '/face-recognize', $_SERVER['REQUEST_URI']);
+                        $userId = $validate['id'];
+                        $this->createSession($userId, $role, $authToken);
+                        setcookie(
+                            'user_data',
+                            json_encode($userSessions),
+                            $cookieExpiry, // 10 mins for students, 2 days for others
+                            '/',
+                            '',      // domain
+                            isset($_SERVER['HTTPS']), // secure flag
+                            true     // HttpOnly
+                        );
+                        $uri = str_replace('/login', '/facilitator', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'student') {
                                             // Call createSession() to generate a secure token
                         $userId = $validate['id'];
