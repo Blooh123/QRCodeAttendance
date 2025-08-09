@@ -9,22 +9,81 @@ let isCapturing = false
 // Hide capture button by default
 captureBtn.style.display = 'none'
 
-Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/js/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/js/models'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/js/models'),
-  faceapi.nets.faceExpressionNet.loadFromUri('../public/assets/js/models')
-]).then(startVideo)
+// iOS-optimized video constraints
+const videoConstraints = {
+  video: {
+    width: { ideal: 640, max: 1280 },
+    height: { ideal: 480, max: 720 },
+    frameRate: { ideal: 15, max: 30 },
+    facingMode: "user"
+  }
+}
+
+// Progressive model loading for better iOS performance
+async function loadModelsProgressively() {
+  updateStatusIndicator('Loading face detection models...', 'detecting')
+  
+  try {
+    // Load essential model first
+    await faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/js/models')
+    updateStatusIndicator('Loading recognition models...', 'detecting')
+    
+    // Load remaining models
+    await Promise.all([
+      faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/js/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/js/models'),
+      faceapi.nets.faceExpressionNet.loadFromUri('../public/assets/js/models')
+    ])
+    
+    updateStatusIndicator('Models loaded successfully!', 'success')
+    return true
+  } catch (error) {
+    console.error("Failed to load models:", error)
+    updateStatusIndicator('Failed to load models. Please refresh.', 'error')
+    return false
+  }
+}
+
+// Initialize with progressive loading
+async function initializeFaceDetection() {
+  const modelsLoaded = await loadModelsProgressively()
+  if (!modelsLoaded) {
+    return
+  }
+  startVideo()
+}
+
+// Start initialization
+initializeFaceDetection()
 
 function startVideo() {
-  navigator.getUserMedia(
-    { video: {} },
-    stream => video.srcObject = stream,
-    err => {
-      console.error(err)
-      updateStatusIndicator('Camera access denied', 'error')
+  // Use modern getUserMedia API for iOS compatibility
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia(videoConstraints)
+      .then(stream => {
+        video.srcObject = stream
+        video.play()
+      })
+      .catch(err => {
+        console.error("Camera access error:", err)
+        updateStatusIndicator('Camera access denied. Please allow camera permissions.', 'error')
+      })
+  } else {
+    // Fallback for older browsers (though not recommended for iOS)
+    console.warn('getUserMedia not supported, trying legacy API')
+    if (navigator.getUserMedia) {
+      navigator.getUserMedia(
+        { video: videoConstraints.video },
+        stream => video.srcObject = stream,
+        err => {
+          console.error(err)
+          updateStatusIndicator('Camera access denied', 'error')
+        }
+      )
+    } else {
+      updateStatusIndicator('Camera not supported on this device', 'error')
     }
-  )
+  }
 }
 
 video.addEventListener('play', () => {
@@ -42,25 +101,38 @@ video.addEventListener('play', () => {
   canvas.style.width = '100%'
   canvas.style.height = '100%'
   
+  let detectionCount = 0
+  const detectionInterval = 300 // Increased interval for better performance
+  
   setInterval(async () => {
-    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
-    const resizedDetections = faceapi.resizeResults(detections, displaySize)
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-    faceapi.draw.drawDetections(canvas, resizedDetections)
-    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-    faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
-    
-    // Check if face is detected
-    if (detections.length > 0 && !faceDetected) {
-      faceDetected = true
-      captureBtn.style.display = 'flex'
-      updateStatusIndicator('Face detected! You can now take a photo.', 'success')
-    } else if (detections.length === 0 && faceDetected) {
-      faceDetected = false
-      captureBtn.style.display = 'none'
-      updateStatusIndicator('Detecting face…', 'detecting')
+    try {
+      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+      const resizedDetections = faceapi.resizeResults(detections, displaySize)
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+      faceapi.draw.drawDetections(canvas, resizedDetections)
+      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+      faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+      
+      // Check if face is detected
+      if (detections.length > 0 && !faceDetected) {
+        faceDetected = true
+        captureBtn.style.display = 'flex'
+        updateStatusIndicator('Face detected! You can now take a photo.', 'success')
+      } else if (detections.length === 0 && faceDetected) {
+        faceDetected = false
+        captureBtn.style.display = 'none'
+        updateStatusIndicator('Detecting face…', 'detecting')
+      }
+    } catch (error) {
+      console.error("Face detection error:", error)
+      // Don't spam errors, only log occasionally
+      if (detectionCount % 10 === 0) {
+        console.warn("Face detection performance issue detected")
+      }
     }
-  }, 100)
+    
+    detectionCount++
+  }, detectionInterval)
 })
 
 // Capture button event listener
