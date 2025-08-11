@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $attendanceList = $attendance->AttendanceRecord($_POST['program'], $_POST['year'], $_GET['id']);
     } elseif (isset($_POST['search']) && !empty($_POST['search'])) {
         // Search functionality - use required attendees from database
-        $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], $_POST['search']);
+        $attendanceList = $attendance->getAttendanceRecord($_GET['id'], $_POST['search']);
     } else {
         // Default: show all students for the event
-        $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], '');
+        $attendanceList = $attendance->getAttendanceRecord($_GET['id'], '');
     }
 } elseif (isset($_GET['view']) && $_GET['view'] === 'not_attended') {
     // Get students who did NOT attend

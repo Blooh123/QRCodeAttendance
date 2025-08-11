@@ -160,45 +160,44 @@ class Attendances
         return $this->query($query,[$program,$year,$atten_id]);
     }
 
-    public function getAttendanceRecord($programJson, $eventID, $searchQuery): array
+    public function getAttendanceRecord($eventID, $searchQuery): array
     {
-        // Ensure $programJson is a valid JSON string or convert it to an array
-        if (is_string($programJson)) {
-            $programs = json_decode($programJson, true);
-        } elseif (is_array($programJson)) {
-            $programs = $programJson;
-        } else {
-            $programs = []; // Default to an empty array
-        }
+        // // Ensure $programJson is a valid JSON string or convert it to an array
+        // if (is_string($programJson)) {
+        //     $programs = json_decode($programJson, true);
+        // } elseif (is_array($programJson)) {
+        //     $programs = $programJson;
+        // } else {
+        //     $programs = []; // Default to an empty array
+        // }
 
-        // If programs is null after JSON decode, try to handle it
-        if ($programs === null) {
-            $programs = [];
-        }
+        // // If programs is null after JSON decode, try to handle it
+        // if ($programs === null) {
+        //     $programs = [];
+        // }
 
-        // If still empty, try to get required attendees from the database
-        if (empty($programs)) {
-            try {
-                $requiredAttendees = $this->getRequiredAttendees($eventID);
-                if (!empty($requiredAttendees)) {
-                    $programs = array_column($requiredAttendees, 'program');
-                } else {
-                    // If no specific programs required, show all students
-                    $programs = ['AllStudents'];
-                }
-            } catch (Exception $e) {
-                error_log("Error getting required attendees: " . $e->getMessage());
-                $programs = ['AllStudents'];
-            }
-        }
+        // // If still empty, try to get required attendees from the database
+        // if (empty($programs)) {
+        //     try {
+        //         $requiredAttendees = $this->getRequiredAttendees($eventID);
+        //         if (!empty($requiredAttendees)) {
+        //             $programs = array_column($requiredAttendees, 'program');
+        //         } else {
+        //             // If no specific programs required, show all students
+        //             $programs = ['AllStudents'];
+        //         }
+        //     } catch (Exception $e) {
+        //         error_log("Error getting required attendees: " . $e->getMessage());
+        //         $programs = ['AllStudents'];
+        //     }
+        // }
 
-        $sql = "CALL sp_get_student_attendance_record(?, ?, ?, ?)";
+        $sql = "CALL sp_get_student_attendance_record(?, ?, ?)";
         $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?)";
 
         try {
         if (!in_array('AllStudents', $programs)) {
-            $programList = json_encode($programs); // Ensure valid JSON for MySQL JSON functions
-                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $programList, $eventID]);
+                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $eventID]);
         } else {
                 $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
         }
