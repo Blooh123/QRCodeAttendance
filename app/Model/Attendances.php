@@ -196,11 +196,11 @@ class Attendances
         $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?)";
 
         try {
-        if (!in_array('AllStudents', $programs)) {
+
                 $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $eventID]);
-        } else {
-                $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
-        }
+   
+                // $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
+        
 
         // Ensure query result is an array
         return is_array($attendanceRecords) ? $attendanceRecords : [];
