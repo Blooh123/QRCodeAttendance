@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $attendanceList = $attendance->AttendanceRecord($_POST['program'], $_POST['year'], $_GET['id']);
     } elseif (isset($_POST['search']) && !empty($_POST['search'])) {
         // Search functionality - use required attendees from database
-        $attendanceList = $attendance->getAttendanceRecord($_GET['id'], $_POST['search']);
+        $searchTerm = is_array($_POST['search']) ? implode(' ', $_POST['search']) : $_POST['search'];
+        $attendanceList = $attendance->getAttendanceRecord($_GET['id'], $searchTerm);
     } else {
         // Default: show all students for the event
         $attendanceList = $attendance->getAttendanceRecord($_GET['id'], '');
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // Default: show students based on required attendees when page loads
-    $attendanceList = $attendance->getAttendanceRecord($requireProgram, $_GET['id'], '');
+    $attendanceList = $attendance->getAttendanceRecord($_GET['id'], '');
 }
 
 $data = [

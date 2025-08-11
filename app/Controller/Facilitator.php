@@ -120,10 +120,15 @@ $_SESSION['evnt_name'] = $EventName;
                 $EventID = $attendance['atten_id'];
 
                 // Only fetch attendance records if a program is selected
+                $studentSearch = isset($_GET['student']) ? $_GET['student'] : '';
+                if (is_array($studentSearch)) {
+                    $studentSearch = implode(' ', $studentSearch);
+                }
+                
                 if (!empty($selectedProgram)) {
-                    $attendanceRecordList = $attendances->getAttendanceRecord($selectedProgram, $EventID, '%'.$_GET['student'].'%');
+                    $attendanceRecordList = $attendances->getAttendanceRecord($EventID, '%'.$studentSearch.'%');
                 } else {
-                    $attendanceRecordList = $attendances->getAttendanceRecord('AllStudents', $EventID,'%'.$_GET['student'].'%');
+                    $attendanceRecordList = $attendances->getAttendanceRecord($EventID, '%'.$studentSearch.'%');
                 }
                 unset($_POST['student']);
                 break;

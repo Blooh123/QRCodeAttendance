@@ -162,48 +162,34 @@ class Attendances
 
     public function getAttendanceRecord($eventID, $searchQuery = ''): array
     {
-        // // Ensure $programJson is a valid JSON string or convert it to an array
-        // if (is_string($programJson)) {
-        //     $programs = json_decode($programJson, true);
-        // } elseif (is_array($programJson)) {
-        //     $programs = $programJson;
-        // } else {
-        //     $programs = []; // Default to an empty array
-        // }
-
-        // // If programs is null after JSON decode, try to handle it
-        // if ($programs === null) {
-        //     $programs = [];
-        // }
-
-        // // If still empty, try to get required attendees from the database
-        // if (empty($programs)) {
-        //     try {
-        //         $requiredAttendees = $this->getRequiredAttendees($eventID);
-        //         if (!empty($requiredAttendees)) {
-        //             $programs = array_column($requiredAttendees, 'program');
-        //         } else {
-        //             // If no specific programs required, show all students
-        //             $programs = ['AllStudents'];
-        //         }
-        //     } catch (Exception $e) {
-        //         error_log("Error getting required attendees: " . $e->getMessage());
-        //         $programs = ['AllStudents'];
-        //     }
-        // }
+        // Ensure eventID is valid
+        if (!is_numeric($eventID) || empty($eventID)) {
+            error_log("Invalid eventID provided to getAttendanceRecord: " . var_export($eventID, true));
+            return [];
+        }
+        
+        // Ensure searchQuery is a string and has a default value
+        if (is_array($searchQuery)) {
+            $searchQuery = implode(' ', $searchQuery);
+        } elseif (!is_string($searchQuery)) {
+            $searchQuery = '';
+        }
+        
+        // Trim and sanitize the search query
+        $searchQuery = trim($searchQuery);
+        if (empty($searchQuery)) {
+            $searchQuery = '';
+        }
 
         $sql = "CALL sp_get_student_attendance_record(?, ?, ?)";
         $sql2 = "CALL sp_get_student_attendance_record2(?, ?, ?)";
 
         try {
+            $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $eventID]);
+            // $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
 
-                $attendanceRecords = $this->query($sql, [$searchQuery, $searchQuery, $eventID]);
-   
-                // $attendanceRecords = $this->query($sql2, [$searchQuery, $searchQuery, $eventID]);
-        
-
-        // Ensure query result is an array
-        return is_array($attendanceRecords) ? $attendanceRecords : [];
+            // Ensure query result is an array
+            return is_array($attendanceRecords) ? $attendanceRecords : [];
         } catch (Exception $e) {
             error_log("Error in getAttendanceRecord: " . $e->getMessage());
             return [];
