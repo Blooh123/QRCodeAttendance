@@ -67,7 +67,7 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
     <div class="w-full max-w-4xl flex items-center justify-center mb-8">
         <div class="floating">
             <img 
-                src="<?php echo $imageSource4 ?>" 
+                src="<?php echo $imageSource7 ?>" 
                 alt="Logo" 
                 class=" backdrop-blur-sm hover:transform hover:scale-105 transition-all duration-300"
             />
