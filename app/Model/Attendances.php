@@ -160,7 +160,7 @@ class Attendances
         return $this->query($query,[$program,$year,$atten_id]);
     }
 
-    public function getAttendanceRecord($eventID, $searchQuery): array
+    public function getAttendanceRecord($eventID, $searchQuery = ''): array
     {
         // // Ensure $programJson is a valid JSON string or convert it to an array
         // if (is_string($programJson)) {
