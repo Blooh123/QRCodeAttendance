@@ -197,7 +197,7 @@
     </div>
 
     <!-- Loading Indicator -->
-    <div id="loadingIndicator" class="hidden text-center py-8">
+    <div id="loadingIndicator" class="text-center py-8">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#a31d1d]"></div>
         <p class="mt-2 text-gray-600">Loading applications...</p>
     </div>
@@ -257,26 +257,7 @@
     </div>
 </div>
 
-<!-- Hidden data container for caching -->
-<div id="applicationsData" style="display: none;">
-    <?php if (!empty($applications)): ?>
-        <?php foreach ($applications as $app): ?>
-            <div class="application-data" 
-                 data-id="<?php echo $app['id']; ?>"
-                 data-status="<?php echo $app['application_status']; ?>"
-                 data-event="<?php echo htmlspecialchars($app['event_name']); ?>"
-                 data-student="<?php echo htmlspecialchars($app['name']); ?>"
-                 data-program="<?php echo htmlspecialchars($app['program']); ?>"
-                 data-date="<?php echo $app['event_date']; ?>"
-                 data-submitted="<?php echo $app['date_submitted']; ?>"
-                 data-description="<?php echo htmlspecialchars($app['application_description']); ?>"
-                 data-remarks="<?php echo htmlspecialchars($app['admin_remarks'] ?? ''); ?>"
-                 data-document1="<?php echo $app['document1'] ? base64_encode($app['document1']) : ''; ?>"
-                 data-document2="<?php echo $app['document2'] ? base64_encode($app['document2']) : ''; ?>">
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</div>
+
 
 <script>
 // Performance optimization variables
@@ -299,26 +280,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize application
 function initializeApplication() {
-    // Load applications from hidden data container
-    const dataContainer = document.getElementById('applicationsData');
-    const applicationElements = dataContainer.querySelectorAll('.application-data');
+    // Check if we have applications data from PHP
+    const applicationsData = <?php echo json_encode($applications ?? []); ?>;
     
-    allApplications = Array.from(applicationElements).map(el => ({
-        id: el.dataset.id,
-        status: el.dataset.status,
-        event: el.dataset.event,
-        student: el.dataset.student,
-        program: el.dataset.program,
-        date: el.dataset.date,
-        submitted: el.dataset.submitted,
-        description: el.dataset.description,
-        remarks: el.dataset.remarks,
-        document1: el.dataset.document1,
-        document2: el.dataset.document2
-    }));
+    if (applicationsData && applicationsData.length > 0) {
+        allApplications = applicationsData.map(app => ({
+            id: app.id,
+            status: app.application_status.toString(),
+            event: app.event_name,
+            student: app.name,
+            program: app.program,
+            date: app.event_date,
+            submitted: app.date_submitted,
+            description: app.application_description,
+            remarks: app.admin_remarks || '',
+            document1: app.document1 ? true : false,
+            document2: app.document2 ? true : false
+        }));
+    } else {
+        allApplications = [];
+    }
     
     // Apply initial filter
     applyFilter(currentFilter);
+    
+    // Hide loading indicator
+    document.getElementById('loadingIndicator').style.display = 'none';
 }
 
 // Setup event listeners with debouncing
@@ -586,12 +573,14 @@ function createApplicationElement(app) {
 }
 
 // Create image section with lazy loading
-function createImageSection(base64Data, title, appId, imageNum) {
+function createImageSection(hasDocument, title, appId, imageNum) {
+    if (!hasDocument) return '';
+    
     return `
         <div class="bg-gray-50 rounded-lg p-4 border">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                 <h5 class="font-medium text-gray-800 text-sm md:text-base">${title}</h5>
-                <button onclick="downloadImage('${base64Data}', '${title.toLowerCase().replace(' ', '')}.jpg')" 
+                <button onclick="downloadImageFromServer(${appId}, ${imageNum}, '${title.toLowerCase().replace(' ', '')}.jpg')" 
                         class="btn-success text-xs md:text-sm flex items-center gap-1 self-start sm:self-auto">
                     <i class="fas fa-download"></i> Download
                 </button>
@@ -599,7 +588,7 @@ function createImageSection(base64Data, title, appId, imageNum) {
             <div class="flex justify-center">
                 <div id="image${imageNum}-container-${appId}" 
                      class="image-placeholder"
-                     onclick="loadAndViewImage('${base64Data}', '${title}', 'image${imageNum}-container-${appId}')">
+                     onclick="loadImageFromServer(${appId}, ${imageNum}, '${title}', 'image${imageNum}-container-${appId}')">
                     <div class="text-center">
                         <i class="fas fa-eye text-4xl text-gray-400 mb-2"></i>
                         <p class="text-gray-600 font-medium">Click to view image</p>
@@ -706,7 +695,7 @@ function loadApplicationsFromCache() {
     }
     
     // If no cache or expired, render from server data
-    renderApplications();
+    // The data is already loaded in initializeApplication()
 }
 
 // Cache applications
@@ -733,22 +722,43 @@ function confirmReject() {
 }
 
 // Image handling functions with optimization
-function loadAndViewImage(base64Data, title, containerId) {
+function loadImageFromServer(appId, imageNum, title, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
-    // Create image element
-    const img = document.createElement('img');
-    img.src = 'data:image/jpeg;base64,' + base64Data;
-    img.alt = title;
-    img.className = 'max-w-full h-auto max-h-48 md:max-h-64 rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform duration-200';
-    img.onclick = function() {
-        openImageModal('data:image/jpeg;base64,' + base64Data, title);
-    };
+    // Show loading state
+    container.innerHTML = `
+        <div class="flex items-center justify-center h-full">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#a31d1d]"></div>
+        </div>
+    `;
     
-    // Replace container content with image
-    container.innerHTML = '';
-    container.appendChild(img);
+    // Fetch image from server
+    fetch(`?action=viewDocument&id=${appId}&doc=${imageNum}`)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = title;
+            img.className = 'max-w-full h-auto max-h-48 md:max-h-64 rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform duration-200';
+            img.onclick = function() {
+                openImageModal(url, title);
+            };
+            
+            // Replace container content with image
+            container.innerHTML = '';
+            container.appendChild(img);
+        })
+        .catch(error => {
+            console.error('Error loading image:', error);
+            container.innerHTML = `
+                <div class="text-center text-red-500">
+                    <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                    <p>Failed to load image</p>
+                </div>
+            `;
+        });
 }
 
 function openImageModal(imageSrc, title) {
@@ -771,6 +781,16 @@ function openImageModal(imageSrc, title) {
 function closeImageModal() {
     const modal = document.getElementById('imageModal');
     modal.style.display = 'none';
+}
+
+function downloadImageFromServer(appId, imageNum, filename) {
+    // Create download link
+    const link = document.createElement('a');
+    link.href = `?action=downloadDocument&id=${appId}&doc=${imageNum}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function downloadImage(base64Data, filename) {
