@@ -363,4 +363,22 @@ class ExcuseApplication
             return $bytes . ' bytes';
         }
     }
+    public function hasApprovedExcuse($studentId, $eventId): bool
+    {
+        try {
+            $query = "SELECT COUNT(*) as count FROM excuse_application 
+                      WHERE student_id = :student_id AND atten_id = :event_id AND application_status = 1";
+            
+            $params = [
+                ':student_id' => $studentId,
+                ':event_id' => $eventId
+            ];
+            
+            $result = $this->query($query, $params);
+            return is_array($result) && !empty($result) ? $result[0]['count'] > 0 : false;
+        } catch (Exception $e) {
+            error_log("Error checking approved excuse: " . $e->getMessage());
+            return false;
+        }
+    }
 } 

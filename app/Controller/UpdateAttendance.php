@@ -22,32 +22,34 @@ use PDOException;
 class UpdateAttendance
 {
     use Database;
+    private $excuseApp;
     
     /**
      * Check if a student has an approved excuse application for a specific event
      */
-    private function hasApprovedExcuse($studentId, $eventId): bool
-    {
-        try {
-            $excuseApp = new ExcuseApplication();
-            $query = "SELECT COUNT(*) as count FROM excuse_application 
-                      WHERE student_id = :student_id AND atten_id = :event_id AND application_status = 1";
+    // private function hasApprovedExcuse($studentId, $eventId): bool
+    // {
+    //     try {
             
-            $stmt = $this->connect()->prepare($query);
-            $stmt->bindParam(':student_id', $studentId);
-            $stmt->bindParam(':event_id', $eventId);
-            $stmt->execute();
+    //         $query = "SELECT COUNT(*) as count FROM excuse_application 
+    //                   WHERE student_id = :student_id AND atten_id = :event_id AND application_status = 1";
             
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['count'] > 0;
-        } catch (Exception $e) {
-            error_log("Error checking approved excuse: " . $e->getMessage());
-            return false;
-        }
-    }
+    //         $stmt = $this->connect()->prepare($query);
+    //         $stmt->bindParam(':student_id', $studentId);
+    //         $stmt->bindParam(':event_id', $eventId);
+    //         $stmt->execute();
+            
+    //         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    //         return $result['count'] > 0;
+    //     } catch (Exception $e) {
+    //         error_log("Error checking approved excuse: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
     
     public function updateAttendance(): void
     {
+        $this->excuseApp = new ExcuseApplication();
         // Check if the request is a POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get the event ID and action from the request
@@ -160,7 +162,7 @@ class UpdateAttendance
                                 $student_id = (string) $student['student_id'];
                                 
                                 // Check if student has an approved excuse application
-                                if ($this->hasApprovedExcuse($student_id, $eventId)) {
+                                if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
                                     continue; // Skip sanction for students with approved excuses
                                 }
                                 
@@ -168,7 +170,7 @@ class UpdateAttendance
                                     if(in_array($student_id, $attendanceRecordList, true)){
                                         //check if naka time out
                                         if(!$qrCode->checkAttendance2($eventId, $student_id)){
-                                            $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', $hours, $formattedTime);
+                                            $sanction->insertSanction($student_id, 'Unable to time out ' . $eventName . ' event', $hours, $formattedTime);
                                         }
                                     }
                                 }
@@ -206,7 +208,7 @@ class UpdateAttendance
                                 // If student is required but did NOT attend
                                 if ($studentIsRequired && in_array($student_id, $attendanceRecordList, true)) {
                                     // Check if student has an approved excuse application
-                                    if ($this->hasApprovedExcuse($student_id, $eventId)) {
+                                    if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
                                         continue; // Skip sanction for students with approved excuses
                                     }
                                     
@@ -220,7 +222,7 @@ class UpdateAttendance
                                     }
                                 }elseif($studentIsRequired && !in_array($student_id, $attendanceRecordList, true)){
                                     // Check if student has an approved excuse application
-                                    if ($this->hasApprovedExcuse($student_id, $eventId)) {
+                                    if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
                                         continue; // Skip sanction for students with approved excuses
                                     }
                                     
