@@ -55,7 +55,7 @@
             <input type="hidden" name="page" value="Attendance">
             <input type="text" id="searchInput" placeholder="Search"
                    class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-            <button id="searchBtn" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200" type="submit">
+            <button id="searchBtn" onclick="searchAttendance()" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200" type="submit">
                 <i class="fas fa-search"></i> Search
             </button>
         </form>
@@ -146,6 +146,12 @@
             }
         });
         return false;
+    }
+
+    function searchAttendance() {
+        const searchInput = document.getElementById('searchInput');
+        const searchValue = searchInput.value.trim();
+        window.location.href = `<?php echo ROOT ?>adminHome?page=Attendance&search=${searchValue}`;
     }
 </script>
 </body>
