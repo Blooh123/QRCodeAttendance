@@ -72,6 +72,7 @@ $routes = [
     '/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
     '/public/student_application' => '../app/Controller/StudentApplication.php',
     '/public/take-photo' => '../app/Controller/TakePhoto.php',
+    '/public/view_application' => '../app/Controller/ViewApplicationDetials.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -161,7 +162,7 @@ $routes = [
     '/QRCodeAttendance/QRCodeAttendance/public/student_application' => '../app/Controller/StudentApplication.php',
 
     '/QRCodeAttendance/QRCodeAttendance/public/take-photo' => '../app/Controller/TakePhoto.php',
-
+    '/QRCodeAttendance/QRCodeAttendance/public/view_application' => '../app/Controller/ViewApplicationDetials.php',
     // For prototype
     '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-register' => '../app/Controller/RegisterUI.php',

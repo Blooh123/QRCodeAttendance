@@ -80,9 +80,10 @@ class ExcuseApplication
     public function getExcuseApplicationById($id): ?array
     {
         try {
-            $query = "SELECT ea.*, a.event_name, a.date_created as event_date 
+            $query = "SELECT s.name, s.program, s.acad_year, ea.*, a.event_name, a.date_created as event_date 
                       FROM excuse_application ea 
                       INNER JOIN attendance a ON ea.atten_id = a.atten_id 
+                      INNER JOIN students s ON ea.student_id = s.student_id 
                       WHERE ea.id = :id";
             
             $params = [':id' => $id];
