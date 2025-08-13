@@ -252,10 +252,14 @@
                                             </button>
                                         </div>
                                         <div class="flex justify-center">
-                                            <img src="data:image/jpeg;base64,<?php echo base64_encode($app['document1']); ?>" 
-                                                 alt="Supporting Image 1" 
-                                                 class="max-w-full h-auto max-h-48 md:max-h-64 rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform duration-200"
-                                                 onclick="openImageModal('data:image/jpeg;base64,<?php echo base64_encode($app['document1']); ?>', 'Image 1')">
+                                            <div id="image1-container-<?php echo $app['id']; ?>" 
+                                                 class="w-full h-48 md:h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors duration-200"
+                                                 onclick="loadAndViewImage('<?php echo base64_encode($app['document1']); ?>', 'Image 1', 'image1-container-<?php echo $app['id']; ?>')">
+                                                <div class="text-center">
+                                                    <i class="fas fa-eye text-4xl text-gray-400 mb-2"></i>
+                                                    <p class="text-gray-600 font-medium">Click to view image</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endif; ?>
@@ -270,10 +274,14 @@
                                             </button>
                                         </div>
                                         <div class="flex justify-center">
-                                            <img src="data:image/jpeg;base64,<?php echo base64_encode($app['document2']); ?>" 
-                                                 alt="Supporting Image 2" 
-                                                 class="max-w-full h-auto max-h-48 md:max-h-64 rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform duration-200"
-                                                 onclick="openImageModal('data:image/jpeg;base64,<?php echo base64_encode($app['document2']); ?>', 'Image 2')">
+                                            <div id="image2-container-<?php echo $app['id']; ?>" 
+                                                 class="w-full h-48 md:h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors duration-200"
+                                                 onclick="loadAndViewImage('<?php echo base64_encode($app['document2']); ?>', 'Image 2', 'image2-container-<?php echo $app['id']; ?>')">
+                                                <div class="text-center">
+                                                    <i class="fas fa-eye text-4xl text-gray-400 mb-2"></i>
+                                                    <p class="text-gray-600 font-medium">Click to view image</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endif; ?>
@@ -369,6 +377,23 @@
     }
 
     // Image handling functions
+    function loadAndViewImage(base64Data, title, containerId) {
+        const container = document.getElementById(containerId);
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = 'data:image/jpeg;base64,' + base64Data;
+        img.alt = title;
+        img.className = 'max-w-full h-auto max-h-48 md:max-h-64 rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform duration-200';
+        img.onclick = function() {
+            openImageModal('data:image/jpeg;base64,' + base64Data, title);
+        };
+        
+        // Replace container content with image
+        container.innerHTML = '';
+        container.appendChild(img);
+    }
+    
     function openImageModal(imageSrc, title) {
         const modal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage');
