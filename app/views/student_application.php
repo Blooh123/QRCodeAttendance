@@ -150,66 +150,25 @@
 
     <!-- Applications List -->
     <div id="applicationsContainer" class="space-y-6">
-        <!-- Applications will be loaded here by JavaScript -->
-    </div>
-
-    <!-- Pagination Controls -->
-    <div id="paginationContainer" class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <!-- Page Size Selector -->
-        <div class="flex items-center space-x-2">
-            <label for="pageSize" class="text-sm text-gray-600">Show:</label>
-            <select id="pageSize" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                <option value="5">5 per page</option>
-                <option value="10">10 per page</option>
-                <option value="15">15 per page</option>
-                <option value="20">20 per page</option>
-            </select>
-        </div>
-        
-        <!-- Navigation Controls -->
-        <div class="flex items-center space-x-2">
-            <button id="prevPage" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-            <div id="pageInfo" class="px-4 py-2 text-sm text-gray-600">
-                Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
-            </div>
-            <button id="nextPage" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-        
-        <!-- Results Info -->
-        <div class="text-sm text-gray-600">
-            Showing <span id="showingStart">1</span> to <span id="showingEnd">5</span> of <span id="totalResults">0</span> applications
-        </div>
-    </div>
-
-    <!-- Applications Data (Hidden) -->
-    <div id="applicationsData" style="display: none;">
         <?php
         if (empty($applications)):
         ?>
-            <div class="no-data" data-status="empty">
-                <div class="glass-card rounded-2xl p-8 text-center">
-                    <i class="fas fa-inbox text-6xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No Applications Found</h3>
-                    <p class="text-gray-500">
-                        <?php if (!empty($searchQuery)): ?>
-                            No applications match your search criteria.
-                        <?php elseif ($currentFilter !== 'all'): ?>
-                            No <?php echo $currentFilter == '0' ? 'pending' : ($currentFilter == '1' ? 'approved' : 'rejected'); ?> applications found.
-                        <?php else: ?>
-                            There are no student excuse applications to review.
-                        <?php endif; ?>
-                    </p>
-                </div>
+            <div class="glass-card rounded-2xl p-8 text-center">
+                <i class="fas fa-inbox text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Applications Found</h3>
+                <p class="text-gray-500">
+                    <?php if (!empty($searchQuery)): ?>
+                        No applications match your search criteria.
+                    <?php elseif ($currentFilter !== 'all'): ?>
+                        No <?php echo $currentFilter == '0' ? 'pending' : ($currentFilter == '1' ? 'approved' : 'rejected'); ?> applications found.
+                    <?php else: ?>
+                        There are no student excuse applications to review.
+                    <?php endif; ?>
+                </p>
             </div>
         <?php else: ?>
             <?php foreach ($applications as $app): ?>
-                <div class="application-card glass-card rounded-2xl p-6 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover-card" 
-                     data-status="<?php echo $app['application_status']; ?>"
-                     data-id="<?php echo $app['id']; ?>">
+                <div class="application-card glass-card rounded-2xl p-6 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover-card">
                     
                     <!-- Header with Status -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
@@ -403,186 +362,6 @@
 </div>
 
 <script>
-    // Pagination variables
-    let currentPage = 1;
-    let itemsPerPage = 5; // Number of applications per page
-    let currentFilter = 'all'; // Current filter status
-    let allApplications = []; // Store all applications
-    let filteredApplications = []; // Store filtered applications
-
-    // Initialize pagination when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        initializePagination();
-        setupFilterListeners();
-    });
-
-    // Initialize pagination
-    function initializePagination() {
-        // Get all application cards from the hidden data container
-        const dataContainer = document.getElementById('applicationsData');
-        const applicationCards = dataContainer.querySelectorAll('.application-card, .no-data');
-        
-        // Convert NodeList to Array and store all applications
-        allApplications = Array.from(applicationCards);
-        
-        // Set initial filter based on current page state
-        const activeFilter = document.querySelector('.filter-btn.active');
-        if (activeFilter) {
-            const filterValue = activeFilter.getAttribute('name') === 'filter' ? 
-                activeFilter.getAttribute('value') : 'all';
-            currentFilter = filterValue;
-        }
-        
-        // Apply initial filter and pagination
-        applyFilter(currentFilter);
-        
-        // Setup pagination event listeners
-        document.getElementById('prevPage').addEventListener('click', previousPage);
-        document.getElementById('nextPage').addEventListener('click', nextPage);
-        
-        // Setup page size selector
-        document.getElementById('pageSize').addEventListener('change', function() {
-            itemsPerPage = parseInt(this.value);
-            currentPage = 1; // Reset to first page
-            applyFilter(currentFilter);
-        });
-    }
-
-    // Setup filter button listeners
-    function setupFilterListeners() {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                // Remove active class from all buttons
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Get filter value
-                const filterValue = this.getAttribute('value');
-                currentFilter = filterValue;
-                
-                // Reset to first page and apply filter
-                currentPage = 1;
-                applyFilter(filterValue);
-            });
-        });
-    }
-
-    // Apply filter and update display
-    function applyFilter(filterValue) {
-        if (filterValue === 'all') {
-            filteredApplications = allApplications.filter(app => !app.classList.contains('no-data'));
-        } else {
-            filteredApplications = allApplications.filter(app => 
-                app.getAttribute('data-status') === filterValue
-            );
-        }
-        
-        // Check if we have any applications
-        if (filteredApplications.length === 0) {
-            showNoDataMessage();
-            return;
-        }
-        
-        // Calculate total pages
-        const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-        
-        // Ensure current page is within bounds
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
-        
-        // Update pagination info
-        document.getElementById('currentPage').textContent = currentPage;
-        document.getElementById('totalPages').textContent = totalPages;
-        
-        // Update results info
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, filteredApplications.length);
-        document.getElementById('showingStart').textContent = startIndex + 1;
-        document.getElementById('showingEnd').textContent = endIndex;
-        document.getElementById('totalResults').textContent = filteredApplications.length;
-        
-        // Show/hide pagination controls
-        const paginationContainer = document.getElementById('paginationContainer');
-        if (totalPages <= 1) {
-            paginationContainer.style.display = 'none';
-        } else {
-            paginationContainer.style.display = 'flex';
-        }
-        
-        // Update navigation buttons
-        updateNavigationButtons(totalPages);
-        
-        // Display current page
-        displayCurrentPage();
-    }
-
-    // Display current page applications
-    function displayCurrentPage() {
-        const container = document.getElementById('applicationsContainer');
-        container.innerHTML = '';
-        
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const pageApplications = filteredApplications.slice(startIndex, endIndex);
-        
-        pageApplications.forEach(app => {
-            const clone = app.cloneNode(true);
-            container.appendChild(clone);
-        });
-    }
-
-    // Show no data message
-    function showNoDataMessage() {
-        const container = document.getElementById('applicationsContainer');
-        const paginationContainer = document.getElementById('paginationContainer');
-        
-        container.innerHTML = `
-            <div class="glass-card rounded-2xl p-8 text-center">
-                <i class="fas fa-inbox text-6xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Applications Found</h3>
-                <p class="text-gray-500">
-                    ${currentFilter === 'all' ? 'There are no student excuse applications to review.' : 
-                      `No ${currentFilter === '0' ? 'pending' : (currentFilter === '1' ? 'approved' : 'rejected')} applications found.`}
-                </p>
-            </div>
-        `;
-        
-        paginationContainer.style.display = 'none';
-    }
-
-    // Update navigation buttons
-    function updateNavigationButtons(totalPages) {
-        const prevButton = document.getElementById('prevPage');
-        const nextButton = document.getElementById('nextPage');
-        
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage === totalPages;
-    }
-
-    // Navigation functions
-    function previousPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            document.getElementById('currentPage').textContent = currentPage;
-            displayCurrentPage();
-            updateNavigationButtons(Math.ceil(filteredApplications.length / itemsPerPage));
-        }
-    }
-
-    function nextPage() {
-        const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            document.getElementById('currentPage').textContent = currentPage;
-            displayCurrentPage();
-            updateNavigationButtons(totalPages);
-        }
-    }
-
     // Form confirmation functions
     function confirmApprove() {
         return confirm('Are you sure you want to approve this excuse application?');
