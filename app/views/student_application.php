@@ -311,23 +311,28 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize application
 function initializeApplication() {
     // Check if we have applications data from PHP
-    const applicationsData = <?php echo json_encode($applications ?? []); ?>;
-    
-    if (applicationsData && applicationsData.length > 0) {
-        allApplications = applicationsData.map(app => ({
-            id: app.id,
-            status: app.application_status.toString(),
-            event: app.event_name,
-            student: app.name,
-            program: app.program,
-            date: app.event_date,
-            submitted: app.date_submitted,
-            description: app.application_description,
-            remarks: app.admin_remarks || '',
-            document1: app.document1 ? true : false,
-            document2: app.document2 ? true : false
-        }));
-    } else {
+    try {
+        const applicationsData = <?php echo json_encode($applications ?? [], JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS); ?>;
+        
+        if (applicationsData && applicationsData.length > 0) {
+            allApplications = applicationsData.map(app => ({
+                id: app.id || 0,
+                status: (app.application_status || 0).toString(),
+                event: app.event_name || '',
+                student: app.name || '',
+                program: app.program || '',
+                date: app.event_date || '',
+                submitted: app.date_submitted || '',
+                description: app.application_description || '',
+                remarks: app.admin_remarks || '',
+                document1: app.document1 ? true : false,
+                document2: app.document2 ? true : false
+            }));
+        } else {
+            allApplications = [];
+        }
+    } catch (error) {
+        console.error('Error initializing applications data:', error);
         allApplications = [];
     }
     
