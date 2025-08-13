@@ -107,27 +107,24 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <!-- Status Filter -->
             <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                <form method="POST" action="" class="w-full">
-                    <input type="hidden" name="action" value="filter">
-                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full">
-                        <button type="submit" name="filter" value="all" 
-                                class="filter-btn <?php echo ($currentFilter === 'all') ? 'active bg-[#a31d1d] text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[70px] focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                            <i class="fas fa-list mr-1"></i> All
-                        </button>
-                        <button type="submit" name="filter" value="0" 
-                                class="filter-btn <?php echo ($currentFilter === '0') ? 'active bg-yellow-500 text-white shadow-lg' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                            <i class="fas fa-clock mr-1"></i> Pending
-                        </button>
-                        <button type="submit" name="filter" value="1" 
-                                class="filter-btn <?php echo ($currentFilter === '1') ? 'active bg-green-600 text-white shadow-lg' : 'bg-green-100 text-green-800 hover:bg-green-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[100px] focus:outline-none focus:ring-2 focus:ring-green-400">
-                            <i class="fas fa-check mr-1"></i> Approved
-                        </button>
-                        <button type="submit" name="filter" value="2" 
-                                class="filter-btn <?php echo ($currentFilter === '2') ? 'active bg-red-600 text-white shadow-lg' : 'bg-red-100 text-red-800 hover:bg-red-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-red-400">
-                            <i class="fas fa-times mr-1"></i> Rejected
-                        </button>
-                    </div>
-                </form>
+                <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full">
+                    <button type="button" data-filter="all" 
+                            class="filter-btn <?php echo ($currentFilter === 'all') ? 'active bg-[#a31d1d] text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[70px] focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                        <i class="fas fa-list mr-1"></i> All
+                    </button>
+                    <button type="button" data-filter="0" 
+                            class="filter-btn <?php echo ($currentFilter === '0') ? 'active bg-yellow-500 text-white shadow-lg' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <i class="fas fa-clock mr-1"></i> Pending
+                    </button>
+                    <button type="button" data-filter="1" 
+                            class="filter-btn <?php echo ($currentFilter === '1') ? 'active bg-green-600 text-white shadow-lg' : 'bg-green-100 text-green-800 hover:bg-green-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[100px] focus:outline-none focus:ring-2 focus:ring-green-400">
+                        <i class="fas fa-check mr-1"></i> Approved
+                    </button>
+                    <button type="button" data-filter="2" 
+                            class="filter-btn <?php echo ($currentFilter === '2') ? 'active bg-red-600 text-white shadow-lg' : 'bg-red-100 text-red-800 hover:bg-red-200'; ?> px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-red-400">
+                        <i class="fas fa-times mr-1"></i> Rejected
+                    </button>
+                </div>
             </div>
             
             <!-- Stats -->
@@ -428,8 +425,7 @@
         // Set initial filter based on current page state
         const activeFilter = document.querySelector('.filter-btn.active');
         if (activeFilter) {
-            const filterValue = activeFilter.getAttribute('name') === 'filter' ? 
-                activeFilter.getAttribute('value') : 'all';
+            const filterValue = activeFilter.getAttribute('data-filter');
             currentFilter = filterValue;
         }
         
@@ -454,13 +450,35 @@
         filterButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 // Remove active class from all buttons
-                filterButtons.forEach(btn => btn.classList.remove('active'));
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    // Reset button styles
+                    if (btn.getAttribute('data-filter') === 'all') {
+                        btn.className = 'filter-btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[70px] focus:outline-none focus:ring-2 focus:ring-[#a31d1d]';
+                    } else if (btn.getAttribute('data-filter') === '0') {
+                        btn.className = 'filter-btn bg-yellow-100 text-yellow-800 hover:bg-yellow-200 px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-yellow-400';
+                    } else if (btn.getAttribute('data-filter') === '1') {
+                        btn.className = 'filter-btn bg-green-100 text-green-800 hover:bg-green-200 px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[100px] focus:outline-none focus:ring-2 focus:ring-green-400';
+                    } else if (btn.getAttribute('data-filter') === '2') {
+                        btn.className = 'filter-btn bg-red-100 text-red-800 hover:bg-red-200 px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-red-400';
+                    }
+                });
                 
-                // Add active class to clicked button
+                // Add active class to clicked button and update styles
                 this.classList.add('active');
+                const filterValue = this.getAttribute('data-filter');
                 
-                // Get filter value
-                const filterValue = this.getAttribute('value');
+                if (filterValue === 'all') {
+                    this.className = 'filter-btn active bg-[#a31d1d] text-white shadow-lg px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[70px] focus:outline-none focus:ring-2 focus:ring-[#a31d1d]';
+                } else if (filterValue === '0') {
+                    this.className = 'filter-btn active bg-yellow-500 text-white shadow-lg px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-yellow-400';
+                } else if (filterValue === '1') {
+                    this.className = 'filter-btn active bg-green-600 text-white shadow-lg px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[100px] focus:outline-none focus:ring-2 focus:ring-green-400';
+                } else if (filterValue === '2') {
+                    this.className = 'filter-btn active bg-red-600 text-white shadow-lg px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base min-w-[90px] focus:outline-none focus:ring-2 focus:ring-red-400';
+                }
+                
+                // Get filter value and update current filter
                 currentFilter = filterValue;
                 
                 // Reset to first page and apply filter
@@ -472,13 +490,20 @@
 
     // Apply filter and update display
     function applyFilter(filterValue) {
+        console.log('Applying filter:', filterValue);
+        console.log('Total applications:', allApplications.length);
+        
         if (filterValue === 'all') {
             filteredApplications = allApplications.filter(app => !app.classList.contains('no-data'));
         } else {
-            filteredApplications = allApplications.filter(app => 
-                app.getAttribute('data-status') === filterValue
-            );
+            filteredApplications = allApplications.filter(app => {
+                const status = app.getAttribute('data-status');
+                console.log('App status:', status, 'Filter:', filterValue, 'Match:', status === filterValue);
+                return status === filterValue;
+            });
         }
+        
+        console.log('Filtered applications:', filteredApplications.length);
         
         // Check if we have any applications
         if (filteredApplications.length === 0) {
