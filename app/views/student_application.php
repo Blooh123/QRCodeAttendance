@@ -257,6 +257,36 @@
     </div>
 </div>
 
+<!-- Application Details Modal -->
+<div id="applicationDetailsModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="flex justify-between items-center mb-4">
+            <h3 id="detailsModalTitle" class="text-xl font-semibold text-gray-800">Application Details</h3>
+            <button onclick="closeApplicationDetailsModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="applicationDetailsContent">
+            <!-- Application details will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Approve/Reject Modal -->
+<div id="actionModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="flex justify-between items-center mb-4">
+            <h3 id="actionModalTitle" class="text-lg font-semibold text-gray-800">Application Action</h3>
+            <button onclick="closeActionModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="actionModalContent">
+            <!-- Action form will be loaded here -->
+        </div>
+    </div>
+</div>
+
 
 
 <script>
@@ -480,93 +510,61 @@ function renderNormalPagination() {
 // Create application element with optimized rendering
 function createApplicationElement(app) {
     const div = document.createElement('div');
-    div.className = 'application-card glass-card rounded-2xl p-6 shadow-md hover-card mb-6';
+    div.className = 'application-card glass-card rounded-2xl p-4 shadow-md hover-card mb-4';
     div.dataset.id = app.id;
     div.dataset.status = app.status;
     
     const statusInfo = getStatusInfo(app.status);
     const date = new Date(app.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const submittedDate = new Date(app.submitted).toLocaleString('en-US', { 
-        month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' 
-    });
     
     div.innerHTML = `
-        <!-- Header with Status -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-            <div>
-                <h3 class="text-lg md:text-xl font-bold text-[#a31d1d]">${app.event}</h3>
-                <p class="text-gray-600 text-sm md:text-base">${date}</p>
+        <!-- Simplified Card Layout -->
+        <div class="flex items-center justify-between">
+            <!-- Student Info -->
+            <div class="flex-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#a31d1d] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        ${app.student.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">${app.student}</h3>
+                        <p class="text-sm text-gray-600">${app.program} • ${app.event}</p>
+                        <p class="text-xs text-gray-500">Event: ${date}</p>
+                    </div>
+                </div>
             </div>
-            <div class="text-left sm:text-right">
+            
+            <!-- Status Badge -->
+            <div class="flex items-center gap-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusInfo.class}">
                     <i class="${statusInfo.icon} mr-1"></i>
                     ${statusInfo.text}
                 </span>
+                
+                <!-- View Details Button -->
+                <button onclick="viewApplicationDetails(${app.id})" 
+                        class="btn-primary text-sm flex items-center gap-2 px-3 py-2">
+                    <i class="fas fa-eye"></i>
+                    View Details
+                </button>
+                
+                <!-- Action Buttons (only for pending applications) -->
+                ${app.status == 0 ? `
+                    <div class="flex gap-2">
+                        <button onclick="approveApplication(${app.id})" 
+                                class="btn-success text-sm flex items-center gap-1 px-3 py-2">
+                            <i class="fas fa-check"></i>
+                            Approve
+                        </button>
+                        <button onclick="rejectApplication(${app.id})" 
+                                class="btn-danger text-sm flex items-center gap-1 px-3 py-2">
+                            <i class="fas fa-times"></i>
+                            Reject
+                        </button>
+                    </div>
+                ` : ''}
             </div>
         </div>
-
-        <!-- Student Information -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-4">
-            <div>
-                <h4 class="font-semibold text-gray-800 mb-2 text-sm md:text-base">Student Information</h4>
-                <div class="space-y-1 text-xs md:text-sm">
-                    <p><strong>Name:</strong> ${app.student}</p>
-                    <p><strong>Program:</strong> ${app.program}</p>
-                </div>
-            </div>
-            
-            <div>
-                <h4 class="font-semibold text-gray-800 mb-2 text-sm md:text-base">Application Details</h4>
-                <div class="space-y-1 text-xs md:text-sm">
-                    <p><strong>Submitted:</strong> ${submittedDate}</p>
-                    <p><strong>Application ID:</strong> #${app.id}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Description -->
-        <div class="mb-4">
-            <h4 class="font-semibold text-gray-800 mb-2 text-sm md:text-base">Excuse Description</h4>
-            <div class="bg-gray-50 rounded-lg p-4 text-xs md:text-sm">
-                ${app.description}
-            </div>
-        </div>
-
-        <!-- Supporting Images -->
-        ${app.document1 || app.document2 ? `
-            <div class="mb-4">
-                <h4 class="font-semibold text-gray-800 mb-2 flex items-center text-sm md:text-base">
-                    <i class="fas fa-image text-[#a31d1d] mr-2"></i>
-                    Supporting Images
-                </h4>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    ${app.document1 ? createImageSection(app.document1, 'Image 1', app.id, 1) : ''}
-                    ${app.document2 ? createImageSection(app.document2, 'Image 2', app.id, 2) : ''}
-                </div>
-            </div>
-        ` : ''}
-
-        <!-- Admin Remarks -->
-        ${app.remarks ? `
-            <div class="mb-4">
-                <h4 class="font-semibold text-gray-800 mb-2 text-sm md:text-base">
-                    <i class="fas fa-comment mr-1"></i>Admin Remarks
-                </h4>
-                <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4 text-xs md:text-sm">
-                    ${app.remarks}
-                </div>
-            </div>
-        ` : ''}
-
-        <!-- Action Buttons -->
-        ${app.status == 0 ? createActionButtons(app.id) : `
-            <div class="pt-4 border-t border-gray-200">
-                <p class="text-xs md:text-sm text-gray-500">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    This application has been ${statusInfo.text.toLowerCase()}.
-                </p>
-            </div>
-        `}
     `;
     
     return div;
@@ -599,36 +597,7 @@ function createImageSection(hasDocument, title, appId, imageNum) {
     `;
 }
 
-// Create action buttons
-function createActionButtons(appId) {
-    return `
-        <div class="flex flex-col lg:flex-row gap-3 pt-4 border-t border-gray-200">
-            <form method="POST" action="" class="flex-1" onsubmit="return confirmApprove()">
-                <input type="hidden" name="application_id" value="${appId}">
-                <input type="hidden" name="status" value="1">
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" name="remarks" placeholder="Optional remarks..." 
-                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <button type="submit" class="btn-success text-sm flex items-center justify-center gap-2">
-                        <i class="fas fa-check"></i> Approve
-                    </button>
-                </div>
-            </form>
-            
-            <form method="POST" action="" class="flex-1" onsubmit="return confirmReject()">
-                <input type="hidden" name="application_id" value="${appId}">
-                <input type="hidden" name="status" value="2">
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" name="remarks" placeholder="Reason for rejection..." required
-                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <button type="submit" class="btn-danger text-sm flex items-center justify-center gap-2">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                </div>
-            </form>
-        </div>
-    `;
-}
+
 
 // Get status information
 function getStatusInfo(status) {
@@ -707,7 +676,232 @@ function cacheApplications() {
     sessionStorage.setItem('applicationsCache', JSON.stringify(cacheData));
 }
 
-// Form confirmation functions
+// Application detail and action functions
+function viewApplicationDetails(appId) {
+    const app = allApplications.find(a => a.id == appId);
+    if (!app) {
+        alert('Application not found');
+        return;
+    }
+    
+    const statusInfo = getStatusInfo(app.status);
+    const date = new Date(app.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const submittedDate = new Date(app.submitted).toLocaleString('en-US', { 
+        month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' 
+    });
+    
+    const modal = document.getElementById('applicationDetailsModal');
+    const content = document.getElementById('applicationDetailsContent');
+    
+    content.innerHTML = `
+        <!-- Header with Status -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+            <div>
+                <h3 class="text-xl font-bold text-[#a31d1d]">${app.event}</h3>
+                <p class="text-gray-600">${date}</p>
+            </div>
+            <div class="text-left sm:text-right">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusInfo.class}">
+                    <i class="${statusInfo.icon} mr-1"></i>
+                    ${statusInfo.text}
+                </span>
+            </div>
+        </div>
+
+        <!-- Student Information -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div>
+                <h4 class="font-semibold text-gray-800 mb-3">Student Information</h4>
+                <div class="space-y-2">
+                    <p><strong>Name:</strong> ${app.student}</p>
+                    <p><strong>Program:</strong> ${app.program}</p>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-gray-800 mb-3">Application Details</h4>
+                <div class="space-y-2">
+                    <p><strong>Submitted:</strong> ${submittedDate}</p>
+                    <p><strong>Application ID:</strong> #${app.id}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+            <h4 class="font-semibold text-gray-800 mb-3">Excuse Description</h4>
+            <div class="bg-gray-50 rounded-lg p-4">
+                ${app.description}
+            </div>
+        </div>
+
+        <!-- Supporting Images -->
+        ${app.document1 || app.document2 ? `
+            <div class="mb-6">
+                <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                    <i class="fas fa-image text-[#a31d1d] mr-2"></i>
+                    Supporting Images
+                </h4>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    ${app.document1 ? createImageSection(app.document1, 'Image 1', app.id, 1) : ''}
+                    ${app.document2 ? createImageSection(app.document2, 'Image 2', app.id, 2) : ''}
+                </div>
+            </div>
+        ` : ''}
+
+        <!-- Admin Remarks -->
+        ${app.remarks ? `
+            <div class="mb-6">
+                <h4 class="font-semibold text-gray-800 mb-3">
+                    <i class="fas fa-comment mr-1"></i>Admin Remarks
+                </h4>
+                <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4">
+                    ${app.remarks}
+                </div>
+            </div>
+        ` : ''}
+
+        <!-- Action Buttons -->
+        ${app.status == 0 ? `
+            <div class="flex flex-col lg:flex-row gap-3 pt-6 border-t border-gray-200">
+                <button onclick="approveApplication(${app.id})" 
+                        class="btn-success flex items-center justify-center gap-2">
+                    <i class="fas fa-check"></i> Approve Application
+                </button>
+                <button onclick="rejectApplication(${app.id})" 
+                        class="btn-danger flex items-center justify-center gap-2">
+                    <i class="fas fa-times"></i> Reject Application
+                </button>
+            </div>
+        ` : `
+            <div class="pt-6 border-t border-gray-200">
+                <p class="text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    This application has been ${statusInfo.text.toLowerCase()}.
+                </p>
+            </div>
+        `}
+    `;
+    
+    modal.style.display = 'block';
+    
+    // Close modal when clicking outside
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeApplicationDetailsModal();
+        }
+    };
+}
+
+function closeApplicationDetailsModal() {
+    const modal = document.getElementById('applicationDetailsModal');
+    modal.style.display = 'none';
+}
+
+function approveApplication(appId) {
+    const modal = document.getElementById('actionModal');
+    const content = document.getElementById('actionModalContent');
+    const title = document.getElementById('actionModalTitle');
+    
+    title.textContent = 'Approve Application';
+    content.innerHTML = `
+        <form id="approveForm" method="POST" action="">
+            <input type="hidden" name="application_id" value="${appId}">
+            <input type="hidden" name="status" value="1">
+            
+            <div class="mb-4">
+                <label for="remarks" class="block text-sm font-medium text-gray-700 mb-2">Optional Remarks</label>
+                <textarea name="remarks" id="remarks" rows="3" 
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Add any remarks about this approval..."></textarea>
+            </div>
+            
+            <div class="flex gap-3">
+                <button type="submit" class="btn-success flex-1">
+                    <i class="fas fa-check mr-2"></i>Confirm Approval
+                </button>
+                <button type="button" onclick="closeActionModal()" class="btn-secondary flex-1">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    `;
+    
+    modal.style.display = 'block';
+    
+    // Handle form submission
+    document.getElementById('approveForm').addEventListener('submit', function(e) {
+        if (!confirm('Are you sure you want to approve this excuse application?')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Close modal when clicking outside
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeActionModal();
+        }
+    };
+}
+
+function rejectApplication(appId) {
+    const modal = document.getElementById('actionModal');
+    const content = document.getElementById('actionModalContent');
+    const title = document.getElementById('actionModalTitle');
+    
+    title.textContent = 'Reject Application';
+    content.innerHTML = `
+        <form id="rejectForm" method="POST" action="">
+            <input type="hidden" name="application_id" value="${appId}">
+            <input type="hidden" name="status" value="2">
+            
+            <div class="mb-4">
+                <label for="remarks" class="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection *</label>
+                <textarea name="remarks" id="remarks" rows="3" required
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                          placeholder="Please provide a reason for rejecting this application..."></textarea>
+            </div>
+            
+            <div class="flex gap-3">
+                <button type="submit" class="btn-danger flex-1">
+                    <i class="fas fa-times mr-2"></i>Confirm Rejection
+                </button>
+                <button type="button" onclick="closeActionModal()" class="btn-secondary flex-1">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    `;
+    
+    modal.style.display = 'block';
+    
+    // Handle form submission
+    document.getElementById('rejectForm').addEventListener('submit', function(e) {
+        const remarks = document.getElementById('remarks').value.trim();
+        if (!remarks) {
+            alert('Please provide a reason for rejection.');
+            e.preventDefault();
+            return;
+        }
+        if (!confirm('Are you sure you want to reject this excuse application?')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Close modal when clicking outside
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeActionModal();
+        }
+    };
+}
+
+function closeActionModal() {
+    const modal = document.getElementById('actionModal');
+    modal.style.display = 'none';
+}
+
+// Form confirmation functions (kept for backward compatibility)
 function confirmApprove() {
     return confirm('Are you sure you want to approve this excuse application?');
 }
