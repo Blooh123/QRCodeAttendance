@@ -402,7 +402,7 @@ $viewNotAttended = $_GET['view'] ?? '';
     </div>
 
     <!-- Search Section -->
-    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6">
+    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 no-print">
         <h2 class="text-xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2 no-print">
             <i class="fas fa-search"></i> Search Records
         </h2>
