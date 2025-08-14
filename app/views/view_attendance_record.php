@@ -325,7 +325,7 @@ $viewNotAttended = $_GET['view'] ?? '';
 <div class="max-w-7xl mx-auto space-y-6">
 
     <!-- Filter Section -->
-    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6">
+    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 no-print">
         <h2 class="text-xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
             <i class="fas fa-filter"></i> Filter Records
         </h2>
@@ -406,7 +406,7 @@ $viewNotAttended = $_GET['view'] ?? '';
         <h2 class="text-xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
             <i class="fas fa-search"></i> Search Records
         </h2>
-        <form action="" method="post" class="flex gap-4">
+        <form action="" method="post" class="flex gap-4 no-print">
             <input type="text" name="search" placeholder="Search by student name or ID..." 
                    value="<?= htmlspecialchars($_POST['search'] ?? ''); ?>"
                    class="flex-grow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d] shadow-sm" required>
