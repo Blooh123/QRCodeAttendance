@@ -215,18 +215,21 @@ $viewNotAttended = $_GET['view'] ?? '';
             
             /* Print header specific font sizes */
             .print-header h1 {
-                font-size: 28px !important;
+                font-size: 36px !important;
                 font-weight: bold !important;
-                margin-bottom: 8px !important;
+                margin-bottom: 12px !important;
+                text-align: center !important;
             }
             
             .print-header h2 {
-                font-size: 20px !important;
-                margin-bottom: 8px !important;
+                font-size: 26px !important;
+                margin-bottom: 12px !important;
+                text-align: center !important;
             }
             
             .print-header p {
-                margin-bottom: 5px !important;
+                margin-bottom: 8px !important;
+                text-align: center !important;
             }
             
             /* Remove rounded corners */
@@ -262,12 +265,13 @@ $viewNotAttended = $_GET['view'] ?? '';
             .print-header {
                 display: block !important;
                 text-align: center !important;
-                margin-bottom: 20px !important;
+                margin-bottom: 25px !important;
                 border-bottom: 3px solid #333 !important;
-                padding-bottom: 15px !important;
-                padding-top: 10px !important;
+                padding-bottom: 20px !important;
+                padding-top: 20px !important;
                 background-color: #f8f9fa !important;
                 border-radius: 0 !important;
+                width: 100% !important;
             }
             
             .print-header.hidden {
@@ -345,10 +349,10 @@ $viewNotAttended = $_GET['view'] ?? '';
 
 <!-- Print Header (hidden on screen, visible in print) -->
 <div class="print-header hidden">
-    <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 8px; text-align: center;">University of Southeastern Philippines</h1>
-    <h2 style="font-size: 20px; margin-bottom: 8px; text-align: center;">Attendance Record Report</h2>
-    <p style="font-size: 16px; color: #333; margin-bottom: 5px; text-align: center;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
-    <p style="font-size: 14px; color: #666; text-align: center;">Generated on: <?php echo date('F j, Y'); ?></p>
+    <h1 style="font-size: 36px; font-weight: bold; margin-bottom: 12px; text-align: center;">University of Southeastern Philippines</h1>
+    <h2 style="font-size: 26px; margin-bottom: 12px; text-align: center;">Attendance Record Report</h2>
+    <p style="font-size: 20px; color: #333; margin-bottom: 8px; text-align: center;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <p style="font-size: 16px; color: #666; text-align: center;">Generated on: <?php echo date('F j, Y'); ?></p>
 </div>
 
 <!-- Header -->
