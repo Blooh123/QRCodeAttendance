@@ -232,6 +232,13 @@ $viewNotAttended = $_GET['view'] ?? '';
                 text-align: center !important;
             }
             
+            /* Description styling in print header */
+            .print-header p:nth-child(4) {
+                font-size: 18px !important;
+                color: #555 !important;
+                font-style: italic !important;
+            }
+            
             /* Remove rounded corners */
             .rounded-2xl, .rounded-xl, .rounded-lg {
                 border-radius: 0 !important;
@@ -352,6 +359,9 @@ $viewNotAttended = $_GET['view'] ?? '';
     <h1 style="font-size: 36px; font-weight: bold; margin-bottom: 12px; text-align: center;">University of Southeastern Philippines</h1>
     <h2 style="font-size: 26px; margin-bottom: 12px; text-align: center;">Attendance Record Report</h2>
     <p style="font-size: 20px; color: #333; margin-bottom: 8px; text-align: center;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <?php if (!empty($Description)): ?>
+        <p style="font-size: 18px; color: #555; margin-bottom: 8px; text-align: center; font-style: italic;"><?php echo htmlspecialchars($Description); ?></p>
+    <?php endif; ?>
     <p style="font-size: 16px; color: #666; text-align: center;">Generated on: <?php echo date('F j, Y'); ?></p>
 </div>
 
