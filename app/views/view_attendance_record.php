@@ -213,6 +213,22 @@ $viewNotAttended = $_GET['view'] ?? '';
                 font-size: 18px !important;
             }
             
+            /* Print header specific font sizes */
+            .print-header h1 {
+                font-size: 28px !important;
+                font-weight: bold !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .print-header h2 {
+                font-size: 20px !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .print-header p {
+                margin-bottom: 5px !important;
+            }
+            
             /* Remove rounded corners */
             .rounded-2xl, .rounded-xl, .rounded-lg {
                 border-radius: 0 !important;
@@ -246,9 +262,12 @@ $viewNotAttended = $_GET['view'] ?? '';
             .print-header {
                 display: block !important;
                 text-align: center !important;
-                margin-bottom: 15px !important;
-                border-bottom: 2px solid #333 !important;
-                padding-bottom: 8px !important;
+                margin-bottom: 20px !important;
+                border-bottom: 3px solid #333 !important;
+                padding-bottom: 15px !important;
+                padding-top: 10px !important;
+                background-color: #f8f9fa !important;
+                border-radius: 0 !important;
             }
             
             .print-header.hidden {
@@ -326,11 +345,11 @@ $viewNotAttended = $_GET['view'] ?? '';
 
 <!-- Print Header (hidden on screen, visible in print) -->
 <div class="print-header hidden">
-    <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">University of Southeastern Philippines</h1>
-    <h2 style="font-size: 18px; margin-bottom: 5px;">Attendance Record Report</h2>
-    <p style="font-size: 14px; color: #666;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
-    <p style="font-size: 12px; color: #666;">Generated on: <?php echo date('F j, Y \a\t g:i A'); ?></p>
-    </div>
+    <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 8px; text-align: center;">University of Southeastern Philippines</h1>
+    <h2 style="font-size: 20px; margin-bottom: 8px; text-align: center;">Attendance Record Report</h2>
+    <p style="font-size: 16px; color: #333; margin-bottom: 5px; text-align: center;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <p style="font-size: 14px; color: #666; text-align: center;">Generated on: <?php echo date('F j, Y'); ?></p>
+</div>
 
 <!-- Header -->
 <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
