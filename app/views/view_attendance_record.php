@@ -61,7 +61,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             
             @page {
                 size: landscape;
-                margin: 5mm;
+                margin: 10mm;
             }
             
             .no-print, .no-print * {
@@ -80,8 +80,8 @@ $viewNotAttended = $_GET['view'] ?? '';
                 padding: 0 !important;
                 margin: 0 !important;
                 font-family: 'Arial', sans-serif !important;
-                font-size: 9px !important;
-                line-height: 1.1 !important;
+                font-size: 10px !important;
+                line-height: 1.2 !important;
             }
             
             .glass-card {
@@ -91,16 +91,18 @@ $viewNotAttended = $_GET['view'] ?? '';
                 box-shadow: none !important;
                 outline: none !important;
                 margin: 0 !important;
-                padding: 5px !important;
+                padding: 10px !important;
             }
             
             header {
-                display: none !important;
+                background: white !important;
+                border-bottom: 2px solid #333 !important;
+                margin-bottom: 15px !important;
             }
             
             h1, h2, h3 {
                 color: black !important;
-                margin-bottom: 5px !important;
+                margin-bottom: 8px !important;
             }
             
             .text-[#a31d1d] {
@@ -113,28 +115,30 @@ $viewNotAttended = $_GET['view'] ?? '';
             
             /* Summary Cards */
             .grid {
-                display: none !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 10px !important;
+                margin-bottom: 15px !important;
             }
             
             .hover-card {
                 transform: none !important;
                 box-shadow: none !important;
                 border: 1px solid #ddd !important;
-                padding: 5px !important;
+                padding: 10px !important;
             }
             
             /* Table Styles */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                font-size: 8px !important;
-                margin-top: 5px !important;
-                margin-bottom: 5px !important;
+                font-size: 9px !important;
+                margin-top: 15px !important;
             }
 
             th, td {
                 border: 1px solid #333 !important;
-                padding: 3px 4px !important;
+                padding: 4px 6px !important;
                 text-align: left !important;
                 vertical-align: top !important;
             }
@@ -143,11 +147,11 @@ $viewNotAttended = $_GET['view'] ?? '';
                 background-color: #f0f0f0 !important;
                 color: black !important;
                 font-weight: bold !important;
-                font-size: 9px !important;
+                font-size: 10px !important;
             }
             
             td {
-                font-size: 8px !important;
+                font-size: 9px !important;
                 color: black !important;
             }
 
@@ -172,13 +176,13 @@ $viewNotAttended = $_GET['view'] ?? '';
             }
 
             /* Page breaks */
-            tr:nth-child(25n) {
+            tr:nth-child(20n) {
                 page-break-after: always !important;
             }
             
             /* Ensure proper spacing */
             .space-y-6 > * + * {
-                margin-top: 5px !important;
+                margin-top: 15px !important;
             }
             
             /* Remove shadows and effects */
@@ -188,19 +192,19 @@ $viewNotAttended = $_GET['view'] ?? '';
 
             /* Ensure text is readable */
             .text-sm {
-                font-size: 8px !important;
+                font-size: 9px !important;
             }
             
             .text-xl {
-                font-size: 12px !important;
+                font-size: 14px !important;
             }
 
             .text-2xl {
-                font-size: 14px !important;
+                font-size: 16px !important;
             }
             
             .text-3xl {
-                font-size: 16px !important;
+                font-size: 18px !important;
             }
             
             /* Remove rounded corners */
@@ -212,7 +216,6 @@ $viewNotAttended = $_GET['view'] ?? '';
             .max-w-7xl {
                 max-width: none !important;
                 margin: 0 !important;
-                padding: 0 !important;
             }
 
             /* Remove transitions */
@@ -237,9 +240,9 @@ $viewNotAttended = $_GET['view'] ?? '';
             .print-header {
                 display: block !important;
                 text-align: center !important;
-                margin-bottom: 10px !important;
+                margin-bottom: 15px !important;
                 border-bottom: 2px solid #333 !important;
-                padding-bottom: 5px !important;
+                padding-bottom: 8px !important;
             }
             
             .print-header.hidden {
@@ -250,15 +253,20 @@ $viewNotAttended = $_GET['view'] ?? '';
             .print-footer {
                 display: block !important;
                 text-align: center !important;
-                margin-top: 10px !important;
-                font-size: 7px !important;
+                margin-top: 15px !important;
+                font-size: 8px !important;
                 color: #666 !important;
                 border-top: 1px solid #ddd !important;
-                padding-top: 5px !important;
+                padding-top: 8px !important;
             }
             
             .print-footer.hidden {
                 display: block !important;
+            }
+            
+            /* Hide screen header in print */
+            header {
+                display: none !important;
             }
             
             /* Ensure proper page numbering */
@@ -269,50 +277,6 @@ $viewNotAttended = $_GET['view'] ?? '';
             /* Add page counter */
             @page {
                 counter-increment: page;
-            }
-            
-            /* Remove extra spacing from containers */
-            .p-4, .p-6, .p-12 {
-                padding: 5px !important;
-            }
-            
-            .mb-8, .mb-4 {
-                margin-bottom: 5px !important;
-            }
-            
-            /* Remove overflow hidden that might cause spacing issues */
-            .overflow-hidden {
-                overflow: visible !important;
-            }
-            
-            /* Ensure table container doesn't add extra space */
-            .overflow-x-auto {
-                overflow: visible !important;
-            }
-            
-            /* Print container specific styles */
-            .print-container {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            .print-container > * {
-                margin-bottom: 5px !important;
-            }
-            
-            .print-container > *:last-child {
-                margin-bottom: 0 !important;
-            }
-            
-            /* Remove any remaining spacing issues */
-            .divide-y > * + * {
-                margin-top: 0 !important;
-            }
-            
-            /* Ensure table wrapper doesn't add space */
-            .glass-card.rounded-2xl {
-                margin: 0 !important;
-                padding: 5px !important;
             }
         }
         
@@ -325,11 +289,11 @@ $viewNotAttended = $_GET['view'] ?? '';
 
 <!-- Print Header (hidden on screen, visible in print) -->
 <div class="print-header hidden">
-    <h1 style="font-size: 18px; font-weight: bold; margin-bottom: 3px;">University of Southeastern Philippines</h1>
-    <h2 style="font-size: 14px; margin-bottom: 3px;">Attendance Record Report</h2>
-    <p style="font-size: 10px; color: #666; margin-bottom: 2px;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
-    <p style="font-size: 9px; color: #666;">Generated on: <?php echo date('F j, Y \a\t g:i A'); ?></p>
-</div>
+    <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">University of Southeastern Philippines</h1>
+    <h2 style="font-size: 18px; margin-bottom: 5px;">Attendance Record Report</h2>
+    <p style="font-size: 14px; color: #666;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <p style="font-size: 12px; color: #666;">Generated on: <?php echo date('F j, Y \a\t g:i A'); ?></p>
+    </div>
 
 <!-- Header -->
 <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
@@ -358,7 +322,7 @@ $viewNotAttended = $_GET['view'] ?? '';
     </div>
 </header>
 
-<div class="max-w-7xl mx-auto space-y-6 print-container">
+<div class="max-w-7xl mx-auto space-y-6">
 
     <!-- Filter Section -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 no-print">
