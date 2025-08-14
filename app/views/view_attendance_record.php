@@ -133,7 +133,8 @@ $viewNotAttended = $_GET['view'] ?? '';
                 width: 100% !important;
                 border-collapse: collapse !important;
                 font-size: 9px !important;
-                margin-top: 15px !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
             }
 
             th, td {
@@ -175,14 +176,19 @@ $viewNotAttended = $_GET['view'] ?? '';
                 overflow: visible !important;
             }
 
-            /* Page breaks */
-            tr:nth-child(20n) {
+            /* Page breaks - only when there are enough rows */
+            tr:nth-child(20n):not(:last-child) {
                 page-break-after: always !important;
+            }
+            
+            /* Prevent page breaks on the last row */
+            tr:last-child {
+                page-break-after: avoid !important;
             }
             
             /* Ensure proper spacing */
             .space-y-6 > * + * {
-                margin-top: 15px !important;
+                margin-top: 10px !important;
             }
             
             /* Remove shadows and effects */
@@ -277,6 +283,37 @@ $viewNotAttended = $_GET['view'] ?? '';
             /* Add page counter */
             @page {
                 counter-increment: page;
+            }
+            
+            /* Better content flow for print */
+            .glass-card {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Ensure table doesn't create unnecessary breaks */
+            table {
+                page-break-inside: auto !important;
+            }
+            
+            /* Prevent orphaned rows */
+            tr {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Ensure footer stays with content */
+            .print-footer {
+                page-break-inside: avoid !important;
+                page-break-before: auto !important;
+            }
+            
+            /* Remove any forced spacing that might cause gaps */
+            .space-y-6 > *:last-child {
+                margin-bottom: 0 !important;
+            }
+            
+            /* Ensure the main container doesn't add extra space */
+            .max-w-7xl {
+                min-height: auto !important;
             }
         }
         
