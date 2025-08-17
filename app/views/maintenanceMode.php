@@ -176,16 +176,26 @@
       let pivot = { x: 100, y: 250 }; // bow rotation point
       aim({ clientX: 320, clientY: 300 }); // set up start drag event
       window.addEventListener("mousedown", draw);
+      // Touch support
+      svg.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        draw(e);
+      }, { passive: false });
       function draw(e) { // pull back arrow
         randomAngle = Math.random() * Math.PI * 0.03 - 0.015;
         TweenMax.to(".arrow-angle use", 0.3, { opacity: 1});
-        window.addEventListener("mousemove", aim);
-        window.addEventListener("mouseup", loose);
+        if (e.type === "touchstart") {
+          window.addEventListener("touchmove", aim, { passive: false });
+          window.addEventListener("touchend", loose, { passive: false });
+        } else {
+          window.addEventListener("mousemove", aim);
+          window.addEventListener("mouseup", loose);
+        }
         aim(e);
       }
 
       function aim(e) {
-        // get mouse position in relation to svg position and scale
+        // get mouse or touch position in relation to svg position and scale
         var point = getMouseSVG(e);
         point.x = Math.min(point.x, pivot.x - 7);
         point.y = Math.max(point.y, pivot.y + 7);
@@ -242,10 +252,15 @@
         });
       }
 
-      function loose() {
+      function loose(e) {
         // release arrow
-        window.removeEventListener("mousemove", aim);
-        window.removeEventListener("mouseup", loose);
+        if (e && e.type === "touchend") {
+          window.removeEventListener("touchmove", aim, { passive: false });
+          window.removeEventListener("touchend", loose, { passive: false });
+        } else {
+          window.removeEventListener("mousemove", aim);
+          window.removeEventListener("mouseup", loose);
+        }
 
         TweenMax.to("#bow", 0.4, {
           scaleX: 1,
@@ -352,9 +367,20 @@
       }
 
       function getMouseSVG(e) {
-        // normalize mouse position within svg coordinates
-        cursor.x = e.clientX;
-        cursor.y = e.clientY;
+        // normalize mouse or touch position within svg coordinates
+        let clientX, clientY;
+        if (e.touches && e.touches.length > 0) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+          clientX = e.changedTouches[0].clientX;
+          clientY = e.changedTouches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+        cursor.x = clientX;
+        cursor.y = clientY;
         return cursor.matrixTransform(svg.getScreenCTM().inverse());
       }
 
