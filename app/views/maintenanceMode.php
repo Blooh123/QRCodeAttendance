@@ -1,208 +1,352 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <title>Maintenance Mode • QRCode Attendance System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            min-height: 100vh;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
-            overflow: hidden;
-            background: #e0e7ef;
-        }
-        .background-svg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            user-select: none;
-        }
-        .glass-card {
-            background: rgba(255,255,255,0.85);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            border: 1px solid rgba(255,255,255,0.25);
-            z-index: 2;
-        }
-        .gear {
-            animation: spin 2s linear infinite;
-            transform-origin: 50% 50%;
-            filter: drop-shadow(0 0 8px #a31d1d44);
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg);}
-            100% { transform: rotate(360deg);}
-        }
-        .bounce {
-            animation: bounce 1.5s infinite alternate;
-        }
-        @keyframes bounce {
-            0% { transform: translateY(0);}
-            100% { transform: translateY(-20px);}
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #f3f3f3;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 24px 0 12px 0;
-        }
-        .progress-bar-inner {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #a31d1d, #fbbf24);
-            border-radius: 8px;
-            animation: progressAnim 2.5s infinite;
-        }
-        @keyframes progressAnim {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
-        }
-        .footer {
-            position: fixed;
-            left: 0; right: 0; bottom: 0;
-            width: 100%;
-            text-align: center;
-            padding: 12px 0;
-            font-size: 1rem;
-            color: #a31d1d;
-            background: rgba(255,255,255,0.7);
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            z-index: 3;
-        }
-        .try-again-btn[aria-busy="true"] {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        /* Ensure card is above background */
-        .main-content {
-            position: relative;
-            z-index: 2;
-        }
+    <title>Arrow GAme</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+    <script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"></script>
+    <style >
+      body{
+        margin:0;
+        background:#222;
+        
+        margin:20px;
+      }
+      .maintenance-message {
+        width: 100vw;
+        text-align: center;
+        font-size: 2.5rem;
+        font-family: 'Poppins', Arial, Helvetica, sans-serif;
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 2px 16px #000, 0 1px 0 #af4c0f;
+        letter-spacing: 1px;
+        margin-top: 32px;
+        margin-bottom: 16px;
+        z-index: 10;
+        position: relative;
+        pointer-events: none;
+        user-select: none;
+      }
+      svg{
+        width:100%;
+        height:100%;
+        position:fixed;
+        top:0;
+        left:0;
+      }
+      span{
+        color:white;
+        font-family:sans-serif;
+        opacity:.3;
+      }
     </style>
-</head>
-<body class="flex items-center justify-center min-h-screen">
-    <!-- SVG Background Illustration -->
-    <div class="background-svg" aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#b3d8f6"/>
-                    <stop offset="100%" stop-color="#e0e7ef"/>
-                </linearGradient>
-                <radialGradient id="cloudWhite" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-                    <stop offset="100%" stop-color="#fff" stop-opacity="0.3"/>
-                </radialGradient>
-            </defs>
-            <!-- Sky -->
-            <rect width="1920" height="1080" fill="url(#skyGradient)"/>
-            <!-- Clouds -->
-            <ellipse cx="400" cy="180" rx="180" ry="60" fill="url(#cloudWhite)"/>
-            <ellipse cx="600" cy="220" rx="120" ry="40" fill="url(#cloudWhite)"/>
-            <ellipse cx="1500" cy="160" rx="160" ry="50" fill="url(#cloudWhite)"/>
-            <ellipse cx="1200" cy="250" rx="100" ry="30" fill="url(#cloudWhite)"/>
-            <!-- Cityscape silhouette -->
-            <g>
-                <rect x="0" y="900" width="200" height="180" fill="#b0b7c3"/>
-                <rect x="210" y="950" width="80" height="130" fill="#a3aab8"/>
-                <rect x="320" y="920" width="120" height="160" fill="#c2c8d6"/>
-                <rect x="470" y="970" width="60" height="110" fill="#b0b7c3"/>
-                <rect x="550" y="940" width="90" height="140" fill="#a3aab8"/>
-                <rect x="660" y="980" width="60" height="100" fill="#c2c8d6"/>
-                <rect x="740" y="930" width="100" height="150" fill="#b0b7c3"/>
-                <rect x="860" y="960" width="80" height="120" fill="#a3aab8"/>
-                <rect x="960" y="900" width="180" height="180" fill="#c2c8d6"/>
-                <rect x="1160" y="950" width="100" height="130" fill="#b0b7c3"/>
-                <rect x="1280" y="920" width="120" height="160" fill="#a3aab8"/>
-                <rect x="1420" y="970" width="60" height="110" fill="#c2c8d6"/>
-                <rect x="1500" y="940" width="90" height="140" fill="#b0b7c3"/>
-                <rect x="1610" y="980" width="60" height="100" fill="#a3aab8"/>
-                <rect x="1690" y="930" width="100" height="150" fill="#c2c8d6"/>
-                <rect x="1800" y="960" width="120" height="120" fill="#b0b7c3"/>
+  </head>
+  <body>
+    <div class="maintenance-message">Website is currently under maintenance</div>
+    <svg id="game" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" overflow="visible">
+      <linearGradient id="ArcGradient" >
+          <stop offset="0"  stop-color="#fff" stop-opacity=".2"/>
+          <stop offset="50%" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+        <path id="arc" fill="none" stroke="url(#ArcGradient)" stroke-width="4" d="M100,250c250-400,550-400,800,0"  pointer-events="none"/>
+        <defs>
+            <g id="arrow">
+                <line x2="60" fill="none" stroke="#888" stroke-width="2" />
+                <polygon fill="#888" points="64 0 58 2 56 0 58 -2" />
+                <polygon fill="#88ce02" points="2 -3 -4 -3 -1 0 -4 3 2 3 5 0" />
             </g>
-        </svg>
-    </div>
-    <div class="main-content w-full flex items-center justify-center min-h-screen">
-        <div class="relative glass-card px-10 py-14 max-w-lg w-full flex flex-col items-center">
-            <div class="flex justify-center mb-8 space-x-4">
-                <svg class="gear w-16 h-16 text-[#a31d1d]" fill="none" viewBox="0 0 64 64" stroke="currentColor">
-                    <circle cx="32" cy="32" r="24" stroke-width="6" />
-                    <path d="M32 8v8M32 48v8M8 32h8M48 32h8M16.97 16.97l5.66 5.66M41.37 41.37l5.66 5.66M16.97 47.03l5.66-5.66M41.37 22.63l5.66-5.66" stroke-width="4"/>
-                </svg>
-                <svg class="gear w-10 h-10 text-[#a31d1d] opacity-70" style="animation-direction: reverse;" fill="none" viewBox="0 0 64 64" stroke="currentColor">
-                    <circle cx="32" cy="32" r="18" stroke-width="4" />
-                    <path d="M32 14v4M32 46v4M14 32h4M46 32h4M21.5 21.5l3 3M39.5 39.5l3 3M21.5 42.5l3-3M39.5 24.5l3-3" stroke-width="3"/>
-                </svg>
-            </div>
-            <div class="bounce mb-6">
-                <svg class="w-16 h-16 mx-auto text-[#a31d1d]" fill="none" viewBox="0 0 48 48" stroke="currentColor">
-                    <rect x="6" y="6" width="12" height="12" rx="2" stroke-width="3"/>
-                    <rect x="30" y="6" width="12" height="12" rx="2" stroke-width="3"/>
-                    <rect x="6" y="30" width="12" height="12" rx="2" stroke-width="3"/>
-                    <rect x="21" y="21" width="6" height="6" rx="1" stroke-width="3"/>
-                    <rect x="30" y="30" width="6" height="6" rx="1" stroke-width="3"/>
-                </svg>
-            </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-[#a31d1d] mb-4 text-center drop-shadow-lg">We'll be back soon!</h1>
-            <p class="text-gray-700 text-lg mb-6 text-center font-medium">
-                The <span class="font-bold text-[#a31d1d]">QRCode Attendance System</span> is currently undergoing scheduled maintenance.<br>
-                Please check back later. Thank you for your patience!
-            </p>
-            <div class="progress-bar">
-                <div class="progress-bar-inner"></div>
-            </div>
-            <button id="tryAgainBtn" onclick="animateMessage()" class="try-again-btn mt-6 px-8 py-3 bg-[#a31d1d] hover:bg-[#7c1818] text-white rounded-xl font-bold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 text-lg" aria-busy="false">
-                <span id="btnText">Try Again</span>
-                <svg id="btnSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-            </button>
-            <div id="message" class="mt-4 text-[#a31d1d] font-semibold text-center"></div>
-        </div>
-    </div>
-    <div class="footer">
-        &copy; <?php echo date('Y'); ?> QRCode Attendance System &mdash; Need help? <a href="mailto:support@yourdomain.com" class="underline hover:text-[#7c1818]">Contact Support</a>
-    </div>
+        </defs>
+        <g id="target">
+            <path fill="#FFF" d="M924.2,274.2c-21.5,21.5-45.9,19.9-52,3.2c-4.4-12.1,2.4-29.2,14.2-41c11.8-11.8,29-18.6,41-14.2 C944.1,228.3,945.7,252.8,924.2,274.2z" />
+            <path fill="#F4531C" d="M915.8,265.8c-14.1,14.1-30.8,14.6-36,4.1c-4.1-8.3,0.5-21.3,9.7-30.5s22.2-13.8,30.5-9.7 C930.4,235,929.9,251.7,915.8,265.8z" />
+            <path fill="#FFF" d="M908.9,258.9c-8,8-17.9,9.2-21.6,3.5c-3.2-4.9-0.5-13.4,5.6-19.5c6.1-6.1,14.6-8.8,19.5-5.6 C918.1,241,916.9,250.9,908.9,258.9z" />
+            <path fill="#F4531C" d="M903.2,253.2c-2.9,2.9-6.7,3.6-8.3,1.7c-1.5-1.8-0.6-5.4,2-8c2.6-2.6,6.2-3.6,8-2 C906.8,246.5,906.1,250.2,903.2,253.2z" />
+        </g>
+        <g id="bow" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" pointer-events="none">
+          <polyline fill="none" stroke="#ddd" stroke-linecap="round" points="88,200 88,250 88,300"/>
+          <path fill="none" stroke="#88ce02" stroke-width="3" stroke-linecap="round" d="M88,300 c0-10.1,12-25.1,12-50s-12-39.9-12-50"/>
+        </g>
+      <g class="arrow-angle"><use x="100" y="250" xlink:href="#arrow"/></g>
+      <clipPath id="mask">
+        <polygon opacity=".5" points="0,0 1500,0 1500,200 970,290 950,240 925,220 875,280 890,295 920,310 0,350" pointer-events="none"/>
+      </clipPath>
+      <g class="arrows" clip-path="url(#mask)"  pointer-events="none">
+      </g>
+     <g class="missyou" fill="#aaa" opacity="0" transform="translate(-50, 50)">
+      <path d="M358 194L363 118 386 120 400 153 416 121 440 119 446 203 419 212 416 163 401 180 380 160 381 204"/>
+      <path d="M450 120L458 200 475 192 474 121"/>
+      <path d="M537 118L487 118 485 160 515 162 509 177 482 171 482 193 529 199 538 148 501 146 508 133 537 137"/>
+      <path d="M540 202L543 178 570 186 569 168 544 167 546 122 590 116 586 142 561 140 560 152 586 153 586 205"/>
+      <path d="M630 120 L650 160 L670 120 L690 120 L660 170 L660 200 L640 200 L640 170 L610 120 Z"/>
+      <!-- o -->
+      <path d="M700 160 A20 20 0 1 1 699.9 160"/>
+      <!-- u -->
+      <path d="M730 140 L730 180 A20 20 0 0 0 770 180 L770 140 L750 140 L750 180 A5 5 0 0 1 750 180 L750 140 Z"/>
+      <!-- ! moved -->
+      <path d="M790 150 L790 180 L810 180 L810 100 Z M790 200 L810 200 L810 220 L790 220 Z"/>
+    </g>
+
+    <g class="loveyou" fill="#F4531C" opacity="0" transform="translate(300, 100)">
+      <!-- L -->
+      <path d="M0 0 L0 80 L30 80 L30 70 L10 70 L10 0 Z"/>
+      <!-- O -->
+      <path d="M50 40 A20 20 0 1 1 49.9 40"/>
+      <!-- V -->
+      <path d="M80 0 L100 80 L120 0 L110 0 L100 60 L90 0 Z"/>
+      <!-- E -->
+      <path d="M140 0 L140 80 L170 80 L170 70 L150 70 L150 50 L170 50 L170 40 L150 40 L150 10 L170 10 L170 0 Z"/>
+      <!-- Y -->
+      <path d="M190 0 L205 30 L220 0 L230 0 L210 40 L210 80 L200 80 L200 40 L180 0 Z"/>
+      <!-- O -->
+      <path d="M250 40 A20 20 0 1 1 249.9 40"/>
+      <!-- U -->
+      <path d="M280 0 L280 50 A20 20 0 0 0 320 50 L320 0 L310 0 L310 50 A10 10 0 0 1 290 50 L290 0 Z"/>
+    </g>
+      <g class="hit" fill="#ffcc00" opacity="0" transform="translate(180, -80) rotate(12) ">
+        <path d="M383 114L385 195 407 191 406 160 422 155 418 191 436 189 444 112 423 119 422 141 407 146 400 113"/>
+        <path d="M449 185L453 113 477 112 464 186"/>
+        <path d="M486 113L484 130 506 130 481 188 506 187 520 131 540 135 545 119"/>
+        <path d="M526,195l5-20l22,5l-9,16L526,195z M558,164l32-44l-35-9l-19,51L558,164z"/>
+      </g>
+    </svg>
+    <span>Draw back an arrow and launch it!</span>
+
     <script>
-        function animateMessage() {
-            const msg = document.getElementById('message');
-            const btn = document.getElementById('tryAgainBtn');
-            const btnText = document.getElementById('btnText');
-            const btnSpinner = document.getElementById('btnSpinner');
-            btn.setAttribute('aria-busy', 'true');
-            btnSpinner.classList.remove('hidden');
-            btnText.textContent = 'Trying...';
-            msg.textContent = "Still under maintenance...";
-            msg.style.opacity = 1;
-            msg.animate([
-                { opacity: 0, transform: "translateY(20px)" },
-                { opacity: 1, transform: "translateY(0)" }
-            ], {
-                duration: 500,
-                fill: "forwards"
-            });
-            setTimeout(() => {
-                btn.setAttribute('aria-busy', 'false');
-                btnSpinner.classList.add('hidden');
-                btnText.textContent = 'Try Again';
-                msg.animate([
-                    { opacity: 1, transform: "translateY(0)" },
-                    { opacity: 0, transform: "translateY(-20px)" }
-                ], {
-                    duration: 500,
-                    fill: "forwards"
-                });
-            }, 2000);
+      var svg = document.querySelector("svg");
+      var cursor = svg.createSVGPoint();
+      var arrows = document.querySelector(".arrows");
+      var randomAngle = 0;
+
+
+      let target = { x: 900, y: 249.5 }; // center of target
+      let lineSegment = { // target intersection line segment
+        x1: 875, y1: 280, x2: 925, y2: 220
+      };
+      let pivot = { x: 100, y: 250 }; // bow rotation point
+      aim({ clientX: 320, clientY: 300 }); // set up start drag event
+      window.addEventListener("mousedown", draw);
+      function draw(e) { // pull back arrow
+        randomAngle = Math.random() * Math.PI * 0.03 - 0.015;
+        TweenMax.to(".arrow-angle use", 0.3, { opacity: 1});
+        window.addEventListener("mousemove", aim);
+        window.addEventListener("mouseup", loose);
+        aim(e);
+      }
+
+      function aim(e) {
+        // get mouse position in relation to svg position and scale
+        var point = getMouseSVG(e);
+        point.x = Math.min(point.x, pivot.x - 7);
+        point.y = Math.max(point.y, pivot.y + 7);
+        var dx = point.x - pivot.x;
+        var dy = point.y - pivot.y;
+        // Make it more difficult by adding random angle each time
+        var angle = Math.atan2(dy, dx) + randomAngle;
+        var bowAngle = angle - Math.PI;
+        var distance = Math.min(Math.sqrt(dx * dx + dy * dy), 50);
+        var scale = Math.min(Math.max(distance / 30, 1), 2);
+        TweenMax.to("#bow", 0.3, {
+          scaleX: scale,
+          rotation: bowAngle + "rad",
+          transformOrigin: "right center"
+        });
+        var arrowX = Math.min(pivot.x - (1 / scale) * distance, 88);
+        TweenMax.to(".arrow-angle", 0.3, {
+          rotation: bowAngle + "rad",
+          svgOrigin: "100 250"
+        });
+        TweenMax.to(".arrow-angle use", 0.3, {
+          x: -distance
+        });
+        TweenMax.to("#bow polyline", 0.3, {
+          attr: {
+            points:
+              "88,200 " + Math.min(pivot.x - (1 / scale) * distance, 88) + ",250 88,300"
+          }
+        });
+
+        var radius = distance * 9;
+        var offset = {
+          x: Math.cos(bowAngle) * radius,
+          y: Math.sin(bowAngle) * radius
+        };
+        var arcWidth = offset.x * 3;
+
+        TweenMax.to("#arc", 0.3, {
+          attr: {
+            d:
+              "M100,250c" +
+              offset.x +
+              "," +
+              offset.y +
+              "," +
+              (arcWidth - offset.x) +
+              "," +
+              (offset.y + 50) +
+              "," +
+              arcWidth +
+              ",50"
+          },
+          autoAlpha: distance / 60
+        });
+      }
+
+      function loose() {
+        // release arrow
+        window.removeEventListener("mousemove", aim);
+        window.removeEventListener("mouseup", loose);
+
+        TweenMax.to("#bow", 0.4, {
+          scaleX: 1,
+          transformOrigin: "right center",
+          ease: Elastic.easeOut
+        });
+        TweenMax.to("#bow polyline", 0.4, {
+          attr: {
+            points: "88,200 88,250 88,300"
+          },
+          ease: Elastic.easeOut
+        });
+        // duplicate arrow
+        var newArrow = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        newArrow.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#arrow");
+        arrows.appendChild(newArrow);
+
+        // animate arrow along path
+        var path = MorphSVGPlugin.pathDataToBezier("#arc");
+        TweenMax.to([newArrow], 0.5, {
+          force3D: true,
+          bezier: {
+            type: "cubic",
+            values: path,
+            autoRotate: ["x", "y", "rotation"]
+          },
+          onUpdate: hitTest,
+          onUpdateParams: ["{self}"],
+          onComplete: onMiss,
+          ease: Linear.easeNone
+        });
+        TweenMax.to("#arc", 0.3, {
+          opacity: 0
+        });
+        //hide previous arrow
+        TweenMax.set(".arrow-angle use", {
+          opacity: 0
+        });
+      }
+
+      function hitTest(tween) {
+        // check for collisions with arrow and target
+        var arrow = tween.target[0];
+        var transform = arrow._gsTransform;
+        var radians = (transform.rotation * Math.PI) / 180;
+        var arrowSegment = {
+          x1: transform.x,
+          y1: transform.y,
+          x2: Math.cos(radians) * 60 + transform.x,
+          y2: Math.sin(radians) * 60 + transform.y
+        };
+
+        var intersection = getIntersection(arrowSegment, lineSegment);
+        if (intersection.segment1 && intersection.segment2) {
+          tween.pause();
+          var dx = intersection.x - target.x;
+          var dy = intersection.y - target.y;
+          var distance = Math.sqrt(dx * dx + dy * dy);
+          var selector = ".hit";
+          if (distance < 7) {
+            selector = ".loveyou";
+          }
+          showMessage(selector);
         }
+      }
+
+      function onMiss() {
+        // Damn!
+        showMessage(".missyou");
+      }
+
+      function showMessage(selector) {
+        // handle all text animations by providing selector
+        TweenMax.killTweensOf(selector);
+        TweenMax.killChildTweensOf(selector);
+        TweenMax.set(selector, {
+          autoAlpha: 1
+        });
+        TweenMax.staggerFromTo(
+          selector + " path",
+          0.5,
+          {
+            rotation: -5,
+            scale: 0,
+            transformOrigin: "center"
+          },
+          {
+            scale: 1,
+            ease: Back.easeOut
+          },
+          0.05
+        );
+        TweenMax.staggerTo(
+          selector + " path",
+          0.3,
+          {
+            delay: 2,
+            rotation: 20,
+            scale: 0,
+            ease: Back.easeIn
+          },
+          0.03
+        );
+      }
+
+      function getMouseSVG(e) {
+        // normalize mouse position within svg coordinates
+        cursor.x = e.clientX;
+        cursor.y = e.clientY;
+        return cursor.matrixTransform(svg.getScreenCTM().inverse());
+      }
+
+      function getIntersection(segment1, segment2) {
+        // find intersection point of two line segments and whether or not the point is on either line segment
+        var dx1 = segment1.x2 - segment1.x1;
+        var dy1 = segment1.y2 - segment1.y1;
+        var dx2 = segment2.x2 - segment2.x1;
+        var dy2 = segment2.y2 - segment2.y1;
+        var cx = segment1.x1 - segment2.x1;
+        var cy = segment1.y1 - segment2.y1;
+        var denominator = dy2 * dx1 - dx2 * dy1;
+        if (denominator == 0) {
+          return null;
+        }
+        var ua = (dx2 * cy - dy2 * cx) / denominator;
+        var ub = (dx1 * cy - dy1 * cx) / denominator;
+        return {
+          x: segment1.x1 + ua * dx1,
+          y: segment1.y1 + ua * dy1,
+          segment1: ua >= 0 && ua <= 1,
+          segment2: ub >= 0 && ub <= 1
+        };
+      }
     </script>
-</body>
+    <script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // Disable F12, Ctrl+Shift+I, Ctrl+U
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+            (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+        }
+    });
+</script>
+  </body>
 </html>

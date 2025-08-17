@@ -45,6 +45,19 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
             -webkit-text-stroke: 1px black;
             text-stroke: 1px black;
         }
+        /* Custom color for focus/outline */
+        .focus\:outline-#af4c0f:focus {
+            outline-color: #af4c0f !important;
+        }
+        .focus\:ring-#af4c0f:focus {
+            box-shadow: 0 0 0 2px #af4c0f !important;
+        }
+        .text-#af4c0f {
+            color: #af4c0f !important;
+        }
+        .hover\:text-#8a3a0c:hover {
+            color: #8a3a0c !important;
+        }
     </style>
     <title>Attendance System • LogIn</title>
 
@@ -96,7 +109,7 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                     id="username"
                     name="username"
                     placeholder="Username"
-                    class="w-full h-12 md:h-14 pl-11 pr-4 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#ec4899] focus:ring-2 focus:ring-[#ec4899] transition-all duration-200"
+                    class="w-full h-12 md:h-14 pl-11 pr-4 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#af4c0f] focus:ring-2 focus:ring-[#af4c0f] transition-all duration-200"
                     autocomplete="username"
                 />
                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -110,7 +123,7 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                     id="password"
                     name="password"
                     placeholder="Password"
-                    class="w-full h-12 md:h-14 pl-11 pr-12 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#ec4899] focus:ring-2 focus:ring-[#ec4899] transition-all duration-200"
+                    class="w-full h-12 md:h-14 pl-11 pr-12 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#af4c0f] focus:ring-2 focus:ring-[#af4c0f] transition-all duration-200"
                     autocomplete="current-password"
                 />
                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -119,7 +132,7 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                 </svg>
                 <!-- Eye Icon -->
                 <button type="button" onclick="togglePassword()"
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#ec4899] focus:outline-none z-20">
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#af4c0f] focus:outline-none z-20">
                     <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                          class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -130,13 +143,13 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                 </button>
             </div>
             <div class="w-full mb-6 flex flex-row items-center">
-                <a href="javascript:void(0);" onclick="showIssueForm()" class="text-[#ec4899] text-lg font-normal hover:underline">Need help?</a>
+                <a href="javascript:void(0);" onclick="showIssueForm()" class="text-[#af4c0f] text-lg font-normal hover:underline">Need help?</a>
                 <span class="mx-2 text-[#515050]">|</span>
-                <a href="<?php echo ROOT;?>forgot-password" class="text-[#ec4899] text-lg font-normal hover:underline">Forgot Password?</a>
+                <a href="<?php echo ROOT;?>forgot-password" class="text-[#af4c0f] text-lg font-normal hover:underline">Forgot Password?</a>
             </div>
             <div class="w-full mb-4">
                 <button type="submit"
-                    class="w-full h-12 md:h-14 bg-[#ec4899] hover:bg-[#db2777] rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-bold text-white transition-all duration-200 focus:outline-[#ec4899] focus:ring-2 focus:ring-[#ec4899]">
+                    class="w-full h-12 md:h-14 bg-[#af4c0f] hover:bg-[#8a3a0c] rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-bold text-white transition-all duration-200 focus:outline-[#af4c0f] focus:ring-2 focus:ring-[#af4c0f]">
                     LOGIN
                 </button>
             </div>
@@ -150,7 +163,7 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
         <textarea id="issueDetails" name="issueDetails" class="w-full h-24 pl-4 text-[#515050] text-lg border border-[#ddd] rounded-lg mb-4" placeholder="Please include your ID number or email"></textarea>
 
         <div class="w-full flex space-x-4">
-            <button type="button" onclick="submitIssue()" class="w-1/2 h-12 bg-[#ec4899] text-white text-xl font-bold rounded-lg">Submit</button>
+            <button type="button" onclick="submitIssue()" class="w-1/2 h-12 bg-[#af4c0f] text-white text-xl font-bold rounded-lg">Submit</button>
             <button type="button" onclick="hideIssueForm()" class="w-1/2 h-12 bg-gray-500 text-white text-xl font-bold rounded-lg">Cancel</button>
         </div>
     </div>
