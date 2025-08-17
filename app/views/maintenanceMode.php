@@ -2,52 +2,99 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrow GAme</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
-    <script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"></script>
-    <style >
-      body{
-        margin:0;
-        background:#222;
-        
-        margin:20px;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arrow Game</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+  <script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #222;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      width: 100vw;
+    }
+    .maintenance-message {
+      width: 100vw;
+      text-align: center;
+      font-size: 2.2rem;
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 16px #000, 0 1px 0 #af4c0f;
+      letter-spacing: 1px;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      z-index: 10;
+      position: relative;
+      pointer-events: none;
+      user-select: none;
+      word-break: break-word;
+      padding: 0 8px;
+    }
+    svg {
+      width: 100vw;
+      height: 60vh;
+      max-height: 70vw;
+      min-height: 320px;
+      position: relative;
+      display: block;
+      top: 0;
+      left: 0;
+      touch-action: none;
+      background: transparent;
+    }
+    span {
+      color: white;
+      font-family: sans-serif;
+      opacity: .3;
+      display: block;
+      text-align: center;
+      margin-top: 8px;
+      font-size: 1rem;
+    }
+    @media (max-width: 600px) {
       .maintenance-message {
-        width: 100vw;
-        text-align: center;
-        font-size: 2.5rem;
-        font-family: 'Poppins', Arial, Helvetica, sans-serif;
-        font-weight: 800;
-        color: #fff;
-        text-shadow: 0 2px 16px #000, 0 1px 0 #af4c0f;
-        letter-spacing: 1px;
-        margin-top: 32px;
-        margin-bottom: 16px;
-        z-index: 10;
-        position: relative;
-        pointer-events: none;
-        user-select: none;
+        font-size: 1.2rem;
+        margin-top: 12px;
+        margin-bottom: 4px;
+        padding: 0 4px;
       }
-      svg{
-        width:100%;
-        height:100%;
-        position:fixed;
-        top:0;
-        left:0;
+      svg {
+        height: 38vh;
+        min-height: 180px;
+        max-height: 60vw;
       }
-      span{
-        color:white;
-        font-family:sans-serif;
-        opacity:.3;
+      span {
+        font-size: 0.9rem;
       }
-    </style>
-  </head>
-  <body>
-    <div class="maintenance-message">Website is currently under maintenance</div>
-    <svg id="game" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" overflow="visible">
+    }
+    @media (max-width: 400px) {
+      .maintenance-message {
+        font-size: 1rem;
+        margin-top: 8px;
+        margin-bottom: 2px;
+      }
+      svg {
+        min-height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="maintenance-message">Website is currently under maintenance</div>
+  <svg id="game" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" overflow="visible">
       <linearGradient id="ArcGradient" >
           <stop offset="0"  stop-color="#fff" stop-opacity=".2"/>
           <stop offset="50%" stop-color="#fff" stop-opacity="0"/>
