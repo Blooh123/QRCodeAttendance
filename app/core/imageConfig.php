@@ -14,7 +14,7 @@ $imagePath4 = ROOT."assets/Images/QR.png";
 $imageData4 = base64_encode(file_get_contents($imagePath4));
 $imageSource4 = 'data:image/png;base64,' . $imageData4;
 
-$imagePath7 = ROOT."assets/Images/QR2.png";
+$imagePath7 = ROOT."assets/Images/QR3.png";
 $imageData7 = base64_encode(file_get_contents($imagePath7));
 $imageSource7 = 'data:image/png;base64,' . $imageData7;
 
