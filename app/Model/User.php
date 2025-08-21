@@ -1,7 +1,7 @@
 <?php
 
 namespace Model;
-require_once '../app/core/Database.php';
+require_once __DIR__ . '/../core/Database.php';
 
 use PDO;
 
@@ -223,8 +223,42 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getUserIdByUsername($username): ?string
+    {
+        $query = "SELECT id FROM users WHERE username = :username";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['id'] : null;
+    }
 
+    public function uploadFacialImage($userId, $imageData): bool
+    {
+        $query = "INSERT INTO facilitator_facial_images (user_id, img) VALUES (:user_id, :image_data)";
+        $params = [
+            ':user_id' => $userId,
+            ':image_data' => $imageData
+        ];
+        return $this->query($query, $params);
+    }
 
+    public function getFacialImages($userId): array
+    {
+        $query = "SELECT img FROM facilitator_facial_images WHERE user_id = :user_id";
+        $params = [
+            ':user_id' => $userId
+        ];
+        $result = $this->query($query, $params);
+        return $result ? $result : [];
+    }
+
+    public function getAllFacialImages(): array
+    {
+        $query = "SELECT user_id, img FROM facilitator_facial_images";
+        $result = $this->query($query);
+        return $result ? $result : [];
+    }
 
 
 }

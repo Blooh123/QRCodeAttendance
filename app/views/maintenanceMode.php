@@ -3,12 +3,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arrow Game</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
   <script src="//s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"></script>
-  <style>
+    <style>
     html, body {
       margin: 0;
       padding: 0;
@@ -17,19 +17,19 @@
       overflow: hidden;
       background: #222;
     }
-    body {
+        body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
+            min-height: 100vh;
       width: 100vw;
     }
     .maintenance-message {
       width: 100vw;
       text-align: center;
       font-size: 2.2rem;
-      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Poppins', Arial, Helvetica, sans-serif;
       font-weight: 800;
       color: #fff;
       text-shadow: 0 2px 16px #000, 0 1px 0 #af4c0f;
@@ -89,8 +89,8 @@
       svg {
         min-height: 120px;
       }
-    }
-  </style>
+        }
+    </style>
 </head>
 <body>
   <div class="maintenance-message">Website is currently under maintenance</div>
@@ -159,7 +159,7 @@
         <path d="M486 113L484 130 506 130 481 188 506 187 520 131 540 135 545 119"/>
         <path d="M526,195l5-20l22,5l-9,16L526,195z M558,164l32-44l-35-9l-19,51L558,164z"/>
       </g>
-    </svg>
+            </svg>
     <span>Draw back an arrow and launch it!</span>
 
     <script>
@@ -420,6 +420,6 @@
             e.preventDefault();
         }
     });
-</script>
-  </body>
+    </script>
+</body>
 </html>

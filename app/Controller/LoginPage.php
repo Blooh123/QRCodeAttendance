@@ -90,25 +90,26 @@ class LoginPage extends Controller
                         ]
                     ];
 
-                    // Set cookie expiration based on role
-                    $cookieExpiry = ($role == 'student') ? time() + (60 * 20) : time() + (60 * 60 * 24 * 2);
-                    // Call createSession() to generate a secure token
-                    $userId = $validate['id'];
-                    $this->createSession($userId, $role, $authToken);
-                    setcookie(
-                        'user_data',
-                        json_encode($userSessions),
-                        $cookieExpiry, // 10 mins for students, 2 days for others
-                        '/',
-                        '',      // domain
-                        isset($_SERVER['HTTPS']), // secure flag
-                        true     // HttpOnly
-                    );
+
 
 
                     $uri = '';
                     // Redirect based on role
                     if ($role == 'admin') {
+                        // Set cookie expiration based on role
+                        $cookieExpiry = ($role == 'student') ? time() + (60 * 20) : time() + (60 * 60 * 24 * 2);
+                        // Call createSession() to generate a secure token
+                        $userId = $validate['id'];
+                        $this->createSession($userId, $role, $authToken);
+                        setcookie(
+                            'user_data',
+                            json_encode($userSessions),
+                            $cookieExpiry, // 10 mins for students, 2 days for others
+                            '/',
+                            '',      // domain
+                            isset($_SERVER['HTTPS']), // secure flag
+                            true     // HttpOnly
+                        );
                                             
                         $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
@@ -123,20 +124,23 @@ class LoginPage extends Controller
                         //     isset($_SERVER['HTTPS']), // secure flag
                         //     true     // HttpOnly
                         // );
-                        $uri = str_replace('/login', '/facilitator', $_SERVER['REQUEST_URI']);
+                        $uri = str_replace('/login', '/face-recognize', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'student') {
-                                            // Call createSession() to generate a secure token
-                        // $userId = $validate['id'];
-                        // $this->createSession($userId, $role, $authToken);
-                        // setcookie(
-                        //     'user_data',
-                        //     json_encode($userSessions),
-                        //     $cookieExpiry, // 10 mins for students, 2 days for others
-                        //     '/',
-                        //     '',      // domain
-                        //     isset($_SERVER['HTTPS']), // secure flag
-                        //     true     // HttpOnly
-                        // );
+                        // Set cookie expiration based on role
+                        $cookieExpiry = ($role == 'student') ? time() + (60 * 20) : time() + (60 * 60 * 24 * 2);
+                        // Call createSession() to generate a secure token
+                        $userId = $validate['id'];
+                        $this->createSession($userId, $role, $authToken);
+                        setcookie(
+                            'user_data',
+                            json_encode($userSessions),
+                            $cookieExpiry, // 10 mins for students, 2 days for others
+                            '/',
+                            '',      // domain
+                            isset($_SERVER['HTTPS']), // secure flag
+                            true     // HttpOnly
+                        );
+
                         $uri = str_replace('/login', '/student', $_SERVER['REQUEST_URI']);
                     }
 

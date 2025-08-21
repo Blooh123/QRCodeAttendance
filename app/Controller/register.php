@@ -1,4 +1,11 @@
 <?php
+
+namespace Controller;
+
+// Include the User model using absolute path
+require_once __DIR__ . '/../Model/User.php';
+use Model\User;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -10,22 +17,33 @@ $username = preg_replace('/[^a-zA-Z0-9_]/', '', $data['username']);
 $imgNum = intval($data['imgNum']);
 $imgData = $data['imgData'];
 
-// Directory to save images
-$dir = __DIR__ . '/../../public/assets/js/labels/' . $username;
-if (!is_dir($dir)) {
-    if (!mkdir($dir, 0777, true)) {
-        exit('Failed to create directory: ' . $dir);
-    }
+// Create User instance
+$user = new User();
+
+// Get user ID by username (you'll need to implement this method or pass user ID directly)
+// Assuming you have a method to get user ID by username
+$userId = $user->getUserIdByUsername($username);
+
+if (!$userId) {
+    exit('User not found');
 }
 
-$img = str_replace('data:image/jpeg;base64,', '', $imgData);
-$img = str_replace(' ', '+', $img);
-$fileData = base64_decode($img);
+// Clean the image data (remove data URL prefix and decode base64)
+$cleanImageData = str_replace('data:image/jpeg;base64,', '', $imgData);
+$cleanImageData = str_replace(' ', '+', $cleanImageData);
 
-if (file_put_contents("$dir/$imgNum.jpg", $fileData) === false) {
-    exit('Failed to save file: ' . "$dir/$imgNum.jpg");
+// Decode base64 to binary data for storage
+$binaryImageData = base64_decode($cleanImageData);
+
+if ($binaryImageData === false) {
+    exit('Invalid image data');
 }
 
-echo "<script>alert('Image saved successfully!');</script>";
+// Save image to database using the uploadFacialImage function
+if ($user->uploadFacialImage($userId, $binaryImageData)) {
+    echo json_encode(['success' => true, 'message' => 'Image saved successfully!']);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Failed to save image to database']);
+}
 
 

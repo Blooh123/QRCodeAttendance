@@ -4,7 +4,12 @@ Promise.all([
   faceapi.nets.ssdMobilenetv1.loadFromUri("../public/assets/js/models"),
   faceapi.nets.faceRecognitionNet.loadFromUri("../public/assets/js/models"),
   faceapi.nets.faceLandmark68Net.loadFromUri("../public/assets/js/models"),
-]).then(startVideo);
+]).then(() => {
+  console.log('Face-api.js models loaded successfully');
+  startVideo();
+}).catch(error => {
+  console.error('Failed to load face-api.js models:', error);
+});
 
 function startVideo() {
   navigator.mediaDevices.getUserMedia({ video: true })
@@ -15,61 +20,122 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptions() {
-  // Use absolute path
-  const res = await fetch('../public/assets/js/labels.php');
-  const labels = await res.json();
-
-  return Promise.all(
-    labels.map(async (label) => {
-      const descriptions = [];
-      for (let i = 1; i <= 3; i++) {
-        const extensions = ['jpg', 'jpeg', 'png'];
-        let found = false;
-        for (const ext of extensions) {
-          try {
-            const img = await faceapi.fetchImage(`../public/assets/js/labels/${label}/${i}.${ext}`);
-            const detections = await faceapi
-              .detectSingleFace(img)
-              .withFaceLandmarks()
-              .withFaceDescriptor();
-            if (detections) {
-              descriptions.push(detections.descriptor);
-              found = true;
-              break;
-            }
-          } catch (e) {
-            // Image does not exist, try next extension
+  try {
+    // Fetch facial images from database
+    const res = await fetch('../public/assets/js/get_facial_images.php');
+    const data = await res.json();
+    
+    if (data.error) {
+      console.error('Error fetching facial images:', data.error);
+      return [];
+    }
+    
+    if (!data.success || !data.images || data.images.length === 0) {
+      console.warn('No facial images found in database');
+      return [];
+    }
+    
+    console.log('Fetched images:', data.images.length, 'images');
+    
+    const username = data.username;
+    const descriptions = [];
+    
+    // Process each image from the database
+    for (const imageData of data.images) {
+      try {
+        console.log(`Processing image ${imageData.id}...`);
+        
+        // Create an image element from the data URL
+        const img = await faceapi.fetchImage(imageData.dataUrl);
+        console.log(`Image ${imageData.id} loaded, dimensions:`, img.width, 'x', img.height);
+        
+        // Check if face-api models are loaded
+        if (!faceapi.nets.ssdMobilenetv1.isLoaded) {
+          console.error('Face detection model not loaded');
+          return [];
+        }
+        
+        const detections = await faceapi
+          .detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        
+        if (detections) {
+          console.log(`Face detected in image ${imageData.id}`);
+          descriptions.push(detections.descriptor);
+        } else {
+          console.warn(`No face detected in image ${imageData.id} - trying with different settings`);
+          
+          // Try with different detection settings
+          const altDetections = await faceapi
+            .detectSingleFace(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.1 }))
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+            
+          if (altDetections) {
+            console.log(`Face detected in image ${imageData.id} with lower confidence`);
+            descriptions.push(altDetections.descriptor);
+          } else {
+            console.warn(`No face detected in image ${imageData.id} even with lower confidence`);
           }
         }
-        if (!found) {
-          console.warn(`No valid image found for ${label}/${i} (jpg, jpeg, png)`);
-        }
+      } catch (e) {
+        console.error(`Error processing image ${imageData.id}:`, e);
       }
-      if (descriptions.length === 0) {
-        console.warn(`No valid images for label: ${label}`);
-        return null;
-      }
-      return new faceapi.LabeledFaceDescriptors(label, descriptions);
-    })
-  );
-}
-
-// Fetch the username stored in PHP session
-async function getUsernameFromSession() {
-  try {
-    const res = await fetch('../public/assets/js/session_user.php');
-    const data = await res.json();
-    return data.username;
-  } catch (e) {
-    console.error('Failed to fetch session username', e);
-    return null;
+    }
+    
+    if (descriptions.length === 0) {
+      console.warn('No valid face descriptors found');
+      return [];
+    }
+    
+    console.log('Successfully processed', descriptions.length, 'face descriptors');
+    
+    // Return labeled face descriptors for the current user
+    return [new faceapi.LabeledFaceDescriptors(username, descriptions)];
+    
+  } catch (error) {
+    console.error('Failed to get labeled face descriptions:', error);
+    return [];
   }
 }
 
+// Test function to verify images are loading correctly
+async function testImageLoading() {
+  try {
+    const res = await fetch('../public/assets/js/get_facial_images.php');
+    const data = await res.json();
+    
+    if (data.success && data.images) {
+      console.log('Testing image loading...');
+      for (const imageData of data.images) {
+        const img = new Image();
+        img.onload = () => {
+          console.log(`Image ${imageData.id} loaded successfully:`, img.width, 'x', img.height);
+        };
+        img.onerror = () => {
+          console.error(`Failed to load image ${imageData.id}`);
+        };
+        img.src = imageData.dataUrl;
+      }
+    }
+  } catch (error) {
+    console.error('Error testing image loading:', error);
+  }
+}
 
 video.addEventListener("play", async () => {
+  // Test image loading first
+  await testImageLoading();
+  
   let labeledFaceDescriptors = await getLabeledFaceDescriptions();
-  labeledFaceDescriptors = labeledFaceDescriptors.filter(d => d); // Remove nulls
+  
+  if (labeledFaceDescriptors.length === 0) {
+    console.error('No facial descriptors available for recognition');
+    setStatus("❌ No facial data available", "status-failed");
+    return;
+  }
+  
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
 
   const canvas = faceapi.createCanvasFromMedia(video);
@@ -88,15 +154,7 @@ video.addEventListener("play", async () => {
 
   faceapi.matchDimensions(canvas, displaySize);
 
-  const username = await getUsernameFromSession();
-  console.log("Session username:", username);
-
-  if (!username) {
-    alert("No user session found.");
-    return;
-  }
-
-  let redirected = false; // 🔷 flag to ensure redirect only happens once
+  let redirected = false; // flag to ensure redirect only happens once
 
   setInterval(async () => {
     const detections = await faceapi
@@ -121,9 +179,11 @@ video.addEventListener("play", async () => {
     });
 
     if (results.length > 0) {
-      const matched = results.some(r => r.label === username);
-      if (matched && !redirected) {  // 🔷 only if not already redirected
-        redirected = true;          // 🔷 set flag
+      // Check if any result matches the expected user (not "unknown")
+      const matched = results.some(r => r.label !== "unknown" && r.distance < 0.5);
+      
+      if (matched && !redirected) {
+        redirected = true;
         setStatus("✅ Face recognized!", "status-success");
         video.classList.remove("scanning-border");
 
