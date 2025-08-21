@@ -1,5 +1,5 @@
 <?php
-    require_once '../app/Core/config.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

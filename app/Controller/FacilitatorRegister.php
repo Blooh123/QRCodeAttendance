@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-require_once '../app/Core/config.php';
+require_once '../app/core/config.php';
 class FacilitatorRegister extends \Controller{
     public function index(){
         $this->loadView('facilitator_register');
