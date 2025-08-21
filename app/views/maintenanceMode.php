@@ -404,7 +404,7 @@
           segment1: ua >= 0 && ua <= 1,
           segment2: ub >= 0 && ub <= 1
         };
-      }
+        }
     </script>
     <script>
     // Disable right-click

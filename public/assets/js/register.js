@@ -40,7 +40,7 @@ registerBtn.addEventListener('click', async () => {
       const dataUrl = canvas.toDataURL('image/jpeg');
       
       // Send to server
-      const response = await fetch('../app/Controller/register.php', {
+      const response = await fetch('../public/assets/js/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
