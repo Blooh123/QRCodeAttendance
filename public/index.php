@@ -75,8 +75,8 @@ $routes = [
     '/public/view_application' => '../app/Controller/ViewApplicationDetials.php',
 
     // exclusive link for facilitator register
-            '/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
-        '/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
+        // '/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
+        // '/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
