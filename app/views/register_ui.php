@@ -72,9 +72,9 @@ require_once '../app/core/config.php';
             <button id="registerBtn" class="w-full bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                 <i class="fas fa-user-plus"></i> Register Face
             </button>
-            <a href="<?php echo ROOT ?>adminHome?page=Users" class="w-full bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+            <!-- <a href="<?php echo ROOT ?>adminHome?page=Users" class="w-full bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                 <i class="fas fa-arrow-left"></i> Back to Users
-            </a>
+            </a> -->
         </form>
     </div>
 </div>

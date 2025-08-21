@@ -74,6 +74,10 @@ $routes = [
     '/public/take-photo' => '../app/Controller/TakePhoto.php',
     '/public/view_application' => '../app/Controller/ViewApplicationDetials.php',
 
+    // exclusive link for facilitator register
+            '/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
+        '/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
+
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
 
@@ -167,6 +171,10 @@ $routes = [
     '/QRCodeAttendance/QRCodeAttendance/public/map' => '../app/Controller/Geofencing.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-register' => '../app/Controller/RegisterUI.php',
     '/QRCodeAttendance/QRCodeAttendance/public/face-recognize' => '../app/Controller/FaceRecognize.php',
+
+    // exclusive link for facilitator register
+            '/QRCodeAttendance/QRCodeAttendance/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
+        '/QRCodeAttendance/QRCodeAttendance/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
 
     
 
