@@ -1,10 +1,39 @@
 <?php
 
-namespace Controller;
+// Database configuration
+if($_SERVER['SERVER_NAME'] == 'localhost'){
+    defined('ROOT') or define("ROOT", 'https://localhost/QRCodeAttendance/QRCodeAttendance/public/');
+    define('DBNAME', 'qrcode_attendance_system');
+    define('DBUSER', 'root');
+    define('DBPASS', '');
+    define('DBHOST', 'localhost');
+    define('DBPORT', '3306');
+}else{
+    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    define('DBNAME', 'u753706103_qr_attendance');
+    define('DBUSER', 'u753706103_christian');
+    define('DBPASS', 'mZ2~G76JP1s5=B=Cy1L*');
+    define('DBHOST', 'localhost');
+    define('DBPORT', '3306');
+}
 
-// Include the User model using absolute path
-require_once __DIR__ . '/../Model/User.php';
-use Model\User;
+// Database connection
+try {
+    $pdo = new PDO(
+        "mysql:host=" . DBHOST . ";dbname=" . DBNAME . ";port=" . DBPORT,
+        DBUSER,
+        DBPASS,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]
+    );
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Database connection failed']);
+    exit;
+}
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -17,12 +46,17 @@ $username = preg_replace('/[^a-zA-Z0-9_]/', '', $data['username']);
 $imgNum = intval($data['imgNum']);
 $imgData = $data['imgData'];
 
-// Create User instance
-$user = new User();
+// Get user ID by username (direct query instead of using User model)
+function getUserIdByUsername($pdo, $username) {
+    $query = "SELECT id FROM users WHERE username = :username";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ? $result['id'] : null;
+}
 
-// Get user ID by username (you'll need to implement this method or pass user ID directly)
-// Assuming you have a method to get user ID by username
-$userId = $user->getUserIdByUsername($username);
+$userId = getUserIdByUsername($pdo, $username);
 
 if (!$userId) {
     exit('User not found');
@@ -39,8 +73,21 @@ if ($binaryImageData === false) {
     exit('Invalid image data');
 }
 
-// Save image to database using the uploadFacialImage function
-if ($user->uploadFacialImage($userId, $binaryImageData)) {
+// Save image to database (direct query instead of using User model)
+function uploadFacialImage($pdo, $userId, $imageData) {
+    $query = "INSERT INTO facilitator_facial_images (user_id, img) VALUES (:user_id, :image_data)";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':image_data', $imageData, PDO::PARAM_LOB);
+    
+    try {
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+if (uploadFacialImage($pdo, $userId, $binaryImageData)) {
     echo json_encode(['success' => true, 'message' => 'Image saved successfully!']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to save image to database']);
