@@ -174,6 +174,8 @@ registerBtn.addEventListener('click', async () => {
     }
     
     registerStatus.textContent = "Registration complete!";
+    // redirect to login page
+    window.location.href = '<?= ROOT ?>login';
   } catch (error) {
     console.error('Registration error:', error);
     registerStatus.textContent = `Registration failed: ${error.message}`;
