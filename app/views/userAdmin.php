@@ -116,7 +116,7 @@ if (empty($_SESSION['csrf_token'])) {
                         }
                     </p>
                     <div class="flex justify-between mt-4 gap-2">
-                        <a href="${ROOT}edit_user?id=${encodeURIComponent(user.id)}"
+                        <a href="${ROOT}edit_user?user_id=${encodeURIComponent(user.id)}"
                            class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
                             <i class="fas fa-edit"></i> Edit
                         </a>

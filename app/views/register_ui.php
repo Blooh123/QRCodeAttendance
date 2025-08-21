@@ -63,7 +63,7 @@ require_once '../app/core/config.php';
                 <label for="username" class="block mb-2 text-sm font-medium text-gray-700">User ID</label>
                 <input
                     type="text"
-                    value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : 'n/a'; ?>"
+                    value="<?php echo isset($_GET['user_id']) ? htmlspecialchars($_GET['user_id']) : 'n/a'; ?>"
                     id="username"
                     readonly
                     class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#a31d1d] focus:border-[#a31d1d] block w-full p-2.5"
