@@ -22,7 +22,7 @@ if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
     exit();
 }
 
-$userId = $_GET['id'];
+$userId = $_GET['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $actionType = $_POST['actionType'] ?? '';
@@ -84,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$userData = $user->getUserDataWithPersonalInfo($_GET['id']);
-$userSession = $user->getUserSession($_GET['id']);
+$userData = $user->getUserDataWithPersonalInfo($_GET['user_id']);
+$userSession = $user->getUserSession($_GET['user_id']);
 
 $data = [
     'userData' => $userData,
