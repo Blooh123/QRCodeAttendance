@@ -117,6 +117,11 @@ class QRCode
         $query = 'SELECT * FROM attendance_record WHERE atten_id = ? AND student_id = ? AND time_out is not null';
         return $this->query($query, [$attenId, $studentId]);
     }
+    public function checkAttendance3($attenId, $studentId): bool|array
+    {
+        $query = 'SELECT * FROM attendance_record WHERE atten_id = ? AND student_id = ? AND time_in is null';
+        return $this->query($query, [$attenId, $studentId]);
+    }
 
     /**
      * @throws DateMalformedStringException
@@ -164,6 +169,15 @@ class QRCode
             error_log("Error in recordAttendance2: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function recordAttendanceEvenIfNotTimeIn($attenId, $studentId): bool|array
+    {
+        $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
+        $formattedTime = $date->format('h:i:s A'); // 12-hour format with AM/PM
+        $query = 'INSERT INTO attendance_record (atten_id, student_id, time_out) VALUES (?,?,?);';
+        $result = $this->query($query, [$attenId, $studentId, $formattedTime]);
+        return $result;
     }
 
     public function insertQRCode($code, $student_id): bool|array

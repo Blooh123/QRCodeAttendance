@@ -142,6 +142,9 @@ class UpdateAttendance
                         $requiredAttendeesData = $attendances->getRequiredAttendees($eventId);
                         $requiredAttendance = json_decode($attendanceDetails['required_attenRecord'], true);
 
+                        // get sanction hours from the attendance
+                        $sanctionHours = $attendanceDetails['sanction'];
+
                         $studentList = $student->getAllStudent(); // Fetch students as associative arrays
 
                         $attendanceRecordList = array_map('strval', array_column($attendances->AttendanceRecord2($eventId), 'student_id'));
@@ -170,12 +173,15 @@ class UpdateAttendance
                                     if(in_array($student_id, $attendanceRecordList, true)){
                                         //check if naka time out
                                         if(!$qrCode->checkAttendance2($eventId, $student_id)){
-                                            $sanction->insertSanction($student_id, 'Unable to time out ' . $eventName . ' event', $hours, $formattedTime);
+                                            $sanction->insertSanction($student_id, 'Unable to time out ' . $eventName . ' event', 1, $formattedTime);
+                                        }
+                                        if($qrCode->checkAttendance3($eventId, $student_id)){
+                                            $sanction->insertSanction($student_id, 'Unable to time in ' . $eventName . ' event', 1, $formattedTime);
                                         }
                                     }
                                 }
                                 if (!in_array($student_id, $attendanceRecordList, true)){
-                                    $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', $hours, $formattedTime);
+                                    $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', 2, $formattedTime);
                                 }
                             }
                         } else {

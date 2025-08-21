@@ -30,6 +30,7 @@ class QRScanner extends Controller
 
         $qrcode = new QRCode();
         $activityLog = new ActivityLog();
+        $checkIfStudentTimedIn = false;
 
         try {
             $result = $qrcode->getQRData($data);
@@ -77,12 +78,7 @@ class QRScanner extends Controller
 
                         //check kung naka time in
                         if(empty($attendanceExists)){
-                            echo json_encode([
-                                "status" => "error",
-                                "student" => $name,
-                                "message" => "Student did not time in!"
-                            ]);
-                            exit;
+                            $checkIfStudentTimedIn = true;
                         }
 
                         if (!empty($attendanceExists1)) {
@@ -110,13 +106,24 @@ class QRScanner extends Controller
                                     "message" => "QR Code Scanned Successfully! (Time in)"
                                 ]);
                             }else{
-                                $qrcode->recordAttendance2($attenId, $studentId);
-                                $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentName . ' (Time out)',$EventName );
-                                echo json_encode([
-                                    "status" => "success",
-                                    "student" => $name,
-                                    "message" => "QR Code Scanned Successfully! (Time out)"
-                                ]);
+                                if($checkIfStudentTimedIn){
+                                    $qrcode->recordAttendanceEvenIfNotTimeIn($attenId, $studentId);
+                                    $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentName . ' (Time out)',$EventName );
+                                    echo json_encode([
+                                        "status" => "success",
+                                        "student" => $name,
+                                        "message" => "QR Code Scanned Successfully! (Time out)"
+                                    ]);
+                                }else{
+                                    $qrcode->recordAttendance2($attenId, $studentId);
+                                    $activityLog->createActivityLog($_SESSION['user_id'], $_SESSION['role'],$_SESSION['username'] .' Scanned student: '. $studentName . ' (Time out)',$EventName );
+                                    echo json_encode([
+                                        "status" => "success",
+                                        "student" => $name,
+                                        "message" => "QR Code Scanned Successfully! (Time out)"
+                                    ]);
+                                }
+
                             }
 
                         } catch (Exception $e) {
