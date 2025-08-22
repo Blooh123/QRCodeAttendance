@@ -86,10 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $userData = $user->getUserDataWithPersonalInfo($_GET['user_id']);
 $userSession = $user->getUserSession($_GET['user_id']);
+$facialImages = $user->getFacialImages($_GET['user_id']);
 
 $data = [
     'userData' => $userData,
-    'userSession' => $userSession
+    'userSession' => $userSession,
+    'facialImages' => $facialImages
 ];
 
 

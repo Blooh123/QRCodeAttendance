@@ -39,19 +39,31 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        .facial-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .facial-image:hover {
+            transform: scale(1.05);
+            border-color: #a31d1d;
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
 
 <!-- Header -->
-<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-3xl mx-auto glass-card">
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-6xl mx-auto glass-card">
     <div class="flex items-center space-x-3">
         <i class="fas fa-user-edit text-[#a31d1d] text-3xl"></i>
         <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Edit User</h1>
     </div>
 </header>
 
-<div class="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- User Edit Card -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
         <form id="userForm" action="edit_user?id=<?php echo $_GET['user_id']; ?>" method="POST" class="space-y-4">
@@ -133,6 +145,59 @@
             <?php endforeach; ?>
         </div>
     </div>
+
+    <!-- Facial Images Card -->
+    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
+        <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+            <i class="fas fa-user-circle text-[#a31d1d]"></i> Facial Images
+        </h3>
+        <div class="flex-1">
+            <?php if (!empty($facialImages)): ?>
+                <div class="grid grid-cols-2 gap-4">
+                    <?php foreach ($facialImages as $index => $image): ?>
+                        <div class="relative group">
+                            <img 
+                                src="data:image/jpeg;base64,<?php echo base64_encode($image['img']); ?>" 
+                                alt="Facial Image <?php echo $index + 1; ?>"
+                                class="facial-image w-full h-32 object-cover"
+                                onclick="openImageModal(this.src, 'Facial Image <?php echo $index + 1; ?>')"
+                            />
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <i class="fas fa-search-plus text-white text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <span class="text-sm text-gray-600">Image <?php echo $index + 1; ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mt-4 text-center">
+                    <span class="text-sm text-gray-500">Total Images: <?php echo count($facialImages); ?></span>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-8">
+                    <i class="fas fa-user-slash text-gray-400 text-4xl mb-4"></i>
+                    <p class="text-gray-500">No facial images registered</p>
+                    <p class="text-sm text-gray-400 mt-2">This user hasn't completed facial registration yet.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full">
+        <img id="modalImage" src="" alt="Modal Image" class="max-w-full max-h-full object-contain rounded-lg">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all duration-200">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <div class="absolute bottom-4 left-4 text-white bg-black bg-opacity-50 px-3 py-1 rounded-lg">
+            <span id="modalTitle"></span>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -160,6 +225,32 @@
             }
         });
     }
+
+    function openImageModal(src, title) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('imageModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeImageModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImageModal();
+        }
+    });
 
     // Show alerts if there's a success message
     <?php if (isset($_GET['success'])): ?>
