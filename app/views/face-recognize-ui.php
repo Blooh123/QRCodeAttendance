@@ -139,26 +139,44 @@
 </div>
 
 <script>
-    const video = document.getElementById("video");
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for faceapi to be available
+    function waitForFaceAPI() {
+        if (typeof faceapi !== 'undefined') {
+            console.log('Face-api.js library loaded');
+            initializeFaceRecognition();
+        } else {
+            console.log('Waiting for face-api.js to load...');
+            setTimeout(waitForFaceAPI, 100);
+        }
+    }
 
-Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("<?= ROOT ?>assets/js/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("<?= ROOT ?>assets/js/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("<?= ROOT ?>assets/js/models"),
-]).then(() => {
-  console.log('Face-api.js models loaded successfully');
-  startVideo();
-}).catch(error => {
-  console.error('Failed to load face-api.js models:', error);
+    function initializeFaceRecognition() {
+        const video = document.getElementById("video");
+
+        Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromUri("<?= ROOT ?>assets/js/models"),
+            faceapi.nets.faceRecognitionNet.loadFromUri("<?= ROOT ?>assets/js/models"),
+            faceapi.nets.faceLandmark68Net.loadFromUri("<?= ROOT ?>assets/js/models"),
+        ]).then(() => {
+            console.log('Face-api.js models loaded successfully');
+            startVideo();
+        }).catch(error => {
+            console.error('Failed to load face-api.js models:', error);
+        });
+    }
+
+    function startVideo() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Start waiting for faceapi
+    waitForFaceAPI();
 });
-
-function startVideo() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-      video.srcObject = stream;
-    })
-    .catch(err => console.error(err));
-}
 
 async function getLabeledFaceDescriptions() {
   try {
