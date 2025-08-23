@@ -142,9 +142,9 @@
     const video = document.getElementById("video");
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("../public/assets/js/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("../public/assets/js/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("../public/assets/js/models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("<?= ROOT ?>assets/js/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("<?= ROOT ?>assets/js/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("<?= ROOT ?>assets/js/models"),
 ]).then(() => {
   console.log('Face-api.js models loaded successfully');
   startVideo();
@@ -163,7 +163,7 @@ function startVideo() {
 async function getLabeledFaceDescriptions() {
   try {
     // Fetch facial images from database
-    const res = await fetch('../public/assets/js/get_facial_images.php');
+    const res = await fetch('<?= ROOT ?>assets/js/get_facial_images.php');
     const data = await res.json();
     
     if (data.error) {
@@ -244,7 +244,7 @@ async function getLabeledFaceDescriptions() {
 // Test function to verify images are loading correctly
 async function testImageLoading() {
   try {
-    const res = await fetch('../public/assets/js/get_facial_images.php');
+    const res = await fetch('<?= ROOT ?>assets/js/get_facial_images.php');
     const data = await res.json();
     
     if (data.success && data.images) {
@@ -328,7 +328,7 @@ video.addEventListener("play", async () => {
         setStatus("✅ Face recognized!", "status-success");
         video.classList.remove("scanning-border");
 
-        fetch('../public/assets/js/redirect.php', {
+        fetch('<?= ROOT ?>assets/js/redirect.php', {
           method: 'POST',
           credentials: 'include'
         })
