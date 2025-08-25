@@ -22,7 +22,13 @@ if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
     exit();
 }
 
-$userId = $_GET['user_id'];
+// Get user_id from GET parameter
+$userId = $_GET['user_id'] ?? null;
+
+if (!$userId) {
+    header('Location: ' . ROOT . 'adminHome?page=Users&error=missing_user_id');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $actionType = $_POST['actionType'] ?? '';
@@ -34,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newEmail = trim($_POST['email']);
             
             if (empty($newUsername) || empty($newName) || empty($newEmail)) {
-                header("Location: edit_user?id=$userId&error=emptyFields");
+                header("Location: edit_user?user_id=$userId&error=emptyFields");
                 exit();
             }
 
@@ -46,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             
             if ($usernameUpdated && $personalInfoUpdated) {
-                header("Location: edit_user?id=$userId&success=1");
+                header("Location: edit_user?user_id=$userId&success=1");
                 exit();
             }
             break;
@@ -56,17 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $confirmPassword = trim($_POST['confirmPassword']);
 
             if (empty($newPassword) || empty($confirmPassword)) {
-                header("Location: edit_user?id=$userId&error=emptyPassword");
+                header("Location: edit_user?user_id=$userId&error=emptyPassword");
                 exit();
             }
 
             if ($newPassword !== $confirmPassword) {
-                header("Location: edit_user?id=$userId&error=passwordMismatch");
+                header("Location: edit_user?user_id=$userId&error=passwordMismatch");
                 exit();
             }
 
             if ($user->updatePassword($userId, $newPassword)) {
-                header("Location: edit_user?id=$userId&success=1");
+                header("Location: edit_user?user_id=$userId&success=1");
                 exit();
             }
             break;
@@ -79,21 +85,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
     }
 
-    header("Location: edit_user?id=$userId&error=1");
+    header("Location: edit_user?user_id=$userId&error=1");
     exit();
 }
 
+// Get user data
+$userData = $user->getUserDataWithPersonalInfo($userId);
 
-$userData = $user->getUserDataWithPersonalInfo($_GET['user_id']);
-$userSession = $user->getUserSession($_GET['user_id']);
-$facialImages = $user->getFacialImages($_GET['user_id']);
+// Check if user exists
+if (!$userData) {
+    header('Location: ' . ROOT . 'adminHome?page=Users&error=user_not_found');
+    exit();
+}
+
+$userSession = $user->getUserSession($userId);
+$facialImages = $user->getFacialImages($userId);
 
 $data = [
     'userData' => $userData,
     'userSession' => $userSession,
     'facialImages' => $facialImages
 ];
-
 
 $editUser = new EditUser();
 $editUser->index($data);
