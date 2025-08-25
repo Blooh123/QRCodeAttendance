@@ -66,7 +66,7 @@
 <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- User Edit Card -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
-        <form id="userForm" action="edit_user?id=<?php echo $_GET['user_id']; ?>" method="POST" class="space-y-4">
+        <form id="userForm" action="edit_user?user_id=<?php echo $_GET['user_id']; ?>" method="POST" class="space-y-4">
             <div>
                 <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Username</label>
                 <input name="username" id="username" type="text" value="<?php echo htmlspecialchars($userData['username']); ?>"
