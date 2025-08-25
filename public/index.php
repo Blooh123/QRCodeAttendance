@@ -77,6 +77,7 @@ $routes = [
     // exclusive link for facilitator register
     '/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
     '/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
+    '/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -175,6 +176,7 @@ $routes = [
     // exclusive link for facilitator register
             '/QRCodeAttendance/QRCodeAttendance/public/registration17236463' => '../app/Controller/FacilitatorRegister.php',
         '/QRCodeAttendance/QRCodeAttendance/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
+        '/QRCodeAttendance/QRCodeAttendance/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
 
     
 

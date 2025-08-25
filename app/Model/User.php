@@ -260,5 +260,25 @@ class User
         return $result ? $result : [];
     }
 
+    public function getFacialImageById($imageId): ?array
+    {
+        $query = "SELECT id, user_id, img FROM facilitator_facial_images WHERE id = :image_id";
+        $params = [
+            ':image_id' => $imageId
+        ];
+        $result = $this->query($query, $params);
+        return $result ? $result[0] : null;
+    }
+
+    public function deleteFacialImage($imageId): bool
+    {
+        $query = "DELETE FROM facilitator_facial_images WHERE id = :image_id";
+        $params = [
+            ':image_id' => $imageId
+        ];
+        $result = $this->query($query, $params);
+        return $result !== false;
+    }
+
 
 }

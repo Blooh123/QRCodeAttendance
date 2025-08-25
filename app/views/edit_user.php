@@ -163,8 +163,21 @@
                                 onclick="openImageModal(this.src, 'Facial Image <?php echo $index + 1; ?>')"
                             />
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    <i class="fas fa-search-plus text-white text-2xl"></i>
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+                                    <button 
+                                        onclick="openImageModal(this.parentElement.parentElement.previousElementSibling.src, 'Facial Image <?php echo $index + 1; ?>')"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-all duration-200"
+                                        title="View Image"
+                                    >
+                                        <i class="fas fa-search-plus text-sm"></i>
+                                    </button>
+                                    <button 
+                                        onclick="deleteFacialImage(<?php echo $image['id']; ?>, <?php echo $_GET['user_id']; ?>, <?php echo $index + 1; ?>)"
+                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-all duration-200"
+                                        title="Delete Image"
+                                    >
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
                                 </div>
                             </div>
                             <div class="text-center mt-2">
@@ -236,6 +249,73 @@
     function closeImageModal() {
         document.getElementById('imageModal').classList.add('hidden');
         document.body.style.overflow = 'auto';
+    }
+
+    function deleteFacialImage(imageId, userId, imageNumber) {
+        Swal.fire({
+            title: "Delete Facial Image",
+            text: `Are you sure you want to delete Image ${imageNumber}? This action cannot be undone.`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#aaa",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading state
+                Swal.fire({
+                    title: "Deleting...",
+                    text: "Please wait while we delete the image.",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Send AJAX request to delete the image
+                fetch('<?php echo ROOT ?>delete_facial_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image_id: imageId,
+                        user_id: userId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The facial image has been deleted successfully.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6"
+                        }).then(() => {
+                            // Reload the page to refresh the images
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error!",
+                            text: data.error || "Failed to delete the image. Please try again.",
+                            icon: "error",
+                            confirmButtonColor: "#d33"
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "An error occurred while deleting the image. Please try again.",
+                        icon: "error",
+                        confirmButtonColor: "#d33"
+                    });
+                });
+            }
+        });
     }
 
     // Close modal when clicking outside
