@@ -245,7 +245,7 @@ class User
 
     public function getFacialImages($userId): array
     {
-        $query = "SELECT img FROM facilitator_facial_images WHERE user_id = :user_id";
+        $query = "SELECT * FROM facilitator_facial_images WHERE user_id = :user_id";
         $params = [
             ':user_id' => $userId
         ];
