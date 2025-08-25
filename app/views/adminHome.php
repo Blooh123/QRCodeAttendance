@@ -213,7 +213,7 @@ if (!in_array($page, $allowed_pages)) {
 
 <!-- Main Content -->
 <main class="flex flex-col items-center justify-start p-4 min-h-screen">
-    <div class="admin-container w-full max-w-5xl bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg mt-8">
+    <div class="admin-container w-full max-w-7xl bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg mt-8">
 
         <div>
             <?php require "../app/Controller/{$page}.php"; ?>
