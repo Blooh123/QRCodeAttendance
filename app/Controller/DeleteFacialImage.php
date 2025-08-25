@@ -5,7 +5,7 @@ use Model\User;
 session_start();
 
 // Check if user is logged in and has admin privileges
-if (!isset($_SESSION['user_id']) || $_SESSION['roles'] !== 'Admin') {
+if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit();
