@@ -1,7 +1,8 @@
 <?php
 namespace Controller;
 require_once '../app/Model/User.php';
-
+use Model\User;
+session_start();
 class DeleteFacialImage extends \Controller
 {
     public function index()
