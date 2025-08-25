@@ -95,7 +95,10 @@ async function startCamera() {
         currentStream = await navigator.mediaDevices.getUserMedia(constraints);
         const video = document.getElementById('video');
         video.srcObject = currentStream;
+        // Clear any error messages if camera starts successfully
+        document.getElementById('registerStatus').textContent = "";
     } catch (err) {
+        console.error('Camera access error:', err);
         document.getElementById('registerStatus').textContent = "Unable to access camera: " + err.message;
     }
 }
@@ -105,21 +108,8 @@ document.getElementById('flipCameraBtn').addEventListener('click', () => {
     startCamera();
 });
 
+// Initialize camera when page loads
 window.addEventListener('DOMContentLoaded', startCamera);
-
-
-function startVideo() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-      video.srcObject = stream;
-    })
-    .catch(err => {
-      console.error('Error accessing camera:', err);
-      registerStatus.textContent = "Error: Cannot access camera. Please check permissions.";
-    });
-}
-
-startVideo();
 
 const registerBtn = document.getElementById('registerBtn');
 const usernameInput = document.getElementById('username');
@@ -136,6 +126,9 @@ registerBtn.addEventListener('click', async () => {
   registerBtn.disabled = true;
   
   try {
+    // Get video element
+    const video = document.getElementById('video');
+    
     // Capture 3 images
     for (let i = 1; i <= 3; i++) {
       registerStatus.textContent = `Capturing image ${i}/3...`;
