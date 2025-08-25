@@ -130,10 +130,10 @@
     ?>
 
     <!-- Grid Layout for Both Sections -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
         
         <!-- Records Before June 2025 -->
-        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 attendance-card">
+        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 attendance-card min-w-0">
             <div class="section-header">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-history text-2xl"></i>
@@ -157,7 +157,7 @@
                             <?php foreach ($beforeJune2025 as $attendance): ?>
                                 <div class="glass-card w-full rounded-xl shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 hover-card">
                                     <div class="flex items-center justify-between mb-3">
-                                        <h3 class="text-md font-semibold text-[#a31d1d] truncate"><?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?></h3>
+                                        <h3 class="text-md font-semibold text-[#a31d1d] truncate flex-1 mr-3"><?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?></h3>
                                         <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full flex-shrink-0">
                                             <i class="fas fa-clock mr-1"></i>Historical
                                         </span>
@@ -183,7 +183,7 @@
                                         </p>
                                     </div>
                                     <div class="card-actions mt-4">
-                                        <div class="flex gap-2">
+                                        <div class="flex gap-2 flex-wrap">
                                             <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
                                                class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
                                                 <i class="fas fa-eye"></i> View
@@ -208,7 +208,7 @@
         </div>
 
         <!-- Records From June 2025 Onwards -->
-        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 attendance-card">
+        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 attendance-card min-w-0">
             <div class="section-header">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-calendar-alt text-2xl"></i>
@@ -232,7 +232,7 @@
                             <?php foreach ($fromJune2025 as $attendance): ?>
                                 <div class="glass-card w-full rounded-xl shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 hover-card">
                                     <div class="flex items-center justify-between mb-3">
-                                        <h3 class="text-md font-semibold text-[#a31d1d] truncate"><?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?></h3>
+                                        <h3 class="text-md font-semibold text-[#a31d1d] truncate flex-1 mr-3"><?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?></h3>
                                         <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full flex-shrink-0">
                                             <i class="fas fa-check-circle mr-1"></i>Current
                                         </span>
@@ -258,7 +258,7 @@
                                         </p>
                                     </div>
                                     <div class="card-actions mt-4">
-                                        <div class="flex gap-2">
+                                        <div class="flex gap-2 flex-wrap">
                                             <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
                                                class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
                                                 <i class="fas fa-eye"></i> View
