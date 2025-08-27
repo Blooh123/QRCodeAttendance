@@ -192,14 +192,6 @@
             border-radius: 1.5rem;
             overflow: hidden;
         }
-        .historical-card {
-            border-left: 4px solid #f59e0b;
-            border-top: 4px solid #f59e0b;
-        }
-        .current-card {
-            border-left: 4px solid #10b981;
-            border-top: 4px solid #10b981;
-        }
         .attendance-card .card-content {
             flex: 1;
             display: flex;
