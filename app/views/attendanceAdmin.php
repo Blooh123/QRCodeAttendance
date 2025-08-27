@@ -20,7 +20,26 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(163, 29, 29, 0.1);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 1rem;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(163, 29, 29, 0.2), rgba(138, 24, 24, 0.2));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
         }
         .hover-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -42,7 +61,10 @@
         }
         .hover-card:hover {
             transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(163, 29, 29, 0.3);
+            border-color: rgba(163, 29, 29, 0.4);
         }
         .section-header {
             background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
@@ -89,6 +111,18 @@
             flex-direction: column;
             border-radius: 1.5rem;
             overflow: hidden;
+            border: 2px solid rgba(163, 29, 29, 0.15);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .historical-card {
+            border-left: 4px solid #f59e0b;
+            border-top: 4px solid #f59e0b;
+        }
+        .current-card {
+            border-left: 4px solid #10b981;
+            border-top: 4px solid #10b981;
         }
         .attendance-card .card-content {
             flex: 1;
@@ -321,7 +355,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl p-6 hover-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
+                                <div class="glass-card rounded-2xl p-6 hover-card historical-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
                                     <div class="flex items-center justify-between mb-4">
                                         <h3 class="text-lg font-bold text-[#a31d1d] truncate flex-1 mr-4">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
@@ -419,7 +453,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl p-6 hover-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
+                                <div class="glass-card rounded-2xl p-6 hover-card current-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
                                     <div class="flex items-center justify-between mb-4">
                                         <h3 class="text-lg font-bold text-[#a31d1d] truncate flex-1 mr-4">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
