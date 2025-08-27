@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Record</title>
+    <title>Attendance Record • USep Attendance System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,7 +11,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Poppins', sans-serif;
-            background-image:
+            background-image: 
                 radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0),
                 linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
             background-size: 24px 24px;
@@ -20,51 +20,131 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
-            border: 2px solid rgba(163, 29, 29, 0.1);
-            box-shadow: 
-                0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            position: relative;
-        }
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 1rem;
-            padding: 2px;
-            background: linear-gradient(135deg, rgba(163, 29, 29, 0.2), rgba(138, 24, 24, 0.2));
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .hover-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .hover-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s;
-        }
-        .hover-card:hover::before {
-            left: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .hover-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(163, 29, 29, 0.3);
-            border-color: rgba(163, 29, 29, 0.4);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .search-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        .search-loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .search-loading-spinner {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+        .search-loading-spinner:before,
+        .search-loading-spinner:after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            animation: searchPulse 1.5s linear infinite;
+        }
+        .search-loading-spinner:before {
+            width: 100%;
+            height: 100%;
+            background: rgba(220, 38, 38, 0.2);
+            animation-delay: -0.5s;
+        }
+        .search-loading-spinner:after {
+            width: 75%;
+            height: 75%;
+            background: #dc2626;
+            top: 12.5%;
+            left: 12.5%;
+            animation-delay: -1s;
+        }
+        .search-loading-text {
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            animation: searchFadeInOut 1.5s ease-in-out infinite;
+        }
+        @keyframes searchPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+        @keyframes searchFadeInOut {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        .search-animated-logo {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin-bottom: 10px;
+        }
+        .logo-circle {
+            width: 100%;
+            height: 100%;
+            border: 6px solid #a31d1d;
+            border-top: 6px solid #f8fafc;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(.68,-0.55,.27,1.55) infinite;
+            box-shadow: 0 0 30px 0 #a31d1d33;
+        }
+        .logo-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            height: 18px;
+            background: #a31d1d;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: bounce 1.2s infinite alternate;
+            box-shadow: 0 0 10px 2px #a31d1d44;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        @keyframes bounce {
+            0% { transform: translate(-50%, -50%) scale(1);}
+            60% { transform: translate(-50%, -60%) scale(1.15);}
+            100% { transform: translate(-50%, -50%) scale(1);}
         }
         .section-header {
             background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
@@ -111,10 +191,6 @@
             flex-direction: column;
             border-radius: 1.5rem;
             overflow: hidden;
-            border: 2px solid rgba(163, 29, 29, 0.15);
-            box-shadow: 
-                0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .historical-card {
             border-left: 4px solid #f59e0b;
@@ -195,54 +271,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
         }
-        .search-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border-radius: 2rem;
-        }
-        .search-input {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            border-color: #a31d1d;
-            box-shadow: 0 0 0 3px rgba(163, 29, 29, 0.1);
-            background: white;
-        }
-        .search-btn {
-            background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
-            color: white;
-            border-radius: 1rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(163, 29, 29, 0.4);
-        }
-        .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(163, 29, 29, 0.6);
-        }
-        .action-btn {
-            background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
-            color: white;
-            border-radius: 1rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(163, 29, 29, 0.4);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(163, 29, 29, 0.6);
-            color: white;
-        }
         .empty-state {
             text-align: center;
             padding: 3rem 2rem;
@@ -260,50 +288,47 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
     </style>
 </head>
-<body class="p-4 md:p-6">
+<body class="p-4 md:p-6 bg-[#f8f9fa]">
 
-<!-- Header -->
-<header class="glass-card rounded-3xl p-8 mb-8 max-w-7xl mx-auto text-center">
-    <div class="flex items-center justify-center space-x-4 mb-4">
-        <div class="bg-gradient-to-r from-red-500 to-red-600 p-4 rounded-full">
-            <i class="fas fa-file-alt text-white text-4xl"></i>
+<!-- Search Loading Overlay -->
+<div id="searchLoadingOverlay" class="search-loading-overlay">
+    <div class="search-loading-container">
+        <div class="search-animated-logo">
+            <div class="logo-circle"></div>
+            <div class="logo-dot"></div>
         </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
-            Attendance Record
-        </h1>
+        <div class="search-loading-text" id="searchLoadingText">Hang on tight...</div>
     </div>
-    <p class="text-gray-600 text-lg">Manage and monitor attendance records efficiently</p>
+</div>
+
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
+    <div class="flex items-center space-x-3">
+        <i class="fas fa-file-alt text-[#a31d1d] text-3xl"></i>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Attendance Record</h1>
+    </div>
 </header>
 
-<div class="w-full px-4 md:px-6 lg:px-8 mx-auto">
+<div class="max-w-7xl mx-auto">
     <!-- Search and Actions -->
-    <div class="search-container p-6 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <form id="searchForm" onsubmit="return false;" class="flex items-center gap-3 w-full md:w-auto">
+    <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+        <form id="searchForm" onsubmit="return false;" class="flex flex-col md:flex-row items-center gap-4">
             <input type="hidden" name="page" value="Attendance">
-            <div class="relative flex-1 md:flex-none">
+            <div class="flex items-center w-full md:w-auto gap-2">
                 <input type="text" id="searchInput" placeholder="Search attendance records..."
-                       class="search-input w-full md:w-96 px-6 py-3 rounded-2xl focus:outline-none">
-                <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                       class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
+                <button id="searchBtn" onclick="searchAttendance()" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
-            <button id="searchBtn" onclick="searchAttendance()" class="search-btn flex items-center gap-2" type="submit">
-                <i class="fas fa-search"></i> Search
-            </button>
         </form>
-        <div class="flex gap-4 flex-wrap">
-            <a class="action-btn" id="add-attendance" href="<?php echo ROOT ?>add_attendance">
+
+        <div class="flex gap-4 flex-wrap mt-4">
+            <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
                 <i class="fas fa-plus"></i> Add Attendance
             </a>
-            <a class="action-btn bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700" 
-               href="<?php echo ROOT ?>sanctions_summary">
+            <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
                 <i class="fas fa-exclamation-triangle"></i> View Sanctions
             </a>
         </div>
@@ -355,70 +380,62 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl p-6 hover-card historical-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <h3 class="text-lg font-bold text-[#a31d1d] truncate flex-1 mr-4">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card historical-card">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
+                                        <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
                                         </h3>
                                         <span class="status-badge bg-gradient-to-r from-orange-400 to-orange-500 text-white">
                                             <i class="fas fa-clock mr-1"></i>Historical
                                         </span>
                                     </div>
-                                    <div class="space-y-3 mb-6">
-                                        <div class="flex items-center text-gray-600">
-                                            <i class="fas fa-calendar-alt w-5 text-[#a31d1d] mr-3"></i>
-                                            <span><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></span>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-info-circle w-5 text-[#a31d1d] mr-3"></i>
-                                            <span class="mr-3"><strong>Status:</strong></span>
-                                            <?php
-                                            $status = $attendance['atten_status'] ?? 'unknown';
-                                            $statusClass = '';
-                                            $statusIcon = '';
-                                            switch ($status) {
-                                                case 'on going': 
-                                                    $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
-                                                    $statusIcon = 'fas fa-play-circle';
-                                                    break;
-                                                case 'stopped': 
-                                                    $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
-                                                    $statusIcon = 'fas fa-pause-circle';
-                                                    break;
-                                                case 'finished': 
-                                                    $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
-                                                    $statusIcon = 'fas fa-check-circle';
-                                                    break;
-                                                case 'closed': 
-                                                    $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
-                                                    $statusIcon = 'fas fa-times-circle';
-                                                    break;
-                                                default: 
-                                                    $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
-                                                    $statusIcon = 'fas fa-question-circle';
-                                            }
-                                            ?>
-                                            <span class="status-badge <?php echo $statusClass; ?>">
-                                                <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="card-actions">
-                                        <div class="flex gap-3 flex-wrap">
-                                            <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                               class="btn-action btn-view">
-                                                <i class="fas fa-eye"></i> View
-                                            </a>
-                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                               class="btn-action btn-edit">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </a>
-                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                               onclick="return confirmDelete(event, this.href);"
-                                               class="btn-action btn-delete">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </a>
-                                        </div>
+                                    <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
+                                    <p class="text-gray-700"><strong>Status:</strong> 
+                                        <?php
+                                        $status = $attendance['atten_status'] ?? 'unknown';
+                                        $statusClass = '';
+                                        $statusIcon = '';
+                                        switch ($status) {
+                                            case 'on going': 
+                                                $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
+                                                $statusIcon = 'fas fa-play-circle';
+                                                break;
+                                            case 'stopped': 
+                                                $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
+                                                $statusIcon = 'fas fa-pause-circle';
+                                                break;
+                                            case 'finished': 
+                                                $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
+                                                $statusIcon = 'fas fa-check-circle';
+                                                break;
+                                            case 'closed': 
+                                                $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
+                                                $statusIcon = 'fas fa-times-circle';
+                                                break;
+                                            default: 
+                                                $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
+                                                $statusIcon = 'fas fa-question-circle';
+                                        }
+                                        ?>
+                                        <span class="status-badge <?php echo $statusClass; ?>">
+                                            <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
+                                        </span>
+                                    </p>
+                                    <div class="flex justify-between mt-4">
+                                        <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </a>
+                                        <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                                           onclick="return confirmDelete(event, this.href);"
+                                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -453,70 +470,62 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl p-6 hover-card current-card" style="animation-delay: <?php echo $index * 0.1; ?>s;">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <h3 class="text-lg font-bold text-[#a31d1d] truncate flex-1 mr-4">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card current-card">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
+                                        <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
                                         </h3>
                                         <span class="status-badge bg-gradient-to-r from-green-400 to-green-500 text-white">
                                             <i class="fas fa-check-circle mr-1"></i>Current
                                         </span>
                                     </div>
-                                    <div class="space-y-3 mb-6">
-                                        <div class="flex items-center text-gray-600">
-                                            <i class="fas fa-calendar-alt w-5 text-[#a31d1d] mr-3"></i>
-                                            <span><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></span>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-info-circle w-5 text-[#a31d1d] mr-3"></i>
-                                            <span class="mr-3"><strong>Status:</strong></span>
-                                            <?php
-                                            $status = $attendance['atten_status'] ?? 'unknown';
-                                            $statusClass = '';
-                                            $statusIcon = '';
-                                            switch ($status) {
-                                                case 'on going': 
-                                                    $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
-                                                    $statusIcon = 'fas fa-play-circle';
-                                                    break;
-                                                case 'stopped': 
-                                                    $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
-                                                    $statusIcon = 'fas fa-pause-circle';
-                                                    break;
-                                                case 'finished': 
-                                                    $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
-                                                    $statusIcon = 'fas fa-check-circle';
-                                                    break;
-                                                case 'closed': 
-                                                    $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
-                                                    $statusIcon = 'fas fa-times-circle';
-                                                    break;
-                                                default: 
-                                                    $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
-                                                    $statusIcon = 'fas fa-question-circle';
-                                            }
-                                            ?>
-                                            <span class="status-badge <?php echo $statusClass; ?>">
-                                                <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="card-actions">
-                                        <div class="flex gap-3 flex-wrap">
-                                            <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                               class="btn-action btn-view">
-                                                <i class="fas fa-eye"></i> View
-                                            </a>
-                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                               class="btn-action btn-edit">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                            </a>
-                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                               onclick="return confirmDelete(event, this.href);"
-                                               class="btn-action btn-delete">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </a>
-                                        </div>
+                                    <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
+                                    <p class="text-gray-700"><strong>Status:</strong> 
+                                        <?php
+                                        $status = $attendance['atten_status'] ?? 'unknown';
+                                        $statusClass = '';
+                                        $statusIcon = '';
+                                        switch ($status) {
+                                            case 'on going': 
+                                                $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
+                                                $statusIcon = 'fas fa-play-circle';
+                                                break;
+                                            case 'stopped': 
+                                                $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
+                                                $statusIcon = 'fas fa-pause-circle';
+                                                break;
+                                            case 'finished': 
+                                                $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
+                                                $statusIcon = 'fas fa-check-circle';
+                                                break;
+                                            case 'closed': 
+                                                $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
+                                                $statusIcon = 'fas fa-times-circle';
+                                                break;
+                                            default: 
+                                                $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
+                                                $statusIcon = 'fas fa-question-circle';
+                                        }
+                                        ?>
+                                        <span class="status-badge <?php echo $statusClass; ?>">
+                                            <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
+                                        </span>
+                                    </p>
+                                    <div class="flex justify-between mt-4">
+                                        <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </a>
+                                        <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                                           onclick="return confirmDelete(event, this.href);"
+                                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -537,15 +546,10 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdrop: 'rgba(0, 0, 0, 0.4)',
-            customClass: {
-                popup: 'rounded-2xl'
-            }
+            cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = url;
@@ -569,11 +573,43 @@
         }
     });
 
-    // Add loading animation
+    // Add loading screen functionality for search
     document.addEventListener('DOMContentLoaded', function() {
-        const cards = document.querySelectorAll('.hover-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
+        const searchLoadingOverlay = document.getElementById('searchLoadingOverlay');
+        const searchLoadingText = document.getElementById('searchLoadingText');
+        let loadingInterval = null;
+        let loadingMessages = [
+            "Hang on tight...",
+            "Crunching the numbers...",
+            "Fetching attendance data...",
+            "Almost there...",
+            "Just a moment more..."
+        ];
+        let msgIndex = 0;
+
+        function startLoading() {
+            msgIndex = 0;
+            searchLoadingText.textContent = loadingMessages[msgIndex];
+            searchLoadingOverlay.style.display = 'flex';
+            loadingInterval = setInterval(() => {
+                msgIndex = (msgIndex + 1) % loadingMessages.length;
+                searchLoadingText.textContent = loadingMessages[msgIndex];
+            }, 1200);
+        }
+
+        function stopLoading() {
+            searchLoadingOverlay.style.display = 'none';
+            clearInterval(loadingInterval);
+        }
+
+        // Show loading for search form
+        document.getElementById('searchForm').addEventListener('submit', function() {
+            startLoading();
+        });
+
+        // Hide loading when page is fully loaded
+        window.addEventListener('load', function() {
+            stopLoading();
         });
     });
 </script>
