@@ -151,7 +151,7 @@
             color: white;
             padding: 1.5rem 2rem;
             border-radius: 1.5rem 1.5rem 0 0;
-            margin: 0 -2rem 2rem -2rem;
+            margin: 0 -2rem 0.5rem -2rem;
             position: relative;
             overflow: hidden;
         }
@@ -372,7 +372,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 0 auto;">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 10px;">
                                     <div class="flex items-center space-x-3 mb-2">
                                         <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
                                         <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
@@ -462,7 +462,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 0 auto;">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 10px;">
                                     <div class="flex items-center space-x-3 mb-2">
                                         <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
                                         <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
