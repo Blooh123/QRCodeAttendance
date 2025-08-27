@@ -21,6 +21,8 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 95%;
+            margin: 0 auto;
         }
         .hover-card {
             transition: transform 0.3s, box-shadow 0.3s;
@@ -165,7 +167,7 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
         }
         .scrollable-container {
-            max-height: 700px;
+            max-height: 600px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #a31d1d #f1f5f9;
@@ -186,11 +188,14 @@
             background: linear-gradient(135deg, #8a1818 0%, #6b1414 100%);
         }
         .attendance-card {
-            min-height: 250px;
+            min-height: 200px;
+            max-height: 300px;
             display: flex;
             flex-direction: column;
             border-radius: 1.5rem;
             overflow: hidden;
+            max-width: 90%;
+            margin: 0 auto;
         }
         .attendance-card .card-content {
             flex: 1;
@@ -372,7 +377,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card historical-card">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="border-left: 4px solid #f59e0b; border-top: 4px solid #f59e0b;">
                                     <div class="flex items-center space-x-3 mb-2">
                                         <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
                                         <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
@@ -462,7 +467,7 @@
                     <div class="scrollable-container">
                         <div class="grid grid-cols-1 gap-6">
                             <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card current-card">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="border-left: 4px solid #10b981; border-top: 4px solid #10b981;">
                                     <div class="flex items-center space-x-3 mb-2">
                                         <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
                                         <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
