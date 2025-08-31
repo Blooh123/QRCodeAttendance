@@ -546,6 +546,7 @@
              manageUsers: document.getElementById('manageUsers')?.checked || false,
              addStudent: document.getElementById('addStudent')?.checked || false,
              deleteStudent: document.getElementById('deleteStudent')?.checked || false,
+             addUser: document.getElementById('addUser')?.checked || false,
              programs: []
          };
 
@@ -558,7 +559,7 @@
          }
 
          // Validate that at least one permission is selected
-         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance && !permissions.addAttendance) {
+         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance && !permissions.addAttendance && !permissions.addUser) {
              Swal.fire({
                  title: "Warning",
                  text: "Please select at least one permission.",
