@@ -270,6 +270,15 @@ if (empty($_SESSION['csrf_token'])) {
                 </a>
             </div>
         <?php endif; ?>
+        <!-- check if admin and then display add button -->
+        <?php if (isset($userRole) && $userRole === 'admin'): ?>
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="<?php echo ROOT ?>add_student"
+                class="w-full sm:w-auto inline-block bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-center">
+                    <i class="fas fa-user-graduate"></i> Add Student
+                </a>
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- Students Grid -->
@@ -295,6 +304,14 @@ if (empty($_SESSION['csrf_token'])) {
                             <i class="fas fa-edit"></i> <span class="hidden sm:inline">Edit</span>
                         </a>
                         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete student', $facilitatorPermissions)): ?>
+                            <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
+                            onclick="return confirmDelete(event, this.href);"
+                            class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
+                                <i class="fas fa-trash"></i> <span class="hidden sm:inline">Delete</span>
+                            </a>
+                        <?php endif; ?>
+                        <!-- check if Admin then display delete button -->
+                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
                             <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
                             onclick="return confirmDelete(event, this.href);"
                             class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
