@@ -124,10 +124,12 @@ if (!in_array($page, $allowed_pages)) {
                         <span class="font-medium">Manage Students</span>
                     </div>
                     <div class="ml-6 space-y-1">
-                        <a href="<?php echo ROOT ?>add_student" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
-                            <i class="fas fa-user-plus text-sm group-hover:scale-110 transition-transform"></i>
-                            <span class="text-sm">Add Student</span>
-                        </a>
+                        <?php if (in_array('add student', $facilitatorPermissions)): ?>
+                            <a href="<?php echo ROOT ?>add_student" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
+                                <i class="fas fa-user-plus text-sm group-hover:scale-110 transition-transform"></i>
+                                <span class="text-sm">Add Student</span>
+                            </a>
+                        <?php endif; ?>
                         <a href="?page=Students" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group <?php echo $page === 'Students' ? 'bg-[#a31d1d] text-white' : ''; ?>">
                             <i class="fas fa-list text-sm group-hover:scale-110 transition-transform"></i>
                             <span class="text-sm">View Students</span>
