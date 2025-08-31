@@ -84,7 +84,8 @@ if (!empty($_GET['search'])){
 $data = [
     'attendanceList' => $attendanceList,
     'userRole' => $userData['role'],
-    'facilitatorCoursePermissions' => $facilitatorCoursePermissions
+    'facilitatorCoursePermissions' => $facilitatorCoursePermissions,
+    'facilitatorPermissions' => $facilitatorPermissions
 ];
 
 $attendanceInstance = new Attendance();

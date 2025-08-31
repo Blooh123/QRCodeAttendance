@@ -428,6 +428,21 @@
                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
                                             <i class="fas fa-trash"></i> Delete
                                         </a>
+                                        <!-- check if admin -->
+                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            </a>
+                                        <?php endif; ?>
+                                        <!-- display delete -->
+                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                                            onclick="return confirmDelete(event, this.href);"
+                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
