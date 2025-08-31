@@ -175,12 +175,6 @@
                  <i class="fas fa-shield-alt text-[#a31d1d]"></i> Manage Facilitator Permission
              </h3>
              
-             <!-- Debug info (remove this after testing) -->
-             <div class="mb-4 p-3 bg-gray-100 rounded-lg text-sm">
-                 <strong>Debug - Current Permissions:</strong> 
-                 <?php echo htmlspecialchars(json_encode($userPermissions)); ?>
-             </div>
-             
              <!-- Permissions Section -->
              <div class="space-y-6">
                  <!-- Manage Students Permission -->
