@@ -83,10 +83,16 @@
         }
         .search-loading-text {
             color: #dc2626;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 600;
             letter-spacing: 0.5px;
             animation: searchFadeInOut 1.5s ease-in-out infinite;
+        }
+        
+        @media (min-width: 768px) {
+            .search-loading-text {
+                font-size: 1.2rem;
+            }
         }
         @keyframes searchPulse {
             0% {
@@ -112,9 +118,16 @@
         }
         .search-animated-logo {
             position: relative;
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             margin-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .search-animated-logo {
+                width: 70px;
+                height: 70px;
+            }
         }
         .logo-circle {
             width: 100%;
@@ -129,13 +142,20 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: #a31d1d;
             border-radius: 50%;
             transform: translate(-50%, -50%);
             animation: bounce 1.2s infinite alternate;
             box-shadow: 0 0 10px 2px #a31d1d44;
+        }
+        
+        @media (min-width: 768px) {
+            .logo-dot {
+                width: 18px;
+                height: 18px;
+            }
         }
         @keyframes spin {
             0% { transform: rotate(0deg);}
@@ -149,11 +169,18 @@
         .section-header {
             background: linear-gradient(135deg, #a31d1d 0%, #8a1818 100%);
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             border-radius: 1.5rem 1.5rem 0 0;
-            margin: 0 -2rem 0.5rem -2rem;
+            margin: 0 -1.5rem 0.5rem -1.5rem;
             position: relative;
             overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .section-header {
+                padding: 1.5rem 2rem;
+                margin: 0 -2rem 0.5rem -2rem;
+            }
         }
         .section-header::before {
             content: '';
@@ -165,11 +192,17 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
         }
         .scrollable-container {
-            max-height: 700px;
+            max-height: 500px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #a31d1d #f1f5f9;
             padding-right: 8px;
+        }
+        
+        @media (min-width: 768px) {
+            .scrollable-container {
+                max-height: 700px;
+            }
         }
         .scrollable-container::-webkit-scrollbar {
             width: 8px;
@@ -186,11 +219,17 @@
             background: linear-gradient(135deg, #8a1818 0%, #6b1414 100%);
         }
         .attendance-card {
-            min-height: 250px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             border-radius: 1.5rem;
             overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .attendance-card {
+                min-height: 250px;
+            }
         }
         .attendance-card .card-content {
             flex: 1;
@@ -202,19 +241,26 @@
             padding-top: 1rem;
         }
         .status-badge {
-            padding: 0.5rem 1rem;
+            padding: 0.375rem 0.75rem;
             border-radius: 2rem;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.625rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
+        @media (min-width: 768px) {
+            .status-badge {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
         .btn-action {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 1rem;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -222,6 +268,13 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-action {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
         }
         .btn-action::before {
             content: '';
@@ -265,13 +318,22 @@
         }
         .empty-state {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 2rem 1rem;
             color: #6b7280;
         }
         .empty-state i {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.3;
+        }
+        
+        @media (min-width: 768px) {
+            .empty-state {
+                padding: 3rem 2rem;
+            }
+            .empty-state i {
+                font-size: 4rem;
+            }
         }
         .fade-in {
             animation: fadeIn 0.6s ease-in-out;
@@ -282,7 +344,7 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-6 bg-[#f8f9fa]">
+<body class="p-2 md:p-4 lg:p-6 bg-[#f8f9fa]">
 
 <!-- Search Loading Overlay -->
 <div id="searchLoadingOverlay" class="search-loading-overlay">
@@ -295,43 +357,44 @@
     </div>
 </div>
 
-<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
-    <div class="flex items-center space-x-3">
-        <i class="fas fa-file-alt text-[#a31d1d] text-3xl"></i>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Attendance Record</h1>
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-4 md:p-6 mb-6 md:mb-8 max-w-7xl mx-auto glass-card">
+    <div class="flex items-center space-x-2 md:space-x-3">
+        <i class="fas fa-file-alt text-[#a31d1d] text-2xl md:text-3xl"></i>
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Attendance Record</h1>
     </div>
 </header>
 
 <div class="max-w-7xl mx-auto">
     <!-- Search and Actions -->
-    <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-        <form id="searchForm" onsubmit="return false;" class="flex flex-col md:flex-row items-center gap-4">
+    <div class="glass-card rounded-2xl p-4 md:p-6 mb-6 md:mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+        <form id="searchForm" onsubmit="return false;" class="flex flex-col md:flex-row items-center gap-3 md:gap-4">
             <input type="hidden" name="page" value="Attendance">
             <div class="flex items-center w-full md:w-auto gap-2">
                 <input type="text" id="searchInput" placeholder="Search attendance records..."
-                       class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                <button id="searchBtn" onclick="searchAttendance()" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200" type="submit">
+                       class="w-full md:w-80 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                <button id="searchBtn" onclick="searchAttendance()" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-sm md:text-base" type="submit">
                     <i class="fas fa-search"></i>
+                    <span class="hidden sm:inline">Search</span>
                 </button>
             </div>
         </form>
 
-        <div class="flex gap-4 flex-wrap mt-4">
+        <div class="flex gap-2 md:gap-4 flex-wrap mt-4">
             <!-- check if add attendance permission -->
             <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('add attendance', $facilitatorPermissions)): ?>
-            <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                <i class="fas fa-plus"></i> Add Attendance
+            <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-sm md:text-base">
+                <i class="fas fa-plus"></i> <span class="hidden sm:inline">Add Attendance</span>
             </a>
             <?php endif; ?>
             <!-- check if admin -->
             <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                    <i class="fas fa-plus"></i> Add Attendance
+                <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-sm md:text-base">
+                    <i class="fas fa-plus"></i> <span class="hidden sm:inline">Add Attendance</span>
                 </a>
             <?php endif; ?>
             <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                    <i class="fas fa-exclamation-triangle"></i> View Sanctions
+                <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-sm md:text-base">
+                    <i class="fas fa-exclamation-triangle"></i> <span class="hidden sm:inline">View Sanctions</span>
                 </a>
             <?php endif; ?>
         </div>
@@ -356,18 +419,18 @@
     ?>
 
     <!-- Grid Layout for Both Sections -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-8">
         
         <!-- Records Before June 2025 -->
-        <div class="attendance-card glass-card p-6 min-w-0 fade-in">
+        <div class="attendance-card glass-card p-4 md:p-6 min-w-0 fade-in">
             <div class="section-header">
-                <div class="flex items-center gap-4 relative z-10">
-                    <div class="bg-white/20 p-3 rounded-full">
-                        <i class="fas fa-history text-2xl"></i>
+                <div class="flex items-center gap-3 md:gap-4 relative z-10">
+                    <div class="bg-white/20 p-2 md:p-3 rounded-full">
+                        <i class="fas fa-history text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold">Historical Records</h2>
-                        <p class="text-sm opacity-90">Records created before June 2025</p>
+                        <h2 class="text-xl md:text-2xl font-bold">Historical Records</h2>
+                        <p class="text-xs md:text-sm opacity-90">Records created before June 2025</p>
                     </div>
                 </div>
             </div>
@@ -376,21 +439,21 @@
                 <?php if (empty($beforeJune2025)): ?>
                     <div class="empty-state">
                         <i class="fas fa-archive"></i>
-                        <h3 class="text-xl font-semibold mb-2">No Historical Records</h3>
-                        <p class="text-gray-500">Records created before June 2025 will appear here.</p>
+                        <h3 class="text-lg md:text-xl font-semibold mb-2">No Historical Records</h3>
+                        <p class="text-gray-500 text-sm md:text-base">Records created before June 2025 will appear here.</p>
                     </div>
                 <?php else: ?>
                     <div class="scrollable-container">
-                        <div class="grid grid-cols-1 gap-6">
+                        <div class="grid grid-cols-1 gap-4 md:gap-6">
                             <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 10px;">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
-                                        <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-3 md:p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin-left: 20px; margin-top: 20px;">
+                                    <div class="flex items-center space-x-2 md:space-x-3 mb-2">
+                                        <i class="fas fa-file-alt text-[#a31d1d] text-xl md:text-2xl"></i>
+                                        <h3 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate flex-1">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
                                         </h3>
-                                        <span class="status-badge bg-gradient-to-r from-orange-400 to-orange-500 text-white">
-                                            <i class="fas fa-clock mr-1"></i>Historical
+                                        <span class="status-badge bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs md:text-sm">
+                                            <i class="fas fa-clock mr-1"></i><span class="hidden sm:inline">Historical</span>
                                         </span>
                                     </div>
                                     <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
@@ -470,15 +533,15 @@
         </div>
 
         <!-- Records From June 2025 Onwards -->
-        <div class="attendance-card glass-card p-6 min-w-0 fade-in" style="animation-delay: 0.2s;">
+        <div class="attendance-card glass-card p-4 md:p-6 min-w-0 fade-in" style="animation-delay: 0.2s;">
             <div class="section-header">
-                <div class="flex items-center gap-4 relative z-10">
-                    <div class="bg-white/20 p-3 rounded-full">
-                        <i class="fas fa-calendar-alt text-2xl"></i>
+                <div class="flex items-center gap-3 md:gap-4 relative z-10">
+                    <div class="bg-white/20 p-2 md:p-3 rounded-full">
+                        <i class="fas fa-calendar-alt text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold">Current Records</h2>
-                        <p class="text-sm opacity-90">Records from June 2025 onwards</p>
+                        <h2 class="text-xl md:text-2xl font-bold">Current Records</h2>
+                        <p class="text-xs md:text-sm opacity-90">Records from June 2025 onwards</p>
                     </div>
                 </div>
             </div>
@@ -487,21 +550,21 @@
                 <?php if (empty($fromJune2025)): ?>
                     <div class="empty-state">
                         <i class="fas fa-calendar-plus"></i>
-                        <h3 class="text-xl font-semibold mb-2">No Current Records</h3>
-                        <p class="text-gray-500">Records from June 2025 onwards will appear here.</p>
+                        <h3 class="text-lg md:text-xl font-semibold mb-2">No Current Records</h3>
+                        <p class="text-gray-500 text-sm md:text-base">Records from June 2025 onwards will appear here.</p>
                     </div>
                 <?php else: ?>
                     <div class="scrollable-container">
-                        <div class="grid grid-cols-1 gap-6">
+                        <div class="grid grid-cols-1 gap-4 md:gap-6">
                             <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin: 10px;">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <i class="fas fa-file-alt text-[#a31d1d] text-2xl"></i>
-                                        <h3 class="text-xl font-semibold text-[#a31d1d] truncate flex-1">
+                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-3 md:p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin-left: 20px; margin-top: 20px;">
+                                    <div class="flex items-center space-x-2 md:space-x-3 mb-2">
+                                        <i class="fas fa-file-alt text-[#a31d1d] text-xl md:text-2xl"></i>
+                                        <h3 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate flex-1">
                                             <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
                                         </h3>
-                                        <span class="status-badge bg-gradient-to-r from-green-400 to-green-500 text-white">
-                                            <i class="fas fa-check-circle mr-1"></i>Current
+                                        <span class="status-badge bg-gradient-to-r from-green-400 to-green-500 text-white text-xs md:text-sm">
+                                            <i class="fas fa-check-circle mr-1"></i><span class="hidden sm:inline">Current</span>
                                         </span>
                                     </div>
                                     <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>

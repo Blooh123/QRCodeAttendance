@@ -69,7 +69,6 @@ class Attendance extends Controller
         return [
             'attendanceList' => $attendanceList,
             'userRole' => $userData['role'],
-            'facilitatorCoursePermissions' => $facilitatorCoursePermissions,
             'facilitatorPermissions' => $facilitatorPermissions
         ];
     }
