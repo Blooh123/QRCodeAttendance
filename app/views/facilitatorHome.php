@@ -2,12 +2,23 @@
 global $imageSource, $imageSource2, $imageSource3, $programList, $selectedProgram, $EventName, $EventDate, $EventTime, $EventLocation, $attendanceRecordList, $EventID, $facilitatorPermissions, $username;
 require_once "../app/core/imageConfig.php";
 
+// Initialize variables with default values if not set
+$EventName = $EventName ?? 'No Event Scheduled';
+$EventDate = $EventDate ?? 'N/A';
+$EventTime = $EventTime ?? 'N/A';
+$EventLocation = $EventLocation ?? 'N/A';
+$facilitatorPermissions = $facilitatorPermissions ?? [];
+$username = $username ?? 'Facilitator';
+
 // Page routing logic similar to adminHome
 $page = $_GET['page'] ?? 'Dashboard';
 $allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileFacilitator', 'StudentApplication'];
 if (!in_array($page, $allowed_pages)) {
     $page = 'Dashboard';
 }
+
+// Initialize empty activity log for now
+$activityLogList = [];
 ?>
 
 <!doctype html>
@@ -276,7 +287,7 @@ if (!in_array($page, $allowed_pages)) {
 
     <!-- Activity Log Toggle -->
     <script>
-        const fullActivityLog = <?php echo json_encode($activityLogList); ?>;
+        const fullActivityLog = <?php echo json_encode($activityLogList ?? []); ?>;
     </script>
 
 
@@ -382,7 +393,18 @@ if (!in_array($page, $allowed_pages)) {
         <?php else: ?>
             <!-- Load other pages -->
             <div>
-                <?php require "../app/Controller/{$page}.php"; ?>
+                <?php 
+                $controllerFile = "../app/Controller/{$page}.php";
+                if (file_exists($controllerFile)) {
+                    require $controllerFile;
+                } else {
+                    echo '<div class="text-center py-12">';
+                    echo '<i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>';
+                    echo '<h3 class="text-xl font-bold text-gray-700 mb-2">Page Not Found</h3>';
+                    echo '<p class="text-gray-600">The requested page could not be loaded.</p>';
+                    echo '</div>';
+                }
+                ?>
             </div>
         <?php endif; ?>
     </div>
@@ -390,50 +412,83 @@ if (!in_array($page, $allowed_pages)) {
     <script>
         function renderLogs(logs) {
             const list = document.getElementById("activity-log-list");
+            if (!list) {
+                console.warn("Activity log list element not found");
+                return;
+            }
+            
             list.innerHTML = '';
-            if (logs.length === 0) {
+            if (!logs || logs.length === 0) {
                 list.innerHTML = '<li class="text-gray-500 text-center py-8">No activity logs found.</li>';
             } else {
                 logs.forEach(log => {
-                    const item = document.createElement("li");
-                    item.className = "glass-card rounded-xl p-4 text-gray-700 hover-card";
-                    item.innerHTML = `
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <span class="font-semibold text-[#a31d1d]">${log.activity}</span>
-                                <div class="text-sm text-gray-500 mt-1">${log.time_created}</div>
+                    if (log && log.activity && log.time_created) {
+                        const item = document.createElement("li");
+                        item.className = "glass-card rounded-xl p-4 text-gray-700 hover-card";
+                        item.innerHTML = `
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <span class="font-semibold text-[#a31d1d]">${log.activity}</span>
+                                    <div class="text-sm text-gray-500 mt-1">${log.time_created}</div>
+                                </div>
+                                <i class="fas fa-clock text-[#a31d1d] text-lg ml-3"></i>
                             </div>
-                            <i class="fas fa-clock text-[#a31d1d] text-lg ml-3"></i>
-                        </div>
-                    `;
-                    list.appendChild(item);
+                        `;
+                        list.appendChild(item);
+                    }
                 });
             }
         }
 
-        document.getElementById("search-btn").addEventListener("click", () => {
-            const keyword = document.getElementById("search-input").value.toLowerCase();
-            const filtered = fullActivityLog.filter(log =>
-                log.activity.toLowerCase().includes(keyword) ||
-                log.time_created.toLowerCase().includes(keyword)
-            );
-            renderLogs(filtered);
-        });
+        const searchBtn = document.getElementById("search-btn");
+        if (searchBtn) {
+            searchBtn.addEventListener("click", () => {
+                const searchInput = document.getElementById("search-input");
+                if (searchInput) {
+                    const keyword = searchInput.value.toLowerCase();
+                    if (fullActivityLog && fullActivityLog.length > 0) {
+                        const filtered = fullActivityLog.filter(log =>
+                            log.activity.toLowerCase().includes(keyword) ||
+                            log.time_created.toLowerCase().includes(keyword)
+                        );
+                        renderLogs(filtered);
+                    } else {
+                        renderLogs([]);
+                    }
+                }
+            });
+        }
 
-        document.getElementById("search-input").addEventListener("keypress", function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById("search-btn").click();
-            }
-        });
+        const searchInput = document.getElementById("search-input");
+        if (searchInput) {
+            searchInput.addEventListener("keypress", function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const searchBtn = document.getElementById("search-btn");
+                    if (searchBtn) {
+                        searchBtn.click();
+                    }
+                }
+            });
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
-            renderLogs(fullActivityLog);
+            if (fullActivityLog && fullActivityLog.length > 0) {
+                renderLogs(fullActivityLog);
+            } else {
+                // Show empty state if no logs
+                const list = document.getElementById("activity-log-list");
+                if (list) {
+                    list.innerHTML = '<li class="text-gray-500 text-center py-8">No activity logs available.</li>';
+                }
+            }
         });
 
         function toggleLogs() {
             const logSection = document.getElementById("activity-log");
-            logSection.classList.toggle("hidden");
+            if (logSection) {
+                logSection.classList.toggle("hidden");
+            }
         }
     </script>
     
