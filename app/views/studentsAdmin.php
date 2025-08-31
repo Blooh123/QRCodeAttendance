@@ -18,6 +18,7 @@ if (empty($_SESSION['csrf_token'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Students • USep Attendance System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -173,25 +174,25 @@ if (empty($_SESSION['csrf_token'])) {
     </div>
 </div>
 
-<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
-    <div class="flex items-center justify-between">
+<header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-4 md:p-6 mb-6 md:mb-8 max-w-7xl mx-auto glass-card">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div class="flex items-center space-x-3">
-            <i class="fas fa-user-graduate text-[#a31d1d] text-3xl"></i>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
+            <i class="fas fa-user-graduate text-[#a31d1d] text-2xl md:text-3xl"></i>
+            <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
         </div>
         
         <!-- Permission Indicator -->
         <?php if (isset($userRole) && $userRole === 'Facilitator' && !empty($facilitatorCoursePermissions)): ?>
-            <div class="flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+            <div class="flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs md:text-sm">
                 <i class="fas fa-shield-alt text-blue-600"></i>
-                <span class="text-sm text-blue-800 font-medium">
+                <span class="text-blue-800 font-medium">
                     Access: <?php echo implode(', ', $facilitatorCoursePermissions); ?>
                 </span>
             </div>
         <?php elseif (isset($userRole) && $userRole === 'admin'): ?>
-            <div class="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+            <div class="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-xs md:text-sm">
                 <i class="fas fa-crown text-green-600"></i>
-                <span class="text-sm text-green-800 font-medium">Full Access</span>
+                <span class="text-green-800 font-medium">Full Access</span>
             </div>
         <?php endif; ?>
     </div>
@@ -199,103 +200,121 @@ if (empty($_SESSION['csrf_token'])) {
 
 <div class="max-w-7xl mx-auto">
     <!-- Search and Filter Section -->
-    <div class="glass-card rounded-2xl p-6 mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-        <form action="<?php echo ROOT ?>adminHome" method="GET" class="flex flex-col md:flex-row items-center gap-4">
+    <div class="glass-card rounded-2xl p-4 md:p-6 mb-6 md:mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+        <form action="<?php echo ROOT ?>adminHome" method="GET" class="space-y-4">
             <input type="hidden" name="page" value="Students">
-            <div class="flex items-center w-full md:w-auto gap-2">
-                <input type="text" name="search" id="search-input" placeholder="Search..."
-                       value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
-                       class="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                <button type="submit" id="search-btn" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-            <div class="text-gray-600 text-sm">
-                Number of Students: <span class="font-bold"><?php echo $numOfStudent ?></span>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div class="flex-1 flex items-center gap-2">
+                    <input type="text" name="search" id="search-input" placeholder="Search students..."
+                           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                           class="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                    <button type="submit" id="search-btn" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg flex items-center gap-2 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-sm md:text-base">
+                        <i class="fas fa-search"></i>
+                        <span class="hidden sm:inline">Search</span>
+                    </button>
+                </div>
+                <div class="text-gray-600 text-sm md:text-base text-center sm:text-left">
+                    Students: <span class="font-bold"><?php echo $numOfStudent ?></span>
+                </div>
             </div>
         </form>
 
-        <form action="<?php echo ROOT ?>adminHome" method="GET" class="flex flex-col md:flex-row items-center gap-4 mt-4 filter-container">
+        <form action="<?php echo ROOT ?>adminHome" method="GET" class="space-y-4 mt-6 filter-container">
             <input type="hidden" name="page" value="Students">
-            <select name="program" id="program-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                <option value="">Select Program</option>
-                <?php if (isset($userRole) && $userRole === 'Facilitator' && !empty($facilitatorCoursePermissions)): ?>
-                    <!-- Show only permitted programs for facilitators -->
-                    <?php foreach ($programList as $program): ?>
-                        <?php if (in_array($program['program'], $facilitatorCoursePermissions)): ?>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <select name="program" id="program-filter" class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                    <option value="">Select Program</option>
+                    <?php if (isset($userRole) && $userRole === 'Facilitator' && !empty($facilitatorCoursePermissions)): ?>
+                        <!-- Show only permitted programs for facilitators -->
+                        <?php foreach ($programList as $program): ?>
+                            <?php if (in_array($program['program'], $facilitatorCoursePermissions)): ?>
+                                <option value="<?php echo htmlspecialchars($program['program']); ?>"
+                                    <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($program['program']); ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Show all programs for admins or facilitators without specific course permissions -->
+                        <?php foreach ($programList as $program): ?>
                             <option value="<?php echo htmlspecialchars($program['program']); ?>"
                                 <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($program['program']); ?>
                             </option>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <!-- Show all programs for admins or facilitators without specific course permissions -->
-                    <?php foreach ($programList as $program): ?>
-                        <option value="<?php echo htmlspecialchars($program['program']); ?>"
-                            <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($program['program']); ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <select name="year" id="year-filter" class="w-full px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                    <option value="">Select Year</option>
+                    <?php foreach ($yearList as $year): ?>
+                        <option value="<?php echo htmlspecialchars($year['acad_year']); ?>"
+                            <?php echo (isset($_GET['year']) && $_GET['year'] === $year['acad_year']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($year['acad_year']); ?>
                         </option>
                     <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
+                </select>
 
-            <select name="year" id="year-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
-                <option value="">Select Year</option>
-                <?php foreach ($yearList as $year): ?>
-                    <option value="<?php echo htmlspecialchars($year['acad_year']); ?>"
-                        <?php echo (isset($_GET['year']) && $_GET['year'] === $year['acad_year']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($year['acad_year']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <button type="submit" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
-                <i class="fas fa-filter"></i> Apply Filter
-            </button>
+                <button type="submit" class="w-full bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 md:py-2.5 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base">
+                    <i class="fas fa-filter"></i> Apply Filter
+                </button>
+            </div>
         </form>
+        
         <!-- check for permission to add student -->
         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('add student', $facilitatorPermissions)): ?>
-            <a href="<?php echo ROOT ?>add_student"
-            class="mt-4 inline-block bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                <i class="fas fa-user-graduate"></i> Add Student
-            </a>
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="<?php echo ROOT ?>add_student"
+                class="w-full sm:w-auto inline-block bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 text-center">
+                    <i class="fas fa-user-graduate"></i> Add Student
+                </a>
+            </div>
         <?php endif; ?>
     </div>
 
     <!-- Students Grid -->
     <?php if (!empty($studentsList)): ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mt-6">
             <?php foreach ($studentsList as $student): ?>
-                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 flex flex-col space-y-3 hover-card">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <i class="fas fa-user-graduate text-[#a31d1d] text-2xl"></i>
-                        <h2 class="text-xl font-semibold text-[#a31d1d]">
+                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 md:p-6 flex flex-col space-y-3 hover-card">
+                    <div class="flex items-center space-x-2 md:space-x-3 mb-2">
+                        <i class="fas fa-user-graduate text-[#a31d1d] text-xl md:text-2xl"></i>
+                        <h2 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate">
                             <?php echo htmlspecialchars($student['name']); ?>
                         </h2>
                     </div>
-                    <p class="text-gray-700"><strong>ID:</strong> <?php echo htmlspecialchars($student['student_id']); ?></p>
-                    <p class="text-gray-700"><strong>Program:</strong> <?php echo htmlspecialchars($student['program']); ?></p>
-                    <p class="text-gray-700"><strong>Year:</strong> <?php echo htmlspecialchars($student['acad_year']); ?></p>
-                    <p class="text-gray-700"><strong>Email:</strong> <?php echo htmlspecialchars($student['email']); ?></p>
-                    <div class="flex justify-between mt-4">
+                    <div class="space-y-2 text-sm md:text-base">
+                        <p class="text-gray-700"><strong>ID:</strong> <span class="break-all"><?php echo htmlspecialchars($student['student_id']); ?></span></p>
+                        <p class="text-gray-700"><strong>Program:</strong> <span class="break-words"><?php echo htmlspecialchars($student['program']); ?></span></p>
+                        <p class="text-gray-700"><strong>Year:</strong> <?php echo htmlspecialchars($student['acad_year']); ?></p>
+                        <p class="text-gray-700"><strong>Email:</strong> <span class="break-all text-xs md:text-sm"><?php echo htmlspecialchars($student['email']); ?></span></p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-4">
                         <a href="<?php echo ROOT?>edit_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
-                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                            <i class="fas fa-edit"></i> Edit
+                           class="flex-1 bg-blue-600 hover:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
+                            <i class="fas fa-edit"></i> <span class="hidden sm:inline">Edit</span>
                         </a>
                         <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
                            onclick="return confirmDelete(event, this.href);"
-                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                            <i class="fas fa-trash"></i> Delete
+                           class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
+                            <i class="fas fa-trash"></i> <span class="hidden sm:inline">Delete</span>
                         </a>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     <?php elseif ($isFiltered): ?>
-        <p class="text-center text-gray-600 mt-6">No students found for the selected filters.</p>
+        <div class="text-center py-12">
+            <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-600 text-lg">No students found for the selected filters.</p>
+            <p class="text-gray-500 text-sm mt-2">Try adjusting your search criteria.</p>
+        </div>
     <?php elseif(!$isFiltered):?>
-        <p class="text-center text-gray-600 mt-6">Student Information will be displayed here.</p>
+        <div class="text-center py-12">
+            <i class="fas fa-user-graduate text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-600 text-lg">Student Information will be displayed here.</p>
+            <p class="text-gray-500 text-sm mt-2">Use the search and filter options above to find students.</p>
+        </div>
     <?php endif; ?>
 </div>
 
