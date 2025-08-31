@@ -9,7 +9,8 @@ require_once $projectRoot . '/app/core/Database.php';
 use Database;
 use PDO;
 
-class Attendances
+if (!class_exists('Model\Attendances')) {
+    class Attendances
 {
     use Database;
 
@@ -318,4 +319,5 @@ class Attendances
     }
 
 
+}
 }

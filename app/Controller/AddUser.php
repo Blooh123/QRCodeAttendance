@@ -46,7 +46,26 @@ class AddUser extends \Controller
 
 $user1 = new User();
 $userData = $user1->checkSession('add_user');
-if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
+
+// Allow admin or facilitator with manage users permission
+if (!$userData || !isset($userData['role'])) {
+    $uri = str_replace('/add_user', '/login', $_SERVER['REQUEST_URI']);
+    header('Location: '. $uri);
+    exit();
+}
+
+if ($userData['role'] === 'admin') {
+    // Admin has access
+} elseif ($userData['role'] === 'Facilitator') {
+    // Check if facilitator has manage users permission
+    $facilitatorPermissions = $user1->getUserPermissions($userData['user_id']);
+    if (!in_array('manage users', $facilitatorPermissions)) {
+        $uri = str_replace('/add_user', '/login', $_SERVER['REQUEST_URI']);
+        header('Location: '. $uri);
+        exit();
+    }
+} else {
+    // Neither admin nor authorized facilitator
     $uri = str_replace('/add_user', '/login', $_SERVER['REQUEST_URI']);
     header('Location: '. $uri);
     exit();

@@ -16,7 +16,26 @@ class EditUser extends Controller
 
 $user = new User();
 $userData = $user->checkSession('edit_user');
-if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
+
+// Allow admin or facilitator with manage users permission
+if (!$userData || !isset($userData['role'])) {
+    $uri = str_replace('/edit_user', '/login', $_SERVER['REQUEST_URI']);
+    header('Location: '. $uri);
+    exit();
+}
+
+if ($userData['role'] === 'admin') {
+    // Admin has access
+} elseif ($userData['role'] === 'Facilitator') {
+    // Check if facilitator has manage users permission
+    $facilitatorPermissions = $user->getUserPermissions($userData['user_id']);
+    if (!in_array('manage users', $facilitatorPermissions)) {
+        $uri = str_replace('/edit_user', '/login', $_SERVER['REQUEST_URI']);
+        header('Location: '. $uri);
+        exit();
+    }
+} else {
+    // Neither admin nor authorized facilitator
     $uri = str_replace('/edit_user', '/login', $_SERVER['REQUEST_URI']);
     header('Location: '. $uri);
     exit();
@@ -100,11 +119,13 @@ if (!$userData) {
 
 $userSession = $user->getUserSession($userId);
 $facialImages = $user->getFacialImages($userId);
+$userPermissions = $user->getUserPermissions($userId);
 
 $data = [
     'userData' => $userData,
     'userSession' => $userSession,
-    'facialImages' => $facialImages
+    'facialImages' => $facialImages,
+    'userPermissions' => $userPermissions
 ];
 
 $editUser = new EditUser();

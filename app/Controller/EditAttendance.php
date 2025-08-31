@@ -26,8 +26,25 @@ class EditAttendance extends \Controller
 $user = new User();
 $user_de = $user->checkSession('edit_attendance');
 
-// Redirect if not an admin
-if (!$user_de || !isset($user_de['role']) || $user_de['role'] !== 'admin') {
+// Allow admin or facilitator with manage attendance permission
+if (!$user_de || !isset($user_de['role'])) {
+    $uri = str_replace('/edit_attendance', '/login', $_SERVER['REQUEST_URI']);
+    header('Location: '. $uri);
+    exit();
+}
+
+if ($user_de['role'] === 'admin') {
+    // Admin has access
+} elseif ($user_de['role'] === 'Facilitator') {
+    // Check if facilitator has manage attendance permission
+    $facilitatorPermissions = $user->getUserPermissions($user_de['user_id']);
+    if (!in_array('manage attendance', $facilitatorPermissions)) {
+        $uri = str_replace('/edit_attendance', '/login', $_SERVER['REQUEST_URI']);
+        header('Location: '. $uri);
+        exit();
+    }
+} else {
+    // Neither admin nor authorized facilitator
     $uri = str_replace('/edit_attendance', '/login', $_SERVER['REQUEST_URI']);
     header('Location: '. $uri);
     exit();

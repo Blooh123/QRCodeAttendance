@@ -9,7 +9,8 @@ require_once $projectRoot . '/app/core/Database.php';
 use Database;
 use PDO;
 
-class ExcuseApplication
+if (!class_exists('Model\ExcuseApplication')) {
+    class ExcuseApplication
 {
     use Database;
 
@@ -382,4 +383,5 @@ class ExcuseApplication
             return false;
         }
     }
+}
 } 

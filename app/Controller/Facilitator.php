@@ -3,10 +3,10 @@
 namespace Controller;
 require '../app/core/Model.php';
 require_once '../app/core/imageConfig.php';
-require '../app/Model/Attendances.php';
-require '../app/Model/Student.php';
-require '../app/Model/User.php';
-require '../app/Model/ActivityLog.php';
+require_once '../app/Model/Student.php';
+require_once '../app/Model/Attendances.php';
+require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 
 
 use DateTime;
@@ -34,6 +34,9 @@ if (!$userData || !isset($userData['role']) || $userData['role'] !== 'Facilitato
     header('Location: '. $uri);
     exit();
 }
+
+// Get facilitator permissions
+$facilitatorPermissions = $user->getUserPermissions($userData['user_id']);
 $userSessions = json_decode($_COOKIE['user_data'], true);
 
 // Ensure it's a valid array and contains sessions
@@ -125,11 +128,6 @@ $_SESSION['evnt_name'] = $EventName;
                     $studentSearch = implode(' ', $studentSearch);
                 }
                 
-                if (!empty($selectedProgram)) {
-                    $attendanceRecordList = $attendances->getAttendanceRecord($EventID, '%'.$studentSearch.'%');
-                } else {
-                    $attendanceRecordList = $attendances->getAttendanceRecord($EventID, '%'.$studentSearch.'%');
-                }
                 unset($_POST['student']);
                 break;
             }
@@ -145,12 +143,14 @@ $data = [
     'EventDate' => $EventDate,
     'EventTime' => $EventTime,
     'EventLocation' => $EventLocation,
-    'attendanceRecordList' => $attendanceRecordList,
+    // 'attendanceRecordList' => $attendanceRecordList,
     'programList' => $programList,
     'selectedProgram' => $selectedProgram,
     'EventID' => $EventID,
     'activityLogList' => $activityLogList,
-    'attendanceList2' => $attendanceList2
+    'attendanceList2' => $attendanceList2,
+    'facilitatorPermissions' => $facilitatorPermissions,
+    'username' => $_SESSION['username']
 ];
 
 $facilitator = new Facilitator();

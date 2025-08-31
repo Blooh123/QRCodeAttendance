@@ -174,9 +174,26 @@ if (empty($_SESSION['csrf_token'])) {
 </div>
 
 <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-7xl mx-auto glass-card">
-    <div class="flex items-center space-x-3">
-        <i class="fas fa-user-graduate text-[#a31d1d] text-3xl"></i>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-user-graduate text-[#a31d1d] text-3xl"></i>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Students</h1>
+        </div>
+        
+        <!-- Permission Indicator -->
+        <?php if (isset($userRole) && $userRole === 'Facilitator' && !empty($facilitatorCoursePermissions)): ?>
+            <div class="flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+                <i class="fas fa-shield-alt text-blue-600"></i>
+                <span class="text-sm text-blue-800 font-medium">
+                    Access: <?php echo implode(', ', $facilitatorCoursePermissions); ?>
+                </span>
+            </div>
+        <?php elseif (isset($userRole) && $userRole === 'admin'): ?>
+            <div class="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                <i class="fas fa-crown text-green-600"></i>
+                <span class="text-sm text-green-800 font-medium">Full Access</span>
+            </div>
+        <?php endif; ?>
     </div>
 </header>
 
@@ -202,12 +219,25 @@ if (empty($_SESSION['csrf_token'])) {
             <input type="hidden" name="page" value="Students">
             <select name="program" id="program-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">
                 <option value="">Select Program</option>
-                <?php foreach ($programList as $program): ?>
-                    <option value="<?php echo htmlspecialchars($program['program']); ?>"
-                        <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($program['program']); ?>
-                    </option>
-                <?php endforeach ?>
+                <?php if (isset($userRole) && $userRole === 'Facilitator' && !empty($facilitatorCoursePermissions)): ?>
+                    <!-- Show only permitted programs for facilitators -->
+                    <?php foreach ($programList as $program): ?>
+                        <?php if (in_array($program['program'], $facilitatorCoursePermissions)): ?>
+                            <option value="<?php echo htmlspecialchars($program['program']); ?>"
+                                <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($program['program']); ?>
+                            </option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Show all programs for admins or facilitators without specific course permissions -->
+                    <?php foreach ($programList as $program): ?>
+                        <option value="<?php echo htmlspecialchars($program['program']); ?>"
+                            <?php echo (isset($_GET['program']) && $_GET['program'] === $program['program']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($program['program']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </select>
 
             <select name="year" id="year-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a31d1d]">

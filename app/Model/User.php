@@ -5,7 +5,8 @@ require_once __DIR__ . '/../core/Database.php';
 
 use PDO;
 
-class User
+if (!class_exists('Model\User')) {
+    class User
 {
     use \Database;
     public function deleteUsers($id): bool|array
@@ -281,5 +282,40 @@ class User
         return $result !== false;
     }
 
+    public function updateUserPermissions($userId, $permissionsJson): bool
+    {
+        $query = "UPDATE users SET permissions = :permissions WHERE id = :user_id";
+        $params = [
+            ':user_id' => $userId,
+            ':permissions' => $permissionsJson
+        ];
+        $result = $this->query($query, $params);
+        
+        // Debug: Log the result
+        error_log("Update permissions result for user $userId: " . ($result !== false ? 'success' : 'failed'));
+        
+        return $result !== false;
+    }
 
+    public function getUserPermissions($userId): array
+    {
+        $query = "SELECT permissions FROM users WHERE id = :user_id";
+        $params = [
+            ':user_id' => $userId
+        ];
+        $result = $this->query($query, $params);
+        
+        
+        if ($result && isset($result[0]['permissions']) && $result[0]['permissions']) {
+            $permissions = json_decode($result[0]['permissions'], true);
+            error_log("Decoded permissions for user $userId: " . json_encode($permissions));
+            return is_array($permissions) ? $permissions : [];
+        }
+        
+        error_log("No permissions found for user $userId");
+        return [];
+    }
+
+
+}
 }

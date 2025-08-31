@@ -8,7 +8,8 @@ require_once $projectRoot . '/app/core/Database.php';
 
 use PDO;
 
-class Student
+if (!class_exists('Model\Student')) {
+    class Student
 {
     use \Database;
     public function checkIfEmailExists($email): bool
@@ -230,4 +231,5 @@ class Student
             return false;
         }
     }
+}
 }

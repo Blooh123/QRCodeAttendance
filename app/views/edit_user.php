@@ -63,7 +63,7 @@
     </div>
 </header>
 
-<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="max-w-6xl mx-auto space-y-8">
     <!-- User Edit Card -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
         <form id="userForm" action="edit_user?user_id=<?php echo $_GET['user_id']; ?>" method="POST" class="space-y-4">
@@ -112,6 +112,179 @@
             <input type="hidden" id="actionType" name="actionType">
         </form>
     </div>
+     <!-- Facilitator-specific sections in single column -->
+    <?php if ($userData['roles'] == 'Facilitator'): ?>
+     <div class="max-w-6xl mx-auto mt-8 space-y-8">
+         <!-- Facial Images Card -->
+         <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
+             <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+                 <i class="fas fa-user-circle text-[#a31d1d]"></i> Facial Images
+             </h3>
+
+             <div class="flex-1">
+                 <?php if (!empty($facialImages)): ?>
+                     <div class="grid grid-cols-2 gap-4">
+                         <?php foreach ($facialImages as $index => $image): ?>
+                             <div class="relative group">
+                                 <img 
+                                     src="data:image/jpeg;base64,<?php echo base64_encode($image['img']); ?>" 
+                                     alt="Facial Image <?php echo $index + 1; ?>"
+                                     class="facial-image w-full h-32 object-cover"
+                                     onclick="openImageModal(this.src, 'Facial Image <?php echo $index + 1; ?>')"
+                                 />
+                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                                     <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+                                         <button 
+                                             onclick="openImageModal(this.parentElement.parentElement.previousElementSibling.src, 'Facial Image <?php echo $index + 1; ?>')"
+                                             class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-all duration-200"
+                                             title="View Image"
+                                         >
+                                             <i class="fas fa-search-plus text-sm"></i>
+                                         </button>
+                                         <button 
+                                             onclick="deleteFacialImage(<?php echo $image['id']; ?>, <?php echo $_GET['user_id']; ?>, <?php echo $index + 1; ?>)"
+                                             class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-all duration-200"
+                                             title="Delete Image"
+                                         >
+                                             <i class="fas fa-trash text-sm"></i>
+                                         </button>
+                                     </div>
+                                 </div>
+                                 <div class="text-center mt-2">
+                                     <span class="text-sm text-gray-600">Image <?php echo $index + 1; ?></span>
+                                 </div>
+                             </div>
+                         <?php endforeach; ?>
+                     </div>
+                     <div class="mt-4 text-center">
+                         <span class="text-sm text-gray-500">Total Images: <?php echo count($facialImages); ?></span>
+                     </div>
+                 <?php else: ?>
+                     <div class="text-center py-8">
+                         <i class="fas fa-user-slash text-gray-400 text-4xl mb-4"></i>
+                         <p class="text-gray-500">No facial images registered</p>
+                         <p class="text-sm text-gray-400 mt-2">This user hasn't completed facial registration yet.</p>
+                     </div>
+                 <?php endif; ?>
+             </div>
+         </div>
+
+         <!-- Manage Facilitator Permission  -->
+         <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
+             <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+                 <i class="fas fa-shield-alt text-[#a31d1d]"></i> Manage Facilitator Permission
+             </h3>
+             
+             <!-- Debug info (remove this after testing) -->
+             <div class="mb-4 p-3 bg-gray-100 rounded-lg text-sm">
+                 <strong>Debug - Current Permissions:</strong> 
+                 <?php echo htmlspecialchars(json_encode($userPermissions)); ?>
+             </div>
+             
+             <!-- Permissions Section -->
+             <div class="space-y-6">
+                 <!-- Manage Students Permission -->
+                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                     <div class="flex items-center gap-3 mb-3">
+                         <input type="checkbox" id="manageStudents" name="permissions[manageStudents]" 
+                             <?php echo in_array('manage students', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="manageStudents" class="text-lg font-semibold text-gray-700">Manage Students</label>
+                     </div>
+                     
+                     <!-- Program Selection (only visible when Manage Students is checked) -->
+                     <div id="programSelection" class="ml-8 space-y-3 <?php echo in_array('manage students', $userPermissions) ? '' : 'hidden'; ?>">
+                         <p class="text-sm text-gray-600 mb-2">Select programs this user can manage:</p>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                             <!-- Education Programs -->
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_beed" name="permissions[programs][]" value="Bachelor of Elementary Education" 
+                                     <?php echo in_array('Bachelor of Elementary Education', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_beed" class="text-sm text-gray-700">Bachelor of Elementary Education</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsned" name="permissions[programs][]" value="Bachelor of Special Needs Education" 
+                                     <?php echo in_array('Bachelor of Special Needs Education', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsned" class="text-sm text-gray-700">Bachelor of Special Needs Education</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bseed" name="permissions[programs][]" value="Bachelor of Early Childhood Education" 
+                                     <?php echo in_array('Bachelor of Early Childhood Education', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bseed" class="text-sm text-gray-700">Bachelor of Early Childhood Education</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsed_math" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Mathematics" 
+                                     <?php echo in_array('Bachelor of Secondary Education - Major in Mathematics', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsed_math" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Mathematics</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsed_english" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in English" 
+                                     <?php echo in_array('Bachelor of Secondary Education - Major in English', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsed_english" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in English</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsed_filipino" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Filipino" 
+                                     <?php echo in_array('Bachelor of Secondary Education - Major in Filipino', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsed_filipino" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Filipino</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsit" name="permissions[programs][]" value="Bachelor of Science in Information Technology" 
+                                     <?php echo in_array('Bachelor of Science in Information Technology', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsit" class="text-sm text-gray-700">Bachelor of Science in Information Technology</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bstve" name="permissions[programs][]" value="Bachelor of Technical-Vocational Teacher Education" 
+                                     <?php echo in_array('Bachelor of Technical-Vocational Teacher Education', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bstve" class="text-sm text-gray-700">Bachelor of Technical-Vocational Teacher Education</label>
+                             </div>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="program_bsabe" name="permissions[programs][]" value="Bachelor of Science in Agricultural and Biosystems Engineering" 
+                                     <?php echo in_array('Bachelor of Science in Agricultural and Biosystems Engineering', $userPermissions) ? 'checked' : ''; ?>
+                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                 <label for="program_bsabe" class="text-sm text-gray-700">Bachelor of Science in Agricultural and Biosystems Engineering</label>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Manage Attendance Permission -->
+                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="manageAttendance" name="permissions[manageAttendance]" 
+                             <?php echo in_array('manage attendance', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
+                     </div>
+                 </div>
+
+                 <!-- Manage Users Permission -->
+                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="manageUsers" name="permissions[manageUsers]" 
+                             <?php echo in_array('manage users', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="manageUsers" class="text-lg font-semibold text-gray-700">Manage Users</label>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Save Permissions Button -->
+             <div class="mt-6 pt-4 border-t border-gray-200">
+                 <button type="button" onclick="savePermissions()" class="w-full bg-[#a31d1d] hover:bg-[#8a1a1a] text-white font-semibold px-6 py-3 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
+                     <i class="fas fa-save"></i> Save Permissions
+                 </button>
+             </div>
+         </div>
+     </div>
+    <?php endif; ?>
 
     <!-- Session Details Card -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
@@ -125,80 +298,35 @@
                     $device = $session['deviceInfo'] ?? null;
                     $login = $session['created_at'] ?? null;
                 ?>
-                <?php if ($ip !== null || $device !== null || $login !== null): ?>
-                <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex flex-col border border-gray-200 mb-2">
-                    <?php if ($ip !== null): ?>
-                        <p class="text-gray-700"><strong>IP Address:</strong> <?php echo htmlspecialchars($ip); ?></p>
-                    <?php endif; ?>
-                    <?php if ($device !== null): ?>
-                        <p class="text-gray-700"><strong>Device Info:</strong> <?php echo htmlspecialchars($device); ?></p>
-                    <?php endif; ?>
-                    <?php if ($login !== null): ?>
-                        <p class="text-gray-700"><strong>Last Login:</strong> <?php echo htmlspecialchars($login); ?></p>
-                    <?php endif; ?>
-                    <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($session['id']) ?>&user_id=<?php echo urlencode($session['id']) ?>"
-                       class="mt-3 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </div>
-                <?php endif; ?>
+                <?php if ($ip !== null || $device !== null || $login !== null){ ?>
+                    <div class="bg-gradient-to-r from-[#f8fafc] to-[#f1f5f9] p-4 rounded-lg shadow flex flex-col border border-gray-200 mb-2">
+                        <?php if ($ip !== null): ?>
+                            <p class="text-gray-700"><strong>IP Address:</strong> <?php echo htmlspecialchars($ip); ?></p>
+                        <?php endif; ?>
+                        <?php if ($device !== null): ?>
+                            <p class="text-gray-700"><strong>Device Info:</strong> <?php echo htmlspecialchars($device); ?></p>
+                        <?php endif; ?>
+                        <?php if ($login !== null): ?>
+                            <p class="text-gray-700"><strong>Last Login:</strong> <?php echo htmlspecialchars($login); ?></p>
+                        <?php endif; ?>
+                        <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($session['id']) ?>&user_id=<?php echo urlencode($session['id']) ?>"
+                        class="mt-3 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                <?php }else{ ?>
+                    <div class="text-center py-8">
+                        <i class="fas fa-user-slash text-gray-400 text-4xl mb-4"></i>
+                        <p class="text-gray-500">No session details found</p>
+                        <p class="text-sm text-gray-400 mt-2">This user hasn't logged in yet.</p>
+                    </div>
+                <?php } ?>
             <?php endforeach; ?>
         </div>
     </div>
-
-    <!-- Facial Images Card -->
-    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
-        <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
-            <i class="fas fa-user-circle text-[#a31d1d]"></i> Facial Images
-        </h3>
-        <div class="flex-1">
-            <?php if (!empty($facialImages)): ?>
-                <div class="grid grid-cols-2 gap-4">
-                    <?php foreach ($facialImages as $index => $image): ?>
-                        <div class="relative group">
-                            <img 
-                                src="data:image/jpeg;base64,<?php echo base64_encode($image['img']); ?>" 
-                                alt="Facial Image <?php echo $index + 1; ?>"
-                                class="facial-image w-full h-32 object-cover"
-                                onclick="openImageModal(this.src, 'Facial Image <?php echo $index + 1; ?>')"
-                            />
-                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
-                                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
-                                    <button 
-                                        onclick="openImageModal(this.parentElement.parentElement.previousElementSibling.src, 'Facial Image <?php echo $index + 1; ?>')"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-all duration-200"
-                                        title="View Image"
-                                    >
-                                        <i class="fas fa-search-plus text-sm"></i>
-                                    </button>
-                                    <button 
-                                        onclick="deleteFacialImage(<?php echo $image['id']; ?>, <?php echo $_GET['user_id']; ?>, <?php echo $index + 1; ?>)"
-                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-all duration-200"
-                                        title="Delete Image"
-                                    >
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="text-center mt-2">
-                                <span class="text-sm text-gray-600">Image <?php echo $index + 1; ?></span>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <div class="mt-4 text-center">
-                    <span class="text-sm text-gray-500">Total Images: <?php echo count($facialImages); ?></span>
-                </div>
-            <?php else: ?>
-                <div class="text-center py-8">
-                    <i class="fas fa-user-slash text-gray-400 text-4xl mb-4"></i>
-                    <p class="text-gray-500">No facial images registered</p>
-                    <p class="text-sm text-gray-400 mt-2">This user hasn't completed facial registration yet.</p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
 </div>
+
+
 
 <!-- Image Modal -->
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
@@ -342,14 +470,137 @@
     });
     <?php endif; ?>
 
-    <?php if (isset($_GET['error'])): ?>
-    Swal.fire({
-        title: "Error",
-        text: "Something went wrong. Please try again.",
-        icon: "error",
-        confirmButtonColor: "#d33"
-    });
-    <?php endif; ?>
+         <?php if (isset($_GET['error'])): ?>
+     Swal.fire({
+         title: "Error",
+         text: "Something went wrong. Please try again.",
+         icon: "error",
+         confirmButtonColor: "#d33"
+     });
+     <?php endif; ?>
+
+     // Permission management functionality
+     document.addEventListener('DOMContentLoaded', function() {
+         const manageStudentsCheckbox = document.getElementById('manageStudents');
+         const programSelection = document.getElementById('programSelection');
+         
+         if (manageStudentsCheckbox && programSelection) {
+             // Show/hide program selection based on Manage Students checkbox
+             manageStudentsCheckbox.addEventListener('change', function() {
+                 if (this.checked) {
+                     programSelection.classList.remove('hidden');
+                 } else {
+                     programSelection.classList.add('hidden');
+                     // Uncheck all program checkboxes when Manage Students is unchecked
+                     const programCheckboxes = programSelection.querySelectorAll('input[type="checkbox"]');
+                     programCheckboxes.forEach(checkbox => checkbox.checked = false);
+                 }
+             });
+         }
+     });
+
+     function savePermissions() {
+         // Collect permission data
+         const permissions = {
+             manageStudents: document.getElementById('manageStudents')?.checked || false,
+             manageAttendance: document.getElementById('manageAttendance')?.checked || false,
+             manageUsers: document.getElementById('manageUsers')?.checked || false,
+             programs: []
+         };
+
+         // Collect selected programs if Manage Students is checked
+         if (permissions.manageStudents) {
+             const programCheckboxes = document.querySelectorAll('input[name="permissions[programs][]"]:checked');
+             programCheckboxes.forEach(checkbox => {
+                 permissions.programs.push(checkbox.value);
+             });
+         }
+
+         // Validate that at least one permission is selected
+         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers) {
+             Swal.fire({
+                 title: "Warning",
+                 text: "Please select at least one permission.",
+                 icon: "warning",
+                 confirmButtonColor: "#a31d1d"
+             });
+             return;
+         }
+
+         // Validate that programs are selected if Manage Students is checked
+         if (permissions.manageStudents && permissions.programs.length === 0) {
+             Swal.fire({
+                 title: "Warning",
+                 text: "Please select at least one program for student management.",
+                 icon: "warning",
+                 confirmButtonColor: "#a31d1d"
+             });
+             return;
+         }
+
+         // Show confirmation dialog
+         Swal.fire({
+             title: "Save Permissions",
+             text: "Are you sure you want to save these permissions?",
+             icon: "question",
+             showCancelButton: true,
+             confirmButtonColor: "#a31d1d",
+             cancelButtonColor: "#6b7280",
+             confirmButtonText: "Yes, save!",
+             cancelButtonText: "Cancel"
+         }).then((result) => {
+             if (result.isConfirmed) {
+                 // Show loading state
+                 Swal.fire({
+                     title: "Saving...",
+                     text: "Please wait while we save the permissions.",
+                     allowOutsideClick: false,
+                     didOpen: () => {
+                         Swal.showLoading();
+                     }
+                 });
+
+                 // Send AJAX request to save permissions
+                 fetch('<?php echo ROOT ?>save_facilitator_permissions', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({
+                         user_id: <?php echo $_GET['user_id']; ?>,
+                         permissions: permissions
+                     })
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.success) {
+                         Swal.fire({
+                             title: "Success!",
+                             text: "Permissions have been saved successfully.",
+                             icon: "success",
+                             confirmButtonColor: "#a31d1d"
+                         });
+                     } else {
+                         Swal.fire({
+                             title: "Error!",
+                             text: data.error || "Failed to save permissions. Please try again.",
+                             icon: "error",
+                             confirmButtonColor: "#d33"
+                         });
+                     }
+                 })
+                 .catch(error => {
+                     console.error('Error:', error);
+                     Swal.fire({
+                         title: "Error!",
+                         text: "An error occurred while saving permissions. Please try again.",
+                         icon: "error",
+                         confirmButtonColor: "#d33"
+                     });
+                 });
+             }
+         });
+     }
 </script>
 
 </body>

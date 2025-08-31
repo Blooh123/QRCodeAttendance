@@ -14,11 +14,14 @@ use Random\RandomException;
 
 class AddStudent extends \Controller
 {
+
     /**
      * @throws RandomException
      */
     public function index(): void
     {
+        $user = new User();
+        $user_de = $user->checkSession('add_student');
         $student = new Student();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -53,8 +56,42 @@ class AddStudent extends \Controller
                 }
             }
         }
-        $programs = $student->getAllProgram();
+        // check if also a facilitator and have the permission to manage students
+
+        
+        // Get programs based on user permissions
+        $allPrograms = $student->getAllProgram();
         $years = $student->getAllYear();
+        
+        // Filter programs for facilitators based on their course permissions
+        if ($user_de['role'] === 'Facilitator') {
+            $facilitatorPermissions = $user->getUserPermissions($user_de['user_id']);
+            $facilitatorCoursePermissions = [];
+            
+            foreach ($facilitatorPermissions as $permission) {
+                // Handle both formats: "course:BSIT" and direct course names like "Bachelor of Science in Information Technology"
+                if (strpos($permission, 'course:') === 0) {
+                    $course = str_replace('course:', '', $permission);
+                    $facilitatorCoursePermissions[] = $course;
+                } elseif (!in_array($permission, ['manage students', 'manage attendance', 'manage users'])) {
+                    // If it's not a management permission, assume it's a course name
+                    $facilitatorCoursePermissions[] = $permission;
+                }
+            }
+            
+            // Filter programs based on facilitator's course permissions
+            if (!empty($facilitatorCoursePermissions)) {
+                $programs = array_filter($allPrograms, function($program) use ($facilitatorCoursePermissions) {
+                    return in_array($program['program'], $facilitatorCoursePermissions);
+                });
+            } else {
+                // If no specific course permissions, show all programs
+                $programs = $allPrograms;
+            }
+        } else {
+            // Admin gets all programs
+            $programs = $allPrograms;
+        }
 
         $this->loadViewWithData('add_student',['programs' => $programs, 'years' => $years]);
     }
@@ -158,9 +195,23 @@ class AddStudent extends \Controller
 //}
 $user = new User();
 $user_de = $user->checkSession('add_student');
-if ($user_de['role'] !== 'admin') {
+
+// Allow admin or facilitator with manage students permission
+if ($user_de['role'] === 'admin') {
+    // Admin has access
+} elseif ($user_de['role'] === 'Facilitator') {
+    // Check if facilitator has manage students permission
+    $facilitatorPermissions = $user->getUserPermissions($user_de['user_id']);
+    if (!in_array('manage students', $facilitatorPermissions)) {
+        $uri = str_replace('/add_student', '/login', $_SERVER['REQUEST_URI']);
+        header('Location: ' . $uri);
+        exit();
+    }
+} else {
+    // Neither admin nor authorized facilitator
     $uri = str_replace('/add_student', '/login', $_SERVER['REQUEST_URI']);
     header('Location: ' . $uri);
+    exit();
 }
 
 

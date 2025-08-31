@@ -78,9 +78,44 @@
 
 <!-- Header -->
 <header class="bg-white/90 backdrop-blur-lg shadow-md rounded-2xl p-6 mb-8 max-w-2xl mx-auto glass-card">
-    <div class="flex items-center space-x-3">
-        <i class="fas fa-user-plus text-[#a31d1d] text-3xl"></i>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Add New Student</h1>
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-user-plus text-[#a31d1d] text-3xl"></i>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Add New Student</h1>
+        </div>
+        
+        <!-- Permission Indicator -->
+        <?php 
+        // Get user session data to show permissions
+        $user = new \Model\User();
+        $userData = $user->checkSession('add_student');
+        if ($userData && $userData['role'] === 'Facilitator') {
+            $facilitatorPermissions = $user->getUserPermissions($userData['user_id']);
+            $facilitatorCoursePermissions = [];
+            foreach ($facilitatorPermissions as $permission) {
+                // Handle both formats: "course:BSIT" and direct course names like "Bachelor of Science in Information Technology"
+                if (strpos($permission, 'course:') === 0) {
+                    $course = str_replace('course:', '', $permission);
+                    $facilitatorCoursePermissions[] = $course;
+                } elseif (!in_array($permission, ['manage students', 'manage attendance', 'manage users'])) {
+                    // If it's not a management permission, assume it's a course name
+                    $facilitatorCoursePermissions[] = $permission;
+                }
+            }
+            if (!empty($facilitatorCoursePermissions)) { ?>
+                <div class="flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+                    <i class="fas fa-shield-alt text-blue-600"></i>
+                    <span class="text-sm text-blue-800 font-medium">
+                        Can add to: <?php echo implode(', ', $facilitatorCoursePermissions); ?>
+                    </span>
+                </div>
+            <?php }
+        } elseif ($userData && $userData['role'] === 'admin') { ?>
+            <div class="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                <i class="fas fa-crown text-green-600"></i>
+                <span class="text-sm text-green-800 font-medium">Can add to all programs</span>
+            </div>
+        <?php } ?>
     </div>
 </header>
 
