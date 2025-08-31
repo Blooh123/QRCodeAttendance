@@ -27,6 +27,7 @@ if (!$userData || !isset($userData['role'])) {
     header('Location: '. $uri);
     exit();
 }
+$facilitatorPermissions = [];
 
 if ($userData['role'] === 'admin') {
     // Admin has access to all attendance records
