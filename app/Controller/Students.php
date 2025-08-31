@@ -169,6 +169,7 @@ $data = [
     'studentsList' => $studentsList,
     'numOfStudent' => $numOfStudent,
     'userRole' => $userData['role'],
-    'facilitatorCoursePermissions' => $facilitatorCoursePermissions
+    'facilitatorCoursePermissions' => $facilitatorCoursePermissions,
+    'facilitatorPermissions' => $facilitatorPermissions
 ];
 $studentsInstance->index($data);
