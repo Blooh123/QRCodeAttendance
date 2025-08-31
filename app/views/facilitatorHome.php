@@ -167,10 +167,13 @@ if (!in_array($page, $allowed_pages)) {
                         <span class="font-medium">Manage Users</span>
                     </div>
                     <div class="ml-6 space-y-1">
-                        <a href="<?php echo ROOT ?>add_user" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
-                            <i class="fas fa-user-plus text-sm group-hover:scale-110 transition-transform"></i>
-                            <span class="text-sm">Add User</span>
-                        </a>
+                        <!-- check if have the permission to add new user -->
+                        <?php if (in_array('add user', $facilitatorPermissions)): ?>
+                            <a href="<?php echo ROOT ?>add_user" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
+                                <i class="fas fa-user-plus text-sm group-hover:scale-110 transition-transform"></i>
+                                <span class="text-sm">Add User</span>
+                            </a>
+                        <?php endif; ?>
                         <a href="?page=Users" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group <?php echo $page === 'Users' ? 'bg-[#a31d1d] text-white' : ''; ?>">
                             <i class="fas fa-list text-sm group-hover:scale-110 transition-transform"></i>
                             <span class="text-sm">View Users</span>
