@@ -46,18 +46,6 @@ class Attendance extends Controller
                 ];
             }
             
-            // Get facilitator's course permissions
-            $facilitatorCoursePermissions = [];
-            foreach ($facilitatorPermissions as $permission) {
-                // Handle both formats: "course:BSIT" and direct course names like "Bachelor of Science in Information Technology"
-                if (strpos($permission, 'course:') === 0) {
-                    $course = str_replace('course:', '', $permission);
-                    $facilitatorCoursePermissions[] = $course;
-                } elseif (!in_array($permission, ['manage students', 'manage attendance', 'manage users'])) {
-                    // If it's not a management permission, assume it's a course name
-                    $facilitatorCoursePermissions[] = $permission;
-                }
-            }
         } else {
             // Neither admin nor authorized facilitator
             return [
@@ -69,25 +57,11 @@ class Attendance extends Controller
         $attendance = new Attendances();
         $attendanceList = $attendance->getAllAttendance();
 
-        // Filter attendance records for facilitators based on their course permissions
-        if ($userData['role'] === 'Facilitator' && !empty($facilitatorCoursePermissions)) {
-            // This assumes attendance records have program/course information
-            // You may need to modify the attendance model to include this filtering
-            $attendanceList = array_filter($attendanceList, function($record) use ($facilitatorCoursePermissions) {
-                // Adjust this based on your attendance record structure
-                return isset($record['program']) && in_array($record['program'], $facilitatorCoursePermissions);
-            });
-        }
 
         if (!empty($_GET['search'])){
             $searchResults = $attendance->searchAttendance($_GET['search']);
             
-            // Filter search results for facilitators
-            if ($userData['role'] === 'Facilitator' && !empty($facilitatorCoursePermissions)) {
-                $searchResults = array_filter($searchResults, function($record) use ($facilitatorCoursePermissions) {
-                    return isset($record['program']) && in_array($record['program'], $facilitatorCoursePermissions);
-                });
-            }
+
             
             $attendanceList = $searchResults;
         }
