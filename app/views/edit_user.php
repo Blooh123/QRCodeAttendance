@@ -192,18 +192,18 @@
                          <label for="manageStudents" class="text-lg font-semibold text-gray-700">Manage Students</label>
                      </div>
                      <!-- permission to add student -->
-                     <div class="flex items-center gap-3 mb-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="addStudent" name="permissions[addStudent]" 
                              <?php echo in_array('add student', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addStudent" class="text-lg font-semibold text-gray-700">Add Student</label>
+                             class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="addStudent" class="text-m font-semibold text-gray-700">Add Student</label>
                      </div>
                      <!-- permission to delete student -->
-                     <div class="flex items-center gap-3 mb-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="deleteStudent" name="permissions[deleteStudent]" 
                              <?php echo in_array('delete student', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="deleteStudent" class="text-lg font-semibold text-gray-700">Delete Student</label>
+                             class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="deleteStudent" class="text-m font-semibold text-gray-700">Delete Student</label>
                      </div>
                      <!-- Program Selection (only visible when Manage Students is checked) -->
                      <div id="programSelection" class="ml-8 space-y-3 <?php echo in_array('manage students', $userPermissions) ? '' : 'hidden'; ?>">
@@ -271,49 +271,49 @@
 
                  <!-- Manage Attendance Permission -->
                  <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center mb-3 gap-3">
                          <input type="checkbox" id="manageAttendance" name="permissions[manageAttendance]" 
                              <?php echo in_array('manage attendance', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
                      </div>
                      <!-- add attendance permission -->
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="addAttendance" name="permissions[addAttendance]" 
                              <?php echo in_array('add attendance', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addAttendance" class="text-lg font-semibold text-gray-700">Add Attendance</label>
+                         <label for="addAttendance" class="text-m font-semibold text-gray-700">Add Attendance</label>
                      </div>
                      <!-- permission to delete attendance -->
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="deleteAttendance" name="permissions[deleteAttendance]" 
                              <?php echo in_array('delete attendance', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="deleteAttendance" class="text-lg font-semibold text-gray-700">Delete Attendance</label>
+                         <label for="deleteAttendance" class="text-m font-semibold text-gray-700">Delete Attendance</label>
                      </div>
                      <!-- permission to edit attendance -->
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="editAttendance" name="permissions[editAttendance]" 
                              <?php echo in_array('edit attendance', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="editAttendance" class="text-lg font-semibold text-gray-700">Edit Attendance</label>
+                         <label for="editAttendance" class="text-m font-semibold text-gray-700">Edit Attendance</label>
                      </div>
                  </div>
 
                  <!-- Manage Users Permission -->
                  <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center mb-3 gap-3">
                          <input type="checkbox" id="manageUsers" name="permissions[manageUsers]" 
                              <?php echo in_array('manage users', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="manageUsers" class="text-lg font-semibold text-gray-700">Manage Users</label>
                      </div>
                      <!-- add user -->
-                     <div class="flex items-center gap-3">
+                     <div class="flex items-center gap-3 mb-3 ml-3">
                          <input type="checkbox" id="addUser" name="permissions[addUser]" 
                              <?php echo in_array('add user', $userPermissions) ? 'checked' : ''; ?>
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addUser" class="text-lg font-semibold text-gray-700">Add User</label>
+                         <label for="addUser" class="text-m font-semibold text-gray-700">Add User</label>
                      </div>
                  </div>
              </div>
