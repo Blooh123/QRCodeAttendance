@@ -277,6 +277,20 @@
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
                      </div>
+                     <!-- permission to delete attendance -->
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="deleteAttendance" name="permissions[deleteAttendance]" 
+                             <?php echo in_array('delete attendance', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="deleteAttendance" class="text-lg font-semibold text-gray-700">Delete Attendance</label>
+                     </div>
+                     <!-- permission to edit attendance -->
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="editAttendance" name="permissions[editAttendance]" 
+                             <?php echo in_array('edit attendance', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="editAttendance" class="text-lg font-semibold text-gray-700">Edit Attendance</label>
+                     </div>
                  </div>
 
                  <!-- Manage Users Permission -->
@@ -518,6 +532,8 @@
          const permissions = {
              manageStudents: document.getElementById('manageStudents')?.checked || false,
              manageAttendance: document.getElementById('manageAttendance')?.checked || false,
+             deleteAttendance: document.getElementById('deleteAttendance')?.checked || false,
+             editAttendance: document.getElementById('editAttendance')?.checked || false,
              manageUsers: document.getElementById('manageUsers')?.checked || false,
              addStudent: document.getElementById('addStudent')?.checked || false,
              deleteStudent: document.getElementById('deleteStudent')?.checked || false,
@@ -533,7 +549,7 @@
          }
 
          // Validate that at least one permission is selected
-         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent) {
+         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance) {
              Swal.fire({
                  title: "Warning",
                  text: "Please select at least one permission.",
