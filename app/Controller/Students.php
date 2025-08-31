@@ -98,10 +98,12 @@ $isFiltered = !empty($_GET['search']) || !empty($_GET['program']) || !empty($_GE
 
 //searching stuff
 $facilitatorCoursePermissions = [];
+$facilitatorPermissions = [];
 
 // Get facilitator's course permissions if they are a facilitator
 if ($userData['role'] === 'Facilitator') {
     $facilitatorPermissions = $user->getUserPermissions($userData['user_id']);
+    $facilitatorCoursePermissions = [];
     foreach ($facilitatorPermissions as $permission) {
         // Check if permission contains course/program information
         // Handle both formats: "course:BSIT" and direct course names like "Bachelor of Science in Information Technology"
