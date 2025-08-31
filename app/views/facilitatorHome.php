@@ -146,10 +146,13 @@ if (!in_array($page, $allowed_pages)) {
                         <span class="font-medium">Manage Attendance</span>
                     </div>
                     <div class="ml-6 space-y-1">
-                        <a href="<?php echo ROOT ?>add_attendance" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
-                            <i class="fas fa-plus text-sm group-hover:scale-110 transition-transform"></i>
-                            <span class="text-sm">Create Event</span>
-                        </a>
+                        <!-- check if have the permission to add new attendance -->
+                        <?php if (in_array('add attendance', $facilitatorPermissions)): ?>
+                            <a href="<?php echo ROOT ?>add_attendance" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group">
+                                <i class="fas fa-plus text-sm group-hover:scale-110 transition-transform"></i>
+                                <span class="text-sm">Create Event</span>
+                            </a>
+                        <?php endif; ?>
                         <a href="?page=Attendance" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#a31d1d] hover:text-white transition-all duration-200 group <?php echo $page === 'Attendance' ? 'bg-[#a31d1d] text-white' : ''; ?>">
                             <i class="fas fa-list text-sm group-hover:scale-110 transition-transform"></i>
                             <span class="text-sm">View Events</span>

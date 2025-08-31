@@ -317,10 +317,18 @@
         </form>
 
         <div class="flex gap-4 flex-wrap mt-4">
+            <!-- check if add attendance permission -->
+            <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('add attendance', $facilitatorPermissions)): ?>
             <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
                 <i class="fas fa-plus"></i> Add Attendance
             </a>
+            <?php endif; ?>
             <!-- check if admin -->
+            <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+                    <i class="fas fa-plus"></i> Add Attendance
+                </a>
+            <?php endif; ?>
             <?php if (isset($userRole) && $userRole === 'admin'): ?>
                 <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
                     <i class="fas fa-exclamation-triangle"></i> View Sanctions

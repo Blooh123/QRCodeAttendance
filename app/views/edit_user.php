@@ -277,6 +277,13 @@
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
                      </div>
+                     <!-- add attendance permission -->
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="addAttendance" name="permissions[addAttendance]" 
+                             <?php echo in_array('add attendance', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="addAttendance" class="text-lg font-semibold text-gray-700">Add Attendance</label>
+                     </div>
                      <!-- permission to delete attendance -->
                      <div class="flex items-center gap-3">
                          <input type="checkbox" id="deleteAttendance" name="permissions[deleteAttendance]" 
@@ -539,6 +546,7 @@
          const permissions = {
              manageStudents: document.getElementById('manageStudents')?.checked || false,
              manageAttendance: document.getElementById('manageAttendance')?.checked || false,
+             addAttendance: document.getElementById('addAttendance')?.checked || false,
              deleteAttendance: document.getElementById('deleteAttendance')?.checked || false,
              editAttendance: document.getElementById('editAttendance')?.checked || false,
              manageUsers: document.getElementById('manageUsers')?.checked || false,
@@ -556,7 +564,7 @@
          }
 
          // Validate that at least one permission is selected
-         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance) {
+         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance && !permissions.addAttendance) {
              Swal.fire({
                  title: "Warning",
                  text: "Please select at least one permission.",
