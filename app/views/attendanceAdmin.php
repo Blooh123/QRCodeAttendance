@@ -320,9 +320,12 @@
             <a href="<?php echo ROOT ?>add_attendance" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
                 <i class="fas fa-plus"></i> Add Attendance
             </a>
-            <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-                <i class="fas fa-exclamation-triangle"></i> View Sanctions
-            </a>
+            <!-- check if admin -->
+            <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                <a href="<?php echo ROOT ?>sanctions_summary" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+                    <i class="fas fa-exclamation-triangle"></i> View Sanctions
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 

@@ -301,6 +301,13 @@
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="manageUsers" class="text-lg font-semibold text-gray-700">Manage Users</label>
                      </div>
+                     <!-- add user -->
+                     <div class="flex items-center gap-3">
+                         <input type="checkbox" id="addUser" name="permissions[addUser]" 
+                             <?php echo in_array('add user', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="addUser" class="text-lg font-semibold text-gray-700">Add User</label>
+                     </div>
                  </div>
              </div>
 

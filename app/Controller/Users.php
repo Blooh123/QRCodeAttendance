@@ -26,7 +26,7 @@ if (!$userData || !isset($userData['role'])) {
     header('Location: '. $uri);
     exit();
 }
-
+$facilitatorPermissions = [];
 if ($userData['role'] === 'admin') {
     // Admin has access to all users
     $facilitatorCoursePermissions = [];
@@ -46,7 +46,7 @@ if ($userData['role'] === 'admin') {
         if (strpos($permission, 'course:') === 0) {
             $course = str_replace('course:', '', $permission);
             $facilitatorCoursePermissions[] = $course;
-        } elseif (!in_array($permission, ['manage students', 'manage attendance', 'manage users'])) {
+        } elseif (!in_array($permission, ['manage students', 'manage attendance', 'manage users', 'add user'])) {
             // If it's not a management permission, assume it's a course name
             $facilitatorCoursePermissions[] = $permission;
         }
@@ -67,7 +67,8 @@ $userList = $user->getAllUsers();
 $data = [
     'userList' => $userList,
     'userRole' => $userData['role'],
-    'facilitatorCoursePermissions' => $facilitatorCoursePermissions
+    'facilitatorCoursePermissions' => $facilitatorCoursePermissions,
+    'facilitatorPermissions' => $facilitatorPermissions
 ];
 
 $userAdmin->index($data);

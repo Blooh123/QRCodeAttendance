@@ -70,10 +70,20 @@ if (empty($_SESSION['csrf_token'])) {
                 <span class="hidden sm:inline">Search</span>
             </button>
         </form>
-        <a href="<?php echo ROOT ?>add_user"
-           class="w-full md:w-auto bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base">
-            <i class="fas fa-users-gear"></i> Add User
-        </a>
+        <!-- check if facilitator -->
+        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('add user', $facilitatorPermissions)): ?>
+            <a href="<?php echo ROOT ?>add_user"
+            class="w-full md:w-auto bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base">
+                <i class="fas fa-users-gear"></i> Add User
+            </a>
+        <?php endif; ?>
+        <!-- check if admin -->
+        <?php if (isset($userRole) && $userRole === 'admin'): ?>
+            <a href="<?php echo ROOT ?>add_user"
+            class="w-full md:w-auto bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base">
+                <i class="fas fa-users-gear"></i> Add User
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Users Grid -->
