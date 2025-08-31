@@ -68,6 +68,9 @@ class SaveFacilitatorPermissions extends \Controller
         if($permissions['addStudent'] ?? false){
             $permissionsArray[] = 'add student';
         }
+        if($permissions['deleteStudent'] ?? false){
+            $permissionsArray[] = 'delete student';
+        }
 
         // Add program permissions
         if (isset($permissions['programs']) && is_array($permissions['programs'])) {

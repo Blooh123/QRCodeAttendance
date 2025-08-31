@@ -294,11 +294,13 @@ if (empty($_SESSION['csrf_token'])) {
                            class="flex-1 bg-blue-600 hover:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
                             <i class="fas fa-edit"></i> <span class="hidden sm:inline">Edit</span>
                         </a>
-                        <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
-                           onclick="return confirmDelete(event, this.href);"
-                           class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
-                            <i class="fas fa-trash"></i> <span class="hidden sm:inline">Delete</span>
-                        </a>
+                        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete student', $facilitatorPermissions)): ?>
+                            <a href="<?php echo ROOT?>delete_student?id=<?php echo htmlspecialchars($student['student_id']); ?>"
+                            onclick="return confirmDelete(event, this.href);"
+                            class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base">
+                                <i class="fas fa-trash"></i> <span class="hidden sm:inline">Delete</span>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>

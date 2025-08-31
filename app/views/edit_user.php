@@ -198,6 +198,13 @@
                              class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
                          <label for="addStudent" class="text-lg font-semibold text-gray-700">Add Student</label>
                      </div>
+                     <!-- permission to delete student -->
+                     <div class="flex items-center gap-3 mb-3">
+                         <input type="checkbox" id="deleteStudent" name="permissions[deleteStudent]" 
+                             <?php echo in_array('delete student', $userPermissions) ? 'checked' : ''; ?>
+                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                         <label for="deleteStudent" class="text-lg font-semibold text-gray-700">Delete Student</label>
+                     </div>
                      <!-- Program Selection (only visible when Manage Students is checked) -->
                      <div id="programSelection" class="ml-8 space-y-3 <?php echo in_array('manage students', $userPermissions) ? '' : 'hidden'; ?>">
                         
@@ -513,6 +520,7 @@
              manageAttendance: document.getElementById('manageAttendance')?.checked || false,
              manageUsers: document.getElementById('manageUsers')?.checked || false,
              addStudent: document.getElementById('addStudent')?.checked || false,
+             deleteStudent: document.getElementById('deleteStudent')?.checked || false,
              programs: []
          };
 
@@ -525,7 +533,7 @@
          }
 
          // Validate that at least one permission is selected
-         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent) {
+         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent) {
              Swal.fire({
                  title: "Warning",
                  text: "Please select at least one permission.",
