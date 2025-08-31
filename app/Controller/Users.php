@@ -60,29 +60,9 @@ if ($userData['role'] === 'admin') {
 
 $userList = $user->getAllUsers();
 
-// Filter users for facilitators based on their course permissions
-if ($userData['role'] === 'Facilitator' && !empty($facilitatorCoursePermissions)) {
-    // This assumes users have program/course information
-    // You may need to modify the user model to include this filtering
-    $userList = array_filter($userList, function($userRecord) use ($facilitatorCoursePermissions) {
-        // Adjust this based on your user record structure
-        return isset($userRecord['program']) && in_array($userRecord['program'], $facilitatorCoursePermissions);
-    });
-}
 
-if (!empty($_GET["search"])) {
-    $searchQuery = $_GET["search"];
-    $searchResults = $user->searchUsers($searchQuery);
-    
-    // Filter search results for facilitators
-    if ($userData['role'] === 'Facilitator' && !empty($facilitatorCoursePermissions)) {
-        $searchResults = array_filter($searchResults, function($userRecord) use ($facilitatorCoursePermissions) {
-            return isset($userRecord['program']) && in_array($userRecord['program'], $facilitatorCoursePermissions);
-        });
-    }
-    
-    $userList = $searchResults;
-}
+
+
 
 $data = [
     'userList' => $userList,
