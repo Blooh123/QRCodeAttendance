@@ -254,11 +254,13 @@ if (empty($_SESSION['csrf_token'])) {
                 <i class="fas fa-filter"></i> Apply Filter
             </button>
         </form>
-
-        <a href="<?php echo ROOT ?>add_student"
-           class="mt-4 inline-block bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
-            <i class="fas fa-user-graduate"></i> Add Student
-        </a>
+        <!-- check for permission to add student -->
+        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('add student', $facilitatorPermissions)): ?>
+            <a href="<?php echo ROOT ?>add_student"
+            class="mt-4 inline-block bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+                <i class="fas fa-user-graduate"></i> Add Student
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Students Grid -->
