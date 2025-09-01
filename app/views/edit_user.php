@@ -170,155 +170,158 @@
          </div>
 
          <!-- Manage Facilitator Permission  -->
-         <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
-             <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
-                 <i class="fas fa-shield-alt text-[#a31d1d]"></i> Manage Facilitator Permission
-             </h3>
-             
-             <!-- Permissions Section -->
-             <div class="space-y-6">
-                 <!-- Manage Students Permission -->
-                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                     <div class="flex items-center gap-3 mb-3">
-                         <input type="checkbox" id="manageStudents" name="permissions[manageStudents]" 
-                             <?php echo in_array('manage students', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="manageStudents" class="text-lg font-semibold text-gray-700">Manage Students</label>
-                     </div>
-                     <!-- permission to add student -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="addStudent" name="permissions[addStudent]" 
-                             <?php echo in_array('add student', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addStudent" class="text-m font-semibold text-gray-700">Add Student</label>
-                     </div>
-                     <!-- permission to delete student -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="deleteStudent" name="permissions[deleteStudent]" 
-                             <?php echo in_array('delete student', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="deleteStudent" class="text-m font-semibold text-gray-700">Delete Student</label>
-                     </div>
-                     <!-- Program Selection (only visible when Manage Students is checked) -->
-                     <div id="programSelection" class="ml-8 space-y-3 <?php echo in_array('manage students', $userPermissions) ? '' : 'hidden'; ?>">
-                        
-                         <p class="text-sm text-gray-600 mb-2">Select programs this user can manage:</p>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                             <!-- Education Programs -->
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_beed" name="permissions[programs][]" value="Bachelor of Elementary Education" 
-                                     <?php echo in_array('Bachelor of Elementary Education', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_beed" class="text-sm text-gray-700">Bachelor of Elementary Education</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsned" name="permissions[programs][]" value="Bachelor of Special Needs Education" 
-                                     <?php echo in_array('Bachelor of Special Needs Education', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsned" class="text-sm text-gray-700">Bachelor of Special Needs Education</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bseed" name="permissions[programs][]" value="Bachelor of Early Childhood Education" 
-                                     <?php echo in_array('Bachelor of Early Childhood Education', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bseed" class="text-sm text-gray-700">Bachelor of Early Childhood Education</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsed_math" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Mathematics" 
-                                     <?php echo in_array('Bachelor of Secondary Education - Major in Mathematics', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsed_math" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Mathematics</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsed_english" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in English" 
-                                     <?php echo in_array('Bachelor of Secondary Education - Major in English', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsed_english" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in English</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsed_filipino" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Filipino" 
-                                     <?php echo in_array('Bachelor of Secondary Education - Major in Filipino', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsed_filipino" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Filipino</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsit" name="permissions[programs][]" value="Bachelor of Science in Information Technology" 
-                                     <?php echo in_array('Bachelor of Science in Information Technology', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsit" class="text-sm text-gray-700">Bachelor of Science in Information Technology</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bstve" name="permissions[programs][]" value="Bachelor of Technical-Vocational Teacher Education" 
-                                     <?php echo in_array('Bachelor of Technical-Vocational Teacher Education', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bstve" class="text-sm text-gray-700">Bachelor of Technical-Vocational Teacher Education</label>
-                             </div>
-                             <div class="flex items-center gap-2">
-                                 <input type="checkbox" id="program_bsabe" name="permissions[programs][]" value="Bachelor of Science in Agricultural and Biosystems Engineering" 
-                                     <?php echo in_array('Bachelor of Science in Agricultural and Biosystems Engineering', $userPermissions) ? 'checked' : ''; ?>
-                                     class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                                 <label for="program_bsabe" class="text-sm text-gray-700">Bachelor of Science in Agricultural and Biosystems Engineering</label>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
+          <!-- check if admin is trying to edit a facilitator -->
+          <?php if ($userData['roles'] == 'admin'): ?>
+            <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
+                <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
+                    <i class="fas fa-shield-alt text-[#a31d1d]"></i> Manage Facilitator Permission
+                </h3>
+                
+                <!-- Permissions Section -->
+                <div class="space-y-6">
+                    <!-- Manage Students Permission -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex items-center gap-3 mb-3">
+                            <input type="checkbox" id="manageStudents" name="permissions[manageStudents]" 
+                                <?php echo in_array('manage students', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="manageStudents" class="text-lg font-semibold text-gray-700">Manage Students</label>
+                        </div>
+                        <!-- permission to add student -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="addStudent" name="permissions[addStudent]" 
+                                <?php echo in_array('add student', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="addStudent" class="text-m font-semibold text-gray-700">Add Student</label>
+                        </div>
+                        <!-- permission to delete student -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="deleteStudent" name="permissions[deleteStudent]" 
+                                <?php echo in_array('delete student', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="deleteStudent" class="text-m font-semibold text-gray-700">Delete Student</label>
+                        </div>
+                        <!-- Program Selection (only visible when Manage Students is checked) -->
+                        <div id="programSelection" class="ml-8 space-y-3 <?php echo in_array('manage students', $userPermissions) ? '' : 'hidden'; ?>">
+                            
+                            <p class="text-sm text-gray-600 mb-2">Select programs this user can manage:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <!-- Education Programs -->
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_beed" name="permissions[programs][]" value="Bachelor of Elementary Education" 
+                                        <?php echo in_array('Bachelor of Elementary Education', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_beed" class="text-sm text-gray-700">Bachelor of Elementary Education</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsned" name="permissions[programs][]" value="Bachelor of Special Needs Education" 
+                                        <?php echo in_array('Bachelor of Special Needs Education', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsned" class="text-sm text-gray-700">Bachelor of Special Needs Education</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bseed" name="permissions[programs][]" value="Bachelor of Early Childhood Education" 
+                                        <?php echo in_array('Bachelor of Early Childhood Education', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bseed" class="text-sm text-gray-700">Bachelor of Early Childhood Education</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsed_math" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Mathematics" 
+                                        <?php echo in_array('Bachelor of Secondary Education - Major in Mathematics', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsed_math" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Mathematics</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsed_english" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in English" 
+                                        <?php echo in_array('Bachelor of Secondary Education - Major in English', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsed_english" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in English</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsed_filipino" name="permissions[programs][]" value="Bachelor of Secondary Education - Major in Filipino" 
+                                        <?php echo in_array('Bachelor of Secondary Education - Major in Filipino', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsed_filipino" class="text-sm text-gray-700">Bachelor of Secondary Education - Major in Filipino</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsit" name="permissions[programs][]" value="Bachelor of Science in Information Technology" 
+                                        <?php echo in_array('Bachelor of Science in Information Technology', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsit" class="text-sm text-gray-700">Bachelor of Science in Information Technology</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bstve" name="permissions[programs][]" value="Bachelor of Technical-Vocational Teacher Education" 
+                                        <?php echo in_array('Bachelor of Technical-Vocational Teacher Education', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bstve" class="text-sm text-gray-700">Bachelor of Technical-Vocational Teacher Education</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="program_bsabe" name="permissions[programs][]" value="Bachelor of Science in Agricultural and Biosystems Engineering" 
+                                        <?php echo in_array('Bachelor of Science in Agricultural and Biosystems Engineering', $userPermissions) ? 'checked' : ''; ?>
+                                        class="w-4 h-4 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                                    <label for="program_bsabe" class="text-sm text-gray-700">Bachelor of Science in Agricultural and Biosystems Engineering</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                 <!-- Manage Attendance Permission -->
-                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                     <div class="flex items-center mb-3 gap-3">
-                         <input type="checkbox" id="manageAttendance" name="permissions[manageAttendance]" 
-                             <?php echo in_array('manage attendance', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
-                     </div>
-                     <!-- add attendance permission -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="addAttendance" name="permissions[addAttendance]" 
-                             <?php echo in_array('add attendance', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addAttendance" class="text-m font-semibold text-gray-700">Add Attendance</label>
-                     </div>
-                     <!-- permission to delete attendance -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="deleteAttendance" name="permissions[deleteAttendance]" 
-                             <?php echo in_array('delete attendance', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="deleteAttendance" class="text-m font-semibold text-gray-700">Delete Attendance</label>
-                     </div>
-                     <!-- permission to edit attendance -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="editAttendance" name="permissions[editAttendance]" 
-                             <?php echo in_array('edit attendance', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="editAttendance" class="text-m font-semibold text-gray-700">Edit Attendance</label>
-                     </div>
-                 </div>
+                    <!-- Manage Attendance Permission -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex items-center mb-3 gap-3">
+                            <input type="checkbox" id="manageAttendance" name="permissions[manageAttendance]" 
+                                <?php echo in_array('manage attendance', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="manageAttendance" class="text-lg font-semibold text-gray-700">Manage Attendance</label>
+                        </div>
+                        <!-- add attendance permission -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="addAttendance" name="permissions[addAttendance]" 
+                                <?php echo in_array('add attendance', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="addAttendance" class="text-m font-semibold text-gray-700">Add Attendance</label>
+                        </div>
+                        <!-- permission to delete attendance -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="deleteAttendance" name="permissions[deleteAttendance]" 
+                                <?php echo in_array('delete attendance', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="deleteAttendance" class="text-m font-semibold text-gray-700">Delete Attendance</label>
+                        </div>
+                        <!-- permission to edit attendance -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="editAttendance" name="permissions[editAttendance]" 
+                                <?php echo in_array('edit attendance', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="editAttendance" class="text-m font-semibold text-gray-700">Edit Attendance</label>
+                        </div>
+                    </div>
 
-                 <!-- Manage Users Permission -->
-                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                     <div class="flex items-center mb-3 gap-3">
-                         <input type="checkbox" id="manageUsers" name="permissions[manageUsers]" 
-                             <?php echo in_array('manage users', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="manageUsers" class="text-lg font-semibold text-gray-700">Manage Users</label>
-                     </div>
-                     <!-- add user -->
-                     <div class="flex items-center gap-3 mb-3 ml-3">
-                         <input type="checkbox" id="addUser" name="permissions[addUser]" 
-                             <?php echo in_array('add user', $userPermissions) ? 'checked' : ''; ?>
-                             class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
-                         <label for="addUser" class="text-m font-semibold text-gray-700">Add User</label>
-                     </div>
-                 </div>
-             </div>
+                    <!-- Manage Users Permission -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex items-center mb-3 gap-3">
+                            <input type="checkbox" id="manageUsers" name="permissions[manageUsers]" 
+                                <?php echo in_array('manage users', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="manageUsers" class="text-lg font-semibold text-gray-700">Manage Users</label>
+                        </div>
+                        <!-- add user -->
+                        <div class="flex items-center gap-3 mb-3 ml-3">
+                            <input type="checkbox" id="addUser" name="permissions[addUser]" 
+                                <?php echo in_array('add user', $userPermissions) ? 'checked' : ''; ?>
+                                class="w-5 h-5 text-[#a31d1d] bg-gray-100 border-gray-300 rounded focus:ring-[#a31d1d] focus:ring-2">
+                            <label for="addUser" class="text-m font-semibold text-gray-700">Add User</label>
+                        </div>
+                    </div>
+                </div>
 
-             <!-- Save Permissions Button -->
-             <div class="mt-6 pt-4 border-t border-gray-200">
-                 <button type="button" onclick="savePermissions()" class="w-full bg-[#a31d1d] hover:bg-[#8a1a1a] text-white font-semibold px-6 py-3 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
-                     <i class="fas fa-save"></i> Save Permissions
-                 </button>
-             </div>
-         </div>
+                <!-- Save Permissions Button -->
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                    <button type="button" onclick="savePermissions()" class="w-full bg-[#a31d1d] hover:bg-[#8a1a1a] text-white font-semibold px-6 py-3 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
+                        <i class="fas fa-save"></i> Save Permissions
+                    </button>
+                </div>
+            </div>
+         <?php endif; ?>
      </div>
     <?php endif; ?>
 
