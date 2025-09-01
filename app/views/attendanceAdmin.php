@@ -342,6 +342,13 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Custom breakpoint for extra small screens */
+        @media (min-width: 475px) {
+            .xs\:inline {
+                display: inline !important;
+            }
+        }
     </style>
 </head>
 <body class="p-2 md:p-4 lg:p-6 bg-[#f8f9fa]">
@@ -488,39 +495,39 @@
                                             <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
                                         </span>
                                     </p>
-                                    <div class="flex justify-between mt-4">
+                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
                                         <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                            <i class="fas fa-eye"></i> View
+                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-eye"></i> <span class="hidden xs:inline">View</span>
                                         </a>
                                         <!-- check facilitator and has permission -->
                                         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('edit attendance', $facilitatorPermissions)): ?>
                                         <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                            <i class="fas fa-pencil-alt"></i> Edit
+                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
                                         </a>
                                         <?php endif; ?>
                                         <!-- check facilitator and has permission -->
                                         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete attendance', $facilitatorPermissions)): ?>
                                         <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
                                            onclick="return confirmDelete(event, this.href);"
-                                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                            <i class="fas fa-trash"></i> Delete
+                                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
                                         </a>
                                         <?php endif; ?>
                                         <!-- check if admin -->
                                         <?php if (isset($userRole) && $userRole === 'admin'): ?>
                                             <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
                                             </a>
                                         <?php endif; ?>
                                         <!-- display delete -->
                                         <?php if (isset($userRole) && $userRole === 'admin'): ?>
                                             <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
                                             onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-trash"></i> Delete
+                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -599,37 +606,37 @@
                                             <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
                                         </span>
                                     </p>
-                                    <div class="flex justify-between mt-4">
+                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
                                         <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                            <i class="fas fa-eye"></i> View
+                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-eye"></i> <span class="hidden xs:inline">View</span>
                                         </a>
                                         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('edit attendance', $facilitatorPermissions)): ?>
                                             <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
                                             </a>
                                         <?php endif; ?>
                                         <!-- check if admin -->
                                         <?php if (isset($userRole) && $userRole === 'admin'): ?>
                                             <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-pencil-alt"></i> Edit
+                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
                                             </a>
                                         <?php endif; ?>
                                         <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete attendance', $facilitatorPermissions)): ?>
                                             <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
                                             onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-trash"></i> Delete
+                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
                                             </a>
                                         <?php endif; ?>
                                         <!-- check if admin -->
                                         <?php if (isset($userRole) && $userRole === 'admin'): ?>
                                             <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
                                             onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-1">
-                                                <i class="fas fa-trash"></i> Delete
+                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
                                             </a>
                                         <?php endif; ?>
                                     </div>
