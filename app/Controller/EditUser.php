@@ -15,20 +15,21 @@ class EditUser extends Controller
 }
 
 $user = new User();
-$userData = $user->checkSession('edit_user');
+$userData1 = $user->checkSession('edit_user');
+
 
 // Allow admin or facilitator with manage users permission
-if (!$userData || !isset($userData['role'])) {
+if (!$userData1 || !isset($userData1['role'])) {
     $uri = str_replace('/edit_user', '/login', $_SERVER['REQUEST_URI']);
     header('Location: '. $uri);
     exit();
 }
 
-if ($userData['role'] === 'admin') {
+if ($userData1['role'] === 'admin') {
     // Admin has access
-} elseif ($userData['role'] === 'Facilitator') {
+} elseif ($userData1['role'] === 'Facilitator') {
     // Check if facilitator has manage users permission
-    $facilitatorPermissions = $user->getUserPermissions($userData['user_id']);
+    $facilitatorPermissions = $user->getUserPermissions($userData1['user_id']);
     if (!in_array('manage users', $facilitatorPermissions)) {
         $uri = str_replace('/edit_user', '/login', $_SERVER['REQUEST_URI']);
         header('Location: '. $uri);
@@ -125,7 +126,8 @@ $data = [
     'userData' => $userData,
     'userSession' => $userSession,
     'facialImages' => $facialImages,
-    'userPermissions' => $userPermissions
+    'userPermissions' => $userPermissions,
+    'userData1' => $userData1
 ];
 
 $editUser = new EditUser();

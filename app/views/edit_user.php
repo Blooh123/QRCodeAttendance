@@ -170,8 +170,8 @@
          </div>
 
          <!-- Manage Facilitator Permission  -->
-          <!-- check if admin is trying to edit a facilitator -->
-          <?php if ($userData['role'] == 'admin'): ?>
+
+          <?php if ($userData1['role'] == 'admin'): ?>
             <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col">
                 <h3 class="text-2xl font-bold text-[#a31d1d] mb-4 flex items-center gap-2">
                     <i class="fas fa-shield-alt text-[#a31d1d]"></i> Manage Facilitator Permission
