@@ -112,7 +112,7 @@ class LoginPage extends Controller
                             isset($_SERVER['HTTPS']), // secure flag
                             true     // HttpOnly
                         );
-                        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Logged in as admin', 'login');
+                        $activityLog->createActivityLog($userId, $role, 'Logged in as admin', 'login');
                         $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
                         // $userId = $validate['id'];
