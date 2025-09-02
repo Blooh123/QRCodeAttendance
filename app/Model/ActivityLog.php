@@ -60,7 +60,7 @@ class ActivityLog
                   WHERE al.evnt LIKE '%add%' 
                      OR al.evnt LIKE '%delete%' 
                      OR al.evnt LIKE '%update%' 
-                     OR al.evnt LIKE '%Logged%'
+                     OR al.evnt LIKE '%login%'
                   ORDER BY al.time_created DESC";
         
         $stmt = $this->connect()->prepare($query);
