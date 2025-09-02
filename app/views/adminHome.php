@@ -3,7 +3,7 @@ global $imageSource, $OSASLogo, $username;
 require_once "../app/core/imageConfig.php";
 
 $page = $_GET['page'] ?? 'Dashboard';
-$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'StudentApplication'];
+$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'StudentApplication', 'ActivityLogs'];
 if (!in_array($page, $allowed_pages)) {
     $page = 'Dashboard';
 }
@@ -143,7 +143,8 @@ if (!in_array($page, $allowed_pages)) {
                     'Attendance' => ['Attendance', 'fas fa-clipboard-check'],
                     'Users' => ['Accounts', 'fas fa-users-cog'],
                     'StudentApplication' => ['Excuse Applications', 'fas fa-file-medical'],
-                    'ProfileAdmin' => ['Profile', 'fas fa-user-circle']
+                    'ProfileAdmin' => ['Profile', 'fas fa-user-circle'],
+                    'ActivityLogs' => ['Activity Log', 'fas fa-history']
                 ];
                 foreach ($navPages as $key => $navItem): ?>
                     <a href="?page=<?php echo $key; ?>"

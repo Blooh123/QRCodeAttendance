@@ -16,13 +16,15 @@ class DeleteAttendance
         $attendance = new Attendances();
         $user = new User();
         $userData = $user->checkSession('delete_attendance');
+        $attendanceDetails = $attendance->getAttendanceByID($_GET['id']);
+        $attendanceName = $attendanceDetails['event_name'];
         $activityLog = new ActivityLog();
         echo $_GET['id'];
         if (!empty($_GET['id'])) {
             $attendanceID = htmlspecialchars($_GET['id']); // Sanitize input
             $attendance->deleteAttendance($attendanceID);
             $uri = str_replace('/delete_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
-            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted attendance: ' . $attendanceID, 'delete_attendance');
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted attendance: ' . $attendanceName, 'delete_attendance');
             $uri = str_replace('/delete_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
             header('Location: ' . $uri);
         }
