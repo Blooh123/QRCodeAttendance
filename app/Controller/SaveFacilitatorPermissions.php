@@ -38,6 +38,7 @@ class SaveFacilitatorPermissions extends \Controller
 
         // Validate user exists and is a facilitator
         $user = new User();
+        $userSession = $user->checkSession('save_facilitator_permissions');
         $userData = $user->getUserDataWithPersonalInfo($userId);
         
         if (!$userData) {
@@ -114,13 +115,13 @@ class SaveFacilitatorPermissions extends \Controller
             echo json_encode(['success' => true, 'message' => 'Permissions saved successfully', 'debug' => $permissionsArray]);
             $activityLog = new ActivityLog();
             // logged also the permission that was updated
-            $activityLog->createActivityLog($userId, 'Facilitator', 'Updated permissions for user ' . $userData['username'] . ' to ' . $permissionsJson, 'update permissions');
+            $activityLog->createActivityLog($userSession['user_id'], $userSession['role'], 'Updated permissions for user ' . $userData['username'] . ' to ' . $permissionsJson, 'update permissions');
         } else {
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => 'Failed to save permissions']);
             $activityLog = new ActivityLog();
             // logged also the permission that was updated
-            $activityLog->createActivityLog($userId, 'Facilitator', 'Failed to update permissions for user ' . $userData['username'] . ' to ' . $permissionsJson, 'update permissions');
+            $activityLog->createActivityLog($userSession['user_id'], $userSession['role'], 'Failed to update permissions for user ' . $userData['username'] . ' to ' . $permissionsJson, 'update permissions');
         }
     }
 }
