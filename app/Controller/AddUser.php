@@ -2,14 +2,17 @@
 
 namespace Controller;
 require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 
 use Model\User;
-
+use Model\ActivityLog;
 class AddUser extends \Controller
 {
     public function index(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $user1 = new User();
+            $userData = $user1->checkSession('add_user');
             // Validate input
             $username = $_POST['username'];
             $id = $_POST['id'];
@@ -25,13 +28,14 @@ class AddUser extends \Controller
             }
 
             $user = new User();
-
+            $activityLog = new ActivityLog();
             if ($user->checkIfUserNameExists($id,$username)) {
                 echo "<script>alert('Username or ID already exists.');</script>";
             }else{
                 // Insert the new user
                 if ($user->insertUser($id, $username, $confirmPassword,$role)) {
                     $user->insertPersonalInformation($id, $_POST['fullname'], $_POST['email']);
+                    $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Added user: ' . $id, 'add_user');
                     echo "<script>alert('User added successfully!');</script>";
                 } else {
                     echo "<script>alert('Failed to add user.');</script>";

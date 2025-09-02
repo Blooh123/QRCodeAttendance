@@ -4,6 +4,7 @@ namespace Controller;
 require_once "../app/Model/Student.php";
 require_once '../app/Model/User.php';
 require_once '../app/Model/Sanction.php';
+require_once '../app/Model/ActivityLog.php';
 require_once '../app/core/config.php';
 
 
@@ -12,7 +13,7 @@ use DateTimeZone;
 use Model\Sanction;
 use Model\Student;
 use Model\User;
-
+use Model\ActivityLog;
 class EditStudent extends \Controller
 {
     public function index($data): void
@@ -52,6 +53,8 @@ $student = new Student();
 $sanction = new Sanction();
 $studentData = $student->getStudentData($_GET['id']);
 $sanctionList = $sanction->getStudentSanctions($_GET['id']);
+$activityLog = new ActivityLog();
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,7 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
             $formattedTime = $date->format('Y-m-d H:i:s');
             $sanction->insertSanction($_POST['id'], $_POST['reason'], $_POST['sanctionH'], $formattedTime);
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Applied sanction: ' . $_POST['reason'], 'apply_sanction');
             header("Location: " . "edit_student?id=".$_GET['id'] . "&removed=2");
+            
         }
     }
 
@@ -70,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_POST['id'])) {
             $student->updateStudent($_POST['id'], $_POST['name'], $_POST['program'], $_POST['acad_year'], $_POST['email']);
             $user->updateUser($_POST['id'], $_POST['email']);
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Updated student: ' . $_POST['name'], 'update_student');
             // header("Location: " . "edit_student?id=".$_GET['id'] . "&removed=2");
         }
     }

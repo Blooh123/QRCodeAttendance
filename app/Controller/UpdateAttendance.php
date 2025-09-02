@@ -8,6 +8,8 @@ require_once '../app/Model/Student.php';
 require_once '../app/Model/Sanction.php';
 require_once '../app/Model/QRCode.php';
 require_once '../app/Model/ExcuseApplication.php';
+require_once '../app/Model/ActivityLog.php';
+require_once '../app/Model/User.php';
 use Database;
 use DateTime;
 use DateTimeZone;
@@ -17,8 +19,9 @@ use Model\QRCode;
 use Model\Sanction;
 use Model\Student;
 use Model\ExcuseApplication;
+use Model\ActivityLog;
 use PDOException;
-
+use Model\User;
 class UpdateAttendance
 {
     use Database;
@@ -49,7 +52,10 @@ class UpdateAttendance
     
     public function updateAttendance(): void
     {
+        $activityLog = new ActivityLog();
         $this->excuseApp = new ExcuseApplication();
+        $user = new User();
+        $userData = $user->checkSession('update_attendance');
         // Check if the request is a POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get the event ID and action from the request
@@ -77,9 +83,11 @@ class UpdateAttendance
                             $stmt->bindParam(':date', $formattedTime);
                             $stmt->execute();
                             $message = 'Attendance started successfully.';
+                            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Started attendance for event: ' . $eventName, 'update_attendance');
                         }else{
                             $message = 'Oops! only one attendance at a time...';
                         }
+
                         break;
                     case 'continue':
                         if (!$attendance->checkAttendanceOnGoing()){
@@ -87,6 +95,7 @@ class UpdateAttendance
                             $stmt->bindParam(':eventId', $eventId);
                             $stmt->execute();
                             $message = 'Attendance continued successfully.';
+                            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Continued attendance for event: ' . $eventName, 'update_attendance');
                         }else{
                             $message = 'Oops! only one attendance at a time...';
                         }
@@ -117,6 +126,7 @@ class UpdateAttendance
                             ':radius' => $radius
                         ]);
                         $message = 'Attendance updated successfully.';
+                        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Updated attendance for event: ' . $eventName, 'update_attendance');
                         break;
 
                     case 'stopped':
@@ -124,6 +134,7 @@ class UpdateAttendance
                         $stmt->bindParam(':eventId', $eventId);
                         $stmt->execute();
                         $message = 'Attendance stopped successfully.';
+                        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Stopped attendance for event: ' . $eventName, 'update_attendance');
                         break;
 
                     case 'finished':
@@ -238,6 +249,7 @@ class UpdateAttendance
                         }
 
                         $message = 'Attendance finished successfully.';
+                        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Finished attendance for event: ' . $eventName, 'update_attendance');
                         break;
 
                     default:

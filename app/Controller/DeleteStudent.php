@@ -6,13 +6,14 @@ use Model\QRCode;
 use Model\Sanction;
 use Model\Student;
 use Model\User;
-
+use Model\ActivityLog;
 require '../app/core/config.php';
 require '../app/core/Model.php';
 require '../app/Model/QRCode.php';
 require '../app/Model/User.php';
 require '../app/Model/Student.php';
 require '../app/Model/Sanction.php';
+require '../app/Model/ActivityLog.php';
 class DeleteStudent
 {
     use \Model;
@@ -22,6 +23,8 @@ class DeleteStudent
         $student = new Student();
         $user = new User();
         $sanction = new Sanction();
+        $activityLog = new ActivityLog();
+        $userData = $user->checkSession('delete_student');
         if (!empty($_GET['id'])) {
             $studentId = htmlspecialchars($_GET['id']); // Sanitize input
             $qrcode->deleteQRcode($studentId);//delete qrcode
@@ -29,7 +32,7 @@ class DeleteStudent
             $sanction->deleteSanction2($studentId);
             $student->deleteStudent($studentId);
             $user->deleteUsers($studentId);
-
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted student: ' . $studentId, 'delete_student');   
         }
 
         // Redirect back to the home page or list view

@@ -4,6 +4,7 @@ namespace Controller;
 require_once '../app/core/config.php';
 require_once '../app/core/Model.php';
 require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 
 session_set_cookie_params([
     'lifetime' => 31536000, // 1 year in seconds
@@ -18,7 +19,7 @@ session_start();
 use Controller;
 use Model;
 use Random\RandomException;
-
+use Model\ActivityLog;
 class LoginPage extends Controller
 {
     use Model;
@@ -30,6 +31,7 @@ class LoginPage extends Controller
     public function index(): void
     {
         $user = new Model\User();
+        $activityLog = new ActivityLog();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check if there is an existing login session
             if (isset($_COOKIE['user_data'])) {
@@ -110,7 +112,7 @@ class LoginPage extends Controller
                             isset($_SERVER['HTTPS']), // secure flag
                             true     // HttpOnly
                         );
-                                            
+                        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Logged in as admin', 'login');
                         $uri = str_replace('/login', '/adminHome', $_SERVER['REQUEST_URI']);
                     } elseif ($role == 'Facilitator') {
                         // $userId = $validate['id'];

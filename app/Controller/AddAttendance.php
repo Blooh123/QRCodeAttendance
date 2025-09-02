@@ -4,10 +4,12 @@ namespace Controller;
 require_once "../app/Model/Student.php";
 require_once "../app/Model/User.php";
 require_once "../app/Model/Attendances.php";
+require_once "../app/Model/ActivityLog.php";
 use Controller;
 use Model\Attendances;
 use Model\Student;
 use Model\User;
+use Model\ActivityLog;
 
 session_start();
 class AddAttendance extends Controller
@@ -20,6 +22,7 @@ class AddAttendance extends Controller
 $attendance = new Attendances();
 $user = new User();
 $user_de = $user->checkSession('add_attendance');
+$activityLog = new ActivityLog();
 
 // Allow admin or facilitator with manage attendance permission
 if ($user_de['role'] === 'admin') {
@@ -128,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $acad_year = $years[$i] ?? '';
             $attendance->insertRequiredAttendee($last_id, $program, $acad_year);
         }
+        $activityLog->createActivityLog($user_de['user_id'], $user_de['role'], 'Added attendance for event: ' . $_POST['eventName'], 'add_attendance');
         $_SESSION['success_message'] = 'Attendance successfully added!';
     }else{
         echo "<script>alert('Invalid event name. Event already exists!');</script>";

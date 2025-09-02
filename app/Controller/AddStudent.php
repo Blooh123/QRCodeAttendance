@@ -5,10 +5,12 @@ require_once '../vendor/autoload.php'; // Load PhpSpreadsheet
 require_once '../app/Model/QRCode.php';
 require_once '../app/Model/Student.php';
 require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 session_start();
 use Model\QRCode;
 use Model\Student;
 use Model\User;
+use Model\ActivityLog;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Random\RandomException;
 
@@ -23,6 +25,7 @@ class AddStudent extends \Controller
         $user = new User();
         $user_de = $user->checkSession('add_student');
         $student = new Student();
+        $activityLog = new ActivityLog();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if (isset($_FILES['excelFile'])) {
@@ -47,6 +50,7 @@ class AddStudent extends \Controller
                             $qrcode->insertQRCode($qrCode, $_POST['student_id']);
                             $user = new User();
                             $user->insertUser($_POST['student_id'], $_POST['email'],$_POST['student_id'] ,'student');
+                            $activityLog->createActivityLog($user_de['user_id'], $user_de['role'], 'Added student: ' . $_POST['student_id'], 'add_student');
                             echo "<script>alert('Added Successfully!.');</script>";
                         }
                     }

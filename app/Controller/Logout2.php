@@ -2,8 +2,12 @@
 
 namespace Controller;
 
-require '../app/core/config.php';
-require '../app/core/Database.php';
+require_once '../app/core/config.php';
+require_once '../app/core/Database.php';
+require_once '../app/Model/ActivityLog.php';
+require_once '../app/Model/User.php';
+use Model\ActivityLog;
+use Model\User;
 class Logout2
 {
     use \Database;
@@ -20,7 +24,10 @@ class Logout2
             $userId = $_GET['sessionID'];
             // Update user status to 'offline'
             $this->updateStatus($_GET['user_id'], 'offline');
-
+            $activityLog = new ActivityLog();
+            $user = new User();
+            $userData = $user->checkSession('delete_user_session');
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Logged out from session: ' . $userId, 'delete_user_session');  
             // Delete this session from the database
             $stmt = $this->connect()->prepare("DELETE FROM user_sessions WHERE id = ?");
             $stmt->execute([$userId]);

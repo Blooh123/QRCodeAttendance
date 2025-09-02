@@ -3,9 +3,10 @@
 namespace Controller;
 require_once '../app/core/config.php';
 require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 use Controller;
 use Model\User;
-
+use Model\ActivityLog;  
 class EditUser extends Controller
 {
     public function index($data): void
@@ -75,6 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: edit_user?user_id=$userId&success=1");
                 exit();
             }
+            $activityLog = new ActivityLog();
+            $activityLog->createActivityLog($userData1['user_id'], $userData1['role'], 'Updated user: ' . $newUsername, 'update_user');
             break;
 
         case 'changePassword':
@@ -92,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($user->updatePassword($userId, $newPassword)) {
+                $activityLog = new ActivityLog();
+                $activityLog->createActivityLog($userData1['user_id'], $userData1['role'], 'Changed password for user: ' . $userId, 'change_password');
                 header("Location: edit_user?user_id=$userId&success=1");
                 exit();
             }
@@ -99,6 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'deleteUser':
             if ($user->deleteUsers($userId)) {
+                $activityLog = new ActivityLog();
+                $activityLog->createActivityLog($userData1['user_id'], $userData1['role'], 'Deleted user: ' . $userId, 'delete_user');
                 header("Location: adminHome?page=Users&userDeleted=1");
                 exit();
             }

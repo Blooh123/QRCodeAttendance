@@ -1,7 +1,9 @@
 <?php
 namespace Controller;
 require_once '../app/Model/User.php';
+require_once '../app/Model/ActivityLog.php';
 use Model\User;
+use Model\ActivityLog;
 session_start();
 
 // Check if user is logged in and has admin privileges
@@ -40,7 +42,8 @@ if (!$imageId || !$userId) {
 try {
     // Create User model instance directly
     $userModel = new User();
-    
+    $userData = $userModel->checkSession('delete_facial_image');
+    $activityLog = new ActivityLog();
     // Check if the image belongs to the user
     $image = $userModel->getFacialImageById($imageId);
     
@@ -62,6 +65,7 @@ try {
     
     if ($result) {
         echo json_encode(['success' => true, 'message' => 'Image deleted successfully']);
+        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted facial image: ' . $imageId, 'delete_facial_image');
     } else {
         http_response_code(500);
         echo json_encode(['success' => false, 'error' => 'Failed to delete image']);

@@ -1,14 +1,14 @@
 <?php
 
 namespace Controller;
-
+require_once '../app/Model/ActivityLog.php';
 
 
 use DateMalformedStringException;
 use DateTime;
 use DateTimeZone;
 use PDO;
-
+use Model\ActivityLog;
 class DeleteSessions
 {
     public function connect(): PDO
@@ -24,6 +24,7 @@ class DeleteSessions
      */
     public function deleteSession(): bool|array
     {
+
         // Get current Philippine time
         $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
         $philippineNow = $now->format('Y-m-d H:i:s');
@@ -33,8 +34,15 @@ class DeleteSessions
         $stmt = $this->connect()->prepare($query);
         $stmt->bindParam(':now', $philippineNow);
         $stmt->execute();
-
+        $this->createActivityLog();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function createActivityLog(): void
+    {
+        $user = new User();
+        $userData = $user->checkSession('delete_sessions');
+        $activityLog = new ActivityLog();
+        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted sessions', 'delete_sessions');
     }
 
 

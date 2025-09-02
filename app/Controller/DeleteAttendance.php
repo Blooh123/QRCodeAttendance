@@ -1,24 +1,30 @@
 <?php
 
 namespace Controller;
-require "../app/Model/Attendances.php";
-require "../app/Model/User.php";
+require_once "../app/Model/Attendances.php";
+require_once "../app/Model/User.php";
+require_once "../app/Model/ActivityLog.php";
+
 use Model\Attendances;
 use Model\User;
-
+use Model\ActivityLog;
 class DeleteAttendance
 {
 
     public function deleteAttendance(): void
     {
         $attendance = new Attendances();
+        $user = new User();
+        $userData = $user->checkSession('delete_attendance');
+        $activityLog = new ActivityLog();
         echo $_GET['id'];
         if (!empty($_GET['id'])) {
             $attendanceID = htmlspecialchars($_GET['id']); // Sanitize input
             $attendance->deleteAttendance($attendanceID);
             $uri = str_replace('/delete_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Deleted attendance: ' . $attendanceID, 'delete_attendance');
+            $uri = str_replace('/delete_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
             header('Location: ' . $uri);
-
         }
     }
 }
