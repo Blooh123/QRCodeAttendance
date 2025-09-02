@@ -258,8 +258,11 @@
                                         } elseif (strpos($evnt, 'update') !== false) {
                                             $eventClass = 'event-update';
                                             $eventIcon = 'fas fa-edit';
-                                        } elseif (strpos($evnt, 'logged') !== false) {
+                                        } elseif (strpos($evnt, 'logout') !== false) {
                                             $eventClass = 'event-login';
+                                            $eventIcon = 'fas fa-sign-out-alt';
+                                        } elseif (strpos($evnt, 'logged') !== false) {
+                                            $eventClass = 'event-logout';
                                             $eventIcon = 'fas fa-sign-in-alt';
                                         } else {
                                             $eventClass = 'event-update';

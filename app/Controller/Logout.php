@@ -5,8 +5,12 @@ use JetBrains\PhpStorm\NoReturn;
 
 session_start();
 
-require '../app/core/config.php';
-require '../app/core/Database.php';
+require_once '../app/core/config.php';
+require_once '../app/core/Database.php';
+require_once '../app/Model/ActivityLog.php';
+require_once '../app/Model/User.php';
+use Model\ActivityLog;
+use Model\User;
 
 class Logout
 {
@@ -39,6 +43,7 @@ class Logout
 
                  $token = $session['auth_token'];
                  $userId = $session['user_id'];
+                 $role = $session['role'];
 
                  // Check if this session exists in the database
                  $stmt = $this->connect()->prepare("SELECT user_id FROM user_sessions WHERE token = ?");
@@ -48,7 +53,8 @@ class Logout
                  if ($user) {
                      // Update user status to 'offline'
                      $this->updateStatus($userId, 'offline');
-
+                     $activityLog = new ActivityLog();
+                     $activityLog->createActivityLog($userId, $role, 'Logged out from session: ' . $userId, 'logout');
                      // Delete this session from the database
                      $stmt = $this->connect()->prepare("DELETE FROM user_sessions WHERE token = ?");
                      $stmt->execute([$token]);
