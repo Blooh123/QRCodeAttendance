@@ -122,7 +122,7 @@ if (!in_array($page, $allowed_pages)) {
 
 <!-- Responsive Header -->
 <header class="w-full shadow-lg sticky top-0 z-50 glass-header">
-    <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+    <div class="max-w-8xl mx-auto px-6 h-24 flex items-center justify-between">
         <!-- Left Section: Logo & Brand -->
         <div class="flex items-center gap-6">
             <div class="flex items-center gap-3">
