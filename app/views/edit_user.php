@@ -109,7 +109,7 @@
                     </button>
                 <?php endif; ?>
                 <?php if ($userData1['role'] == 'admin' || ($userData1['role'] == 'Facilitator' && in_array('face registration', $userPermissions))): ?>
-                    <a href="<?php echo ROOT ?>face-register?id=<?php echo htmlspecialchars($userData['username']); ?>" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
+                    <a href="<?php echo ROOT ?>face-register?id=<?php echo htmlspecialchars($userData['id']); ?>" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black flex items-center gap-2 justify-center transition-all duration-200">
                         <i class="fas fa-user-circle"></i> Face Registration
                     </a>
                 <?php endif; ?>
