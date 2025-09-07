@@ -598,15 +598,15 @@
          }
 
          // Validate that at least one permission is selected
-         if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance && !permissions.addAttendance && !permissions.addUser && !permissions.editUser && !permissions.deleteUser && !permissions.faceRegistration) {
-             Swal.fire({
-                 title: "Warning",
-                 text: "Please select at least one permission.",
-                 icon: "warning",
-                 confirmButtonColor: "#a31d1d"
-             });
-             return;
-         }
+        //  if (!permissions.manageStudents && !permissions.manageAttendance && !permissions.manageUsers && !permissions.addStudent && !permissions.deleteStudent && !permissions.deleteAttendance && !permissions.editAttendance && !permissions.addAttendance && !permissions.addUser && !permissions.editUser && !permissions.deleteUser && !permissions.faceRegistration) {
+        //      Swal.fire({
+        //          title: "Warning",
+        //          text: "Please select at least one permission.",
+        //          icon: "warning",
+        //          confirmButtonColor: "#a31d1d"
+        //      });
+        //      return;
+        //  }
 
          // Validate that programs are selected if Manage Students is checked
          if (permissions.manageStudents && permissions.programs.length === 0) {
