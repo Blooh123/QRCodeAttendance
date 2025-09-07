@@ -79,6 +79,7 @@ $routes = [
     '/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
     '/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
     '/public/save_facilitator_permissions' => '../app/Controller/SaveFacilitatorPermissions.php',
+    '/public/database-backup' => '../app/Controller/DatabaseBackup.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -179,6 +180,7 @@ $routes = [
         '/QRCodeAttendance/QRCodeAttendance/public/validate_facilitator_account' => '../app/Controller/FacilitatorRegister.php',
         '/QRCodeAttendance/QRCodeAttendance/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
         '/QRCodeAttendance/QRCodeAttendance/public/save_facilitator_permissions' => '../app/Controller/SaveFacilitatorPermissions.php',
+        '/QRCodeAttendance/QRCodeAttendance/public/database-backup' => '../app/Controller/DatabaseBackup.php',
 
     
 

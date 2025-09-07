@@ -263,6 +263,51 @@ if (!in_array($page, $allowed_pages)) {
             sidebar.style.transform = 'translateX(-100%)';
         }
     });
+
+    // Database backup function
+function downloadBackup() {
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Download Database Backup?',
+        text: 'This will download a complete SQL backup of the database. The file may be large.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#800000',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Download Backup',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const button = event.target.closest('button');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin text-4xl mb-2"></i><h2 class="text-xl font-bold mb-2">Creating Backup...</h2><p class="text-sm text-center">Please wait</p>';
+            button.disabled = true;
+            
+            // Create a temporary link to download the backup
+            const link = document.createElement('a');
+            link.href = '<?php echo ROOT; ?>database-backup?action=download';
+            link.download = 'qrcode_attendance_backup_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.sql';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message
+            Swal.fire({
+                title: 'Backup Downloaded!',
+                text: 'Your database backup has been downloaded successfully.',
+                icon: 'success',
+                confirmButtonColor: '#800000'
+            });
+            
+            // Reset button after a delay
+            setTimeout(() => {
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            }, 2000);
+        }
+    });
+}
 </script>
 </body>
 </html>

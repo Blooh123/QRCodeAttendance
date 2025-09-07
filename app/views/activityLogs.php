@@ -264,6 +264,9 @@
                                         } elseif (strpos($evnt, 'logged') !== false) {
                                             $eventClass = 'event-logout';
                                             $eventIcon = 'fas fa-sign-in-alt';
+                                        } elseif (strpos($evnt, 'backup') !== false) {
+                                            $eventClass = 'event-backup';
+                                            $eventIcon = 'fas fa-database';
                                         } else {
                                             $eventClass = 'event-update';
                                             $eventIcon = 'fas fa-info-circle';

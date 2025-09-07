@@ -52,7 +52,7 @@ global $numberOfStudents, $numberOfAttendance, $numberOfFaci, $listOfAttendance,
 </header>
 
 <!-- Overview Cards -->
-<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <a href="?page=Students" class="glass-card rounded-2xl p-6 flex flex-col items-center hover-card shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
         <h2 class="text-2xl font-bold text-[#a31d1d] mb-2">Total Students</h2>
         <p class="text-5xl font-extrabold text-[#a31d1d]"><?php echo $data['numberOfStudents']?></p>
@@ -65,6 +65,11 @@ global $numberOfStudents, $numberOfAttendance, $numberOfFaci, $listOfAttendance,
         <h2 class="text-2xl font-bold text-[#f77f00] mb-2">Total Facilitators</h2>
         <p class="text-5xl font-extrabold text-[#f77f00]"><?php echo $data['numberOfFaci']?></p>
     </a>
+    <button onclick="downloadBackup()" class="glass-card rounded-2xl p-6 flex flex-col items-center hover-card shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-gradient-to-br from-[#800000] to-[#660000] text-white hover:from-[#660000] hover:to-[#4d0000] transition-all duration-200">
+        <i class="fas fa-database text-4xl mb-2 text-green-600"></i>
+        <h2 class="text-xl font-bold mb-2 text-green-600">Database Backup</h2>
+        <p class="text-sm text-center text-green-600">Download SQL backup</p>
+    </button>
 </div>
 
 <!-- Details Section -->
@@ -265,6 +270,70 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     renderAttPage(attCurrentPage);
 });
+
+// Database backup function
+function downloadBackup() {
+    // Show confirmation dialog
+    Swal.fire({
+        title: 'Download Database Backup?',
+        text: 'This will download a password-protected ZIP file containing the complete database backup.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#800000',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Download Backup',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            const button = event.target.closest('button');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin text-4xl mb-2 text-green-600"></i><h2 class="text-xl font-bold mb-2 text-green-600">Creating Backup...</h2><p class="text-sm text-center text-green-600">Please wait</p>';
+            button.disabled = true;
+            
+            // Create a temporary link to download the backup
+            const link = document.createElement('a');
+            link.href = '<?php echo ROOT; ?>database-backup?action=download';
+            link.download = 'qrcode_attendance_backup_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message with password info
+            Swal.fire({
+                title: 'Backup Downloaded!',
+                html: `
+                    <div class="text-left">
+                        <p class="mb-3">Your database backup has been downloaded successfully.</p>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="text-sm font-semibold mb-2">📁 File Format:</p>
+                            <p class="text-sm">• ZIP file containing SQL backup (preferred)</p>
+                            <p class="text-sm">• Or SQL file directly (fallback)</p>
+                            <p class="text-sm">• Password protection when possible</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-lg mt-3">
+                            <p class="text-sm font-semibold mb-2">🔑 Password Information:</p>
+                            <p class="text-sm">If password-protected, the password is logged in the activity log and contains:</p>
+                            <p class="text-sm">• Your user ID</p>
+                            <p class="text-sm">• Timestamp of creation</p>
+                            <p class="text-sm">• Random security salt</p>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-3">Check the Activity Logs page to view the exact password if applicable.</p>
+                    </div>
+                `,
+                icon: 'success',
+                confirmButtonColor: '#800000',
+                confirmButtonText: 'Got it!'
+            });
+            
+            // Reset button after a delay
+            setTimeout(() => {
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            }, 2000);
+        }
+    });
+}
 </script>
 </body>
 </html>
