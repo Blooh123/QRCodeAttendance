@@ -307,8 +307,7 @@ function completeBackup() {
             <div class="bg-gray-100 p-3 rounded-lg text-sm">
                 <p class="font-semibold mb-2">📁 File Format:</p>
                 <p>• ZIP file containing SQL backup (preferred)</p>
-                <p>• Or SQL file directly (fallback)</p>
-                <p>• Password protection when possible</p>
+                <p>• Password protection</p>
             </div>
             <div class="bg-yellow-100 p-3 rounded-lg mt-3 text-sm">
                 <p class="font-semibold mb-2">🔑 Password Information:</p>
