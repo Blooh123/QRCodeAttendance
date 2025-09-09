@@ -3,7 +3,7 @@ global $imageSource, $OSASLogo, $username;
 require_once "../app/core/imageConfig.php";
 
 $page = $_GET['page'] ?? 'Dashboard';
-$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'StudentApplication', 'ActivityLogs'];
+$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'StudentApplication', 'ActivityLogs', 'BackupPage'];
 if (!in_array($page, $allowed_pages)) {
     $page = 'Dashboard';
 }

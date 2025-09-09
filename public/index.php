@@ -80,6 +80,8 @@ $routes = [
     '/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
     '/public/save_facilitator_permissions' => '../app/Controller/SaveFacilitatorPermissions.php',
     '/public/database-backup' => '../app/Controller/DatabaseBackup.php',
+    '/public/backup-page' => '../app/Controller/BackupPage.php',
+    '/public/database-backup-page' => '../app/Controller/BackupPage.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -181,7 +183,8 @@ $routes = [
         '/QRCodeAttendance/QRCodeAttendance/public/delete_facial_image' => '../app/Controller/DeleteFacialImage.php',
         '/QRCodeAttendance/QRCodeAttendance/public/save_facilitator_permissions' => '../app/Controller/SaveFacilitatorPermissions.php',
         '/QRCodeAttendance/QRCodeAttendance/public/database-backup' => '../app/Controller/DatabaseBackup.php',
-
+        '/QRCodeAttendance/QRCodeAttendance/public/backup-page' => '../app/Controller/BackupPage.php',
+        '/QRCodeAttendance/QRCodeAttendance/public/database-backup-page' => '../app/Controller/BackupPage.php',
     
 
 
