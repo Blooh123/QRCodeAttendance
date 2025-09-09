@@ -254,43 +254,50 @@ function resetProgress() {
     document.getElementById('progressMessage').textContent = 'Please wait while we prepare your database backup.';
 }
 
-// Animate progress steps
+// Animate progress steps based on actual process
 function animateProgress() {
+    let currentStep = 0;
     const steps = [
-        { step: 1, delay: 500, text: 'Connecting to database...' },
-        { step: 2, delay: 1500, text: 'Exporting tables...' },
-        { step: 3, delay: 2500, text: 'Creating ZIP file...' },
-        { step: 4, delay: 3500, text: 'Preparing download...' }
+        { step: 1, text: 'Connecting to database...', duration: 1000 },
+        { step: 2, text: 'Exporting tables...', duration: 2000 },
+        { step: 3, text: 'Creating ZIP file...', duration: 1500 },
+        { step: 4, text: 'Preparing download...', duration: 500 }
     ];
     
-    steps.forEach((stepInfo, index) => {
+    function executeStep(stepIndex) {
+        if (stepIndex >= steps.length) {
+            completeBackup();
+            return;
+        }
+        
+        const stepInfo = steps[stepIndex];
+        currentStep = stepIndex;
+        
+        // Update progress bar
+        const progress = ((stepIndex + 1) / steps.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+        
+        // Update step
+        const stepElement = document.getElementById(`step${stepInfo.step}-spinner`);
+        stepElement.classList.remove('fa-circle', 'text-gray-300');
+        stepElement.classList.add('fa-spinner', 'fa-spin', 'text-[#800000]');
+        
+        // Update message
+        document.getElementById('progressMessage').textContent = stepInfo.text;
+        
+        // Complete step after the specified duration
         setTimeout(() => {
-            // Update progress bar
-            const progress = ((index + 1) / steps.length) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
+            stepElement.classList.remove('fa-spinner', 'fa-spin', 'text-[#800000]');
+            stepElement.classList.add('fa-check', 'text-green-500');
+            document.getElementById(`step${stepInfo.step}-check`).classList.remove('hidden');
             
-            // Update step
-            const stepElement = document.getElementById(`step${stepInfo.step}-spinner`);
-            stepElement.classList.remove('fa-circle', 'text-gray-300');
-            stepElement.classList.add('fa-spinner', 'fa-spin', 'text-[#800000]');
-            
-            // Update message
-            document.getElementById('progressMessage').textContent = stepInfo.text;
-            
-            // Complete step after a short delay
-            setTimeout(() => {
-                stepElement.classList.remove('fa-spinner', 'fa-spin', 'text-[#800000]');
-                stepElement.classList.add('fa-check', 'text-green-500');
-                document.getElementById(`step${stepInfo.step}-check`).classList.remove('hidden');
-            }, 800);
-            
-        }, stepInfo.delay);
-    });
+            // Move to next step
+            executeStep(stepIndex + 1);
+        }, stepInfo.duration);
+    }
     
-    // Complete the process
-    setTimeout(() => {
-        completeBackup();
-    }, 4500);
+    // Start the first step
+    executeStep(0);
 }
 
 // Complete backup process
@@ -325,13 +332,16 @@ function completeBackup() {
 
 // Start the actual backup process
 function startBackupProcess() {
-    // Create a temporary link to download the backup
-    const link = document.createElement('a');
-    link.href = '<?php echo ROOT; ?>database-backup?action=download';
-    link.download = 'qrcode_attendance_backup_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.zip';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Wait a moment for the progress animation to start, then initiate download
+    setTimeout(() => {
+        // Create a temporary link to download the backup
+        const link = document.createElement('a');
+        link.href = '<?php echo ROOT; ?>database-backup?action=download';
+        link.download = 'qrcode_attendance_backup_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }, 500); // Small delay to let progress animation start
 }
 
 // Close modal event listener
