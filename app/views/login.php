@@ -39,11 +39,9 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
         /* Existing styles */
         .text-stroke-2 {
             -webkit-text-stroke: 2px black;
-            text-stroke: 2px black;
         }
         .text-stroke-1 {
             -webkit-text-stroke: 1px black;
-            text-stroke: 1px black;
         }
         /* Custom color for focus/outline */
         .focus\:outline-#800000:focus {
