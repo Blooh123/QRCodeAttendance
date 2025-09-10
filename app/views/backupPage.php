@@ -123,6 +123,38 @@ require_once "../app/core/imageConfig.php";
             </div>
         </div>
 
+        <!-- Table Selection UI -->
+        <?php
+        // List of tables (ideally, fetch dynamically from DB, but hardcoded for now)
+        $tables = [
+            "activity_log",
+            "attendance",
+            "attendance_record",
+            "excuse_application",
+            "facilitator_facial_images",
+            "log",
+            "qr_code",
+            "required_attendees",
+            "sanction",
+            "students",
+            "users",
+            "user_personal_info",
+            "user_sessions"
+        ];
+        ?>
+        <div class="mb-8">
+            <label class="block text-lg font-semibold text-[#800000] mb-4">Select tables to backup:</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <?php foreach ($tables as $table): ?>
+                    <label class="flex items-center bg-white rounded-lg shadow-sm px-4 py-2 cursor-pointer hover:bg-gray-50 transition">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-[#800000] mr-3" name="tables[]" value="<?php echo $table; ?>" checked>
+                        <span class="text-base text-gray-700 font-medium"><?php echo $table; ?></span>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Uncheck tables you do not want to include in the backup.</p>
+        </div>
+
         <!-- Backup Button -->
         <div class="text-center">
             <button onclick="downloadBackup()" class="glass-card rounded-2xl p-8 flex flex-col items-center hover-card shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black bg-gradient-to-br from-[#800000] to-[#660000] text-white hover:from-[#660000] hover:to-[#4d0000] transition-all duration-200 max-w-md mx-auto">
@@ -332,16 +364,27 @@ function completeBackup() {
 
 // Start the actual backup process
 function startBackupProcess() {
-    // Wait a moment for the progress animation to start, then initiate download
-    setTimeout(() => {
-        // Create a temporary link to download the backup
-        const link = document.createElement('a');
-        link.href = '<?php echo ROOT; ?>database-backup?action=download';
-        link.download = 'qrcode_attendance_backup_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.zip';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }, 500); // Small delay to let progress animation start
+    // Get checked tables
+    const checkedBoxes = document.querySelectorAll('input[name="tables[]"]:checked');
+    const selectedTables = Array.from(checkedBoxes).map(cb => cb.value);
+
+    // Create a form and submit via POST to download
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '<?php echo ROOT; ?>database-backup?action=download';
+    form.style.display = 'none';
+
+    selectedTables.forEach(table => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'tables[]';
+        input.value = table;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
 
 // Close modal event listener

@@ -33,14 +33,19 @@ class DatabaseBackup
         try {
             // Check if ZipArchive is available
             if (!class_exists('ZipArchive')) {
-                throw new Exception("ZipArchive extension is not available");
+                throw new \Exception("ZipArchive extension is not available");
             }
             
             // Get database connection
             $pdo = $this->connect();
             
-            // Get all tables
-            $tables = $this->getTables($pdo);
+            // Get selected tables from POST, fallback to all tables
+            $tables = [];
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tables'])) {
+                $tables = array_map('trim', $_POST['tables']);
+            } else {
+                $tables = $this->getTables($pdo);
+            }
             
             // Generate backup filename with timestamp
             $timestamp = date('Y-m-d_H-i-s');
@@ -85,7 +90,7 @@ class DatabaseBackup
                         }
                     }
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // ZipArchive failed, try alternative method
                 error_log("ZipArchive failed: " . $e->getMessage());
             }
@@ -98,7 +103,7 @@ class DatabaseBackup
                         // Add password to filename since we can't encrypt
                         $zipFilename = 'qrcode_attendance_backup_' . $timestamp . '_PWD_' . substr($password, -8) . '.zip';
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     error_log("System command ZIP creation failed: " . $e->getMessage());
                 }
             }
@@ -131,7 +136,7 @@ class DatabaseBackup
             
             // Verify ZIP file was created and has content
             if (!file_exists($tempZipFile) || filesize($tempZipFile) === 0) {
-                throw new Exception("ZIP file was not created properly");
+                throw new \Exception("ZIP file was not created properly");
             }
             
             // Set headers for ZIP file download
@@ -157,7 +162,7 @@ class DatabaseBackup
             
             exit();
             
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Handle errors
             $_SESSION['error'] = "Backup failed: " . $e->getMessage();
             header("Location: " . ROOT . "admin-home");
@@ -270,7 +275,7 @@ class DatabaseBackup
         exec($command, $output, $returnCode);
         
         if ($returnCode !== 0) {
-            throw new Exception("Failed to create ZIP using system command");
+            throw new \Exception("Failed to create ZIP using system command");
         }
         
         return file_exists($tempZipFile) && filesize($tempZipFile) > 0;
@@ -299,7 +304,7 @@ class DatabaseBackup
             ];
             
             $this->query($query, $params);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Log error but don't fail the backup
             error_log("Failed to log backup activity: " . $e->getMessage());
         }
@@ -307,7 +312,10 @@ class DatabaseBackup
 }
 
 // Handle the backup request
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'download') {
+if (
+    ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'download') ||
+    ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'download')
+) {
     $backup = new DatabaseBackup();
     $backup->downloadBackup();
 }
