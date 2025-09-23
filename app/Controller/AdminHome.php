@@ -34,8 +34,25 @@ if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
     exit();
 }
 
-    $userSessions = json_decode($_COOKIE['user_data'], true);
-    $username = $userSessions[0]['username']; // Get the first logged-in user
+// Example for AdminHome Controller
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'lock') {
+    setcookie('system_lock', 'true', time() + 3600, '/');
+    setcookie('locked_user', $userData['username'], time() - 3600, '/'); // Clear the locked user cookie
+    // Optionally set locked_user cookie here if needed
+    exit;
+}
+
+// Handle AJAX GET to check system lock status
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+    $locked = isset($_COOKIE['system_lock']) && $_COOKIE['system_lock'] === 'true';
+    header('Content-Type: application/json');
+    echo json_encode(['locked' => $locked]);
+    exit;
+}
+ 
+
+$userSessions = json_decode($_COOKIE['user_data'], true);
+$username = $userSessions[0]['username']; // Get the first logged-in user
 
 
 $data=[

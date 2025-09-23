@@ -24,7 +24,7 @@ class Logout
 
     }
 
-    #[NoReturn] function logout(): void
+    function logout(): void
     {
          if (isset($_COOKIE['user_data'])) {
             // Decode JSON cookie (handle multiple users)
@@ -73,10 +73,12 @@ class Logout
         }
     }
 
-    #[NoReturn] private function clearSessionAndRedirect(): void
+    private function clearSessionAndRedirect(): void
     {
         if (isset($_COOKIE['user_data'])) {
             unset($_COOKIE['user_data']);
+            unset($_COOKIE['system_lock']);
+            unset($_COOKIE['locked_user']);
             setcookie('user_data', '', time() - 3600, '/', '', isset($_SERVER["HTTPS"]), true);
         }
 

@@ -44,10 +44,13 @@ if ($user_de['role'] === 'admin') {
 $student = new Student();
 $program = $student->getAllProgram();
 $year = $student->getAllYear();
+$userSessions = json_decode($_COOKIE['user_data'], true);
+$username = $userSessions[0]['username']; // Get the first logged-in user
 
 $data = [
     'programs' => $program,
-    'years' => $year
+    'years' => $year,
+    'username'=>$username
 ];
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if (!$attendance->getAttendanceDetails(0,$_POST['eventName'])){
@@ -136,6 +139,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     }else{
         echo "<script>alert('Invalid event name. Event already exists!');</script>";
     }
+}
+// Example for AdminHome Controller
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'lock') {
+    setcookie('system_lock', 'true', time() + 3600, '/');
+    setcookie('locked_user', $userData['username'], time() - 3600, '/'); // Clear the locked user cookie
+    // Optionally set locked_user cookie here if needed
+    exit;
+}
+
+// Handle AJAX GET to check system lock status
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+    $locked = isset($_COOKIE['system_lock']) && $_COOKIE['system_lock'] === 'true';
+    header('Content-Type: application/json');
+    echo json_encode(['locked' => $locked]);
+    exit;
 }
 $attendance = new AddAttendance();
 $attendance->index($data);
