@@ -126,7 +126,7 @@ require "../app/core/imageConfig.php";
 
 
 <!-- Header -->
-<header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-7xl mx-auto">
+<header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 mb-8 max-w-screen-2xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div class="flex items-center space-x-3">
             <i class="fas fa-exclamation-triangle text-[#a31d1d] text-3xl"></i>
@@ -144,7 +144,8 @@ require "../app/core/imageConfig.php";
     </div>
 </header>
 
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="max-w-screen-2xl mx-auto space-y-6">
+
 
     <!-- Search Section -->
     <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6">
