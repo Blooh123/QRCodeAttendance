@@ -26,6 +26,7 @@ class StudentAttendanceSummary extends \Controller
         $sanctionList = $sanction->getStudentSanctions($userID);
         $attendanceRecord = $attendance->StudentAttendanceRecord($userID);
         $studentInfo = $student->getStudentData($userID);
+        $notAttended = $attendance->getNotAttendedEvents($userID);
 
         if(isset($_POST['id']) && isset($_POST['studentID'])){
             $sanction->deleteSanction($_POST['id']);
@@ -37,7 +38,8 @@ class StudentAttendanceSummary extends \Controller
         $data = [
             'sanctionList' => $sanctionList,
             'attendanceRecord' => $attendanceRecord,
-            'studentInfo' => $studentInfo
+            'studentInfo' => $studentInfo,
+            'notAttended' => $notAttended
         ];
         $this->loadViewWithData('student_attendance_summary', $data);
     }

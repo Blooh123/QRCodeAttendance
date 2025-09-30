@@ -260,6 +260,31 @@ if (!class_exists('Model\Attendances')) {
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+    public function getNotAttendedEvents($studentID): array
+    {
+        $query = "SELECT 
+                    a.atten_id,
+                    a.event_name,
+                    a.date_created
+                FROM attendance a
+                INNER JOIN required_attendees ra 
+                    ON ra.atten_id = a.atten_id
+                INNER JOIN students s 
+                    ON s.student_id = :student_id
+                LEFT JOIN attendance_record ar 
+                    ON ar.atten_id = a.atten_id 
+                    AND ar.student_id = s.student_id
+                WHERE ar.atten_id IS NULL
+                AND (
+                        ra.program = 'AllStudents'
+                        OR (ra.program = s.program AND ra.acad_year = s.acad_year)
+                    );
+                ";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->bindParam(":student_id", $studentID);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function getBannerImage($attenId): ?string
     {
