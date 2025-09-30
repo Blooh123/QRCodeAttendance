@@ -54,7 +54,7 @@ if (!class_exists('Model\Attendances')) {
             
             error_log("Banner update result: " . ($result ? 'success' : 'failed'));
             return $result !== false;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error updating banner: " . $e->getMessage());
             return false;
         }
@@ -90,7 +90,7 @@ if (!class_exists('Model\Attendances')) {
             ];
             $result = $this->query($query, $params);
             return is_array($result) ? $result : [];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error in getRequiredAttendees: " . $e->getMessage());
             return [];
         }
@@ -191,7 +191,7 @@ if (!class_exists('Model\Attendances')) {
 
             // Ensure query result is an array
             return is_array($attendanceRecords) ? $attendanceRecords : [];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error in getAttendanceRecord: " . $e->getMessage());
             return [];
         }
@@ -275,7 +275,7 @@ if (!class_exists('Model\Attendances')) {
             }
             
             return null;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error getting banner image: " . $e->getMessage());
             return null;
         }
@@ -292,7 +292,7 @@ if (!class_exists('Model\Attendances')) {
                 return "data:image/jpeg;base64,$base64";
             }
             return null;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error converting banner to base64: " . $e->getMessage());
             return null;
         }
@@ -312,7 +312,7 @@ if (!class_exists('Model\Attendances')) {
             }
             
             return null;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Error getting attendance with banner: " . $e->getMessage());
             return null;
         }

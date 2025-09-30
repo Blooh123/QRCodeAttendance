@@ -120,6 +120,8 @@ if (!in_array($page, $allowed_pages)) {
     <title>Attendance System • Admin</title>
 </head>
 <body class="bg-[#f8f9fa] font-['Poppins']">
+    <!-- Countdown Timer -->
+<div id="lockCountdown" class="text-xl font-bold text-[#800000] mb-4"></div>
 
 <!-- Responsive Header -->
 <header class="w-full shadow-lg sticky top-0 z-50 glass-header">
@@ -222,6 +224,8 @@ if (!in_array($page, $allowed_pages)) {
         </div>
     </div>
 </main>
+
+
 
 <div id="systemLockOverlay" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.25);">
     <div class="flex items-center justify-center min-h-screen">
@@ -389,8 +393,10 @@ function showSystemLockOverlay() {
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
+    clearInterval(countdownTimer);
+    document.getElementById('lockCountdown').style.display = 'none';
     inactivityTimer = setTimeout(() => {
-        showSystemLockOverlay();
+        startLockCountdown(); // <-- Start the countdown after inactivity
     }, 60000); // 1 minute = 60,000 ms
 }
 
@@ -485,6 +491,26 @@ resetInactivityTimer();
             e.preventDefault();
         }
     });
+
+
+let countdownTimer;
+let countdownValue = 10; // seconds
+
+function startLockCountdown() {
+    countdownValue = 10;
+    document.getElementById('lockCountdown').textContent = `System will lock in ${countdownValue} seconds...`;
+    document.getElementById('lockCountdown').style.display = 'block';
+
+    countdownTimer = setInterval(() => {
+        countdownValue--;
+        document.getElementById('lockCountdown').textContent = `System will lock in ${countdownValue} seconds...`;
+        if (countdownValue <= 0) {
+            clearInterval(countdownTimer);
+            document.getElementById('lockCountdown').style.display = 'none';
+            showSystemLockOverlay();
+        }
+    }, 1000);
+}
   
 </script>
 </body>

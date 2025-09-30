@@ -34,6 +34,7 @@ require "../app/core/imageConfig.php";
             transition: transform 0.3s, box-shadow 0.3s;
         }
         
+        
         .hover-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);

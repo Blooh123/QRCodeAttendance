@@ -54,7 +54,7 @@ require "../app/core/imageConfig.php";
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                         <i class="fas fa-calendar-check text-red-600 mr-2"></i>
-                        Attendance Records
+                        Attendance Records (A. Y. 2025-2026)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
@@ -94,7 +94,7 @@ require "../app/core/imageConfig.php";
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                         <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
-                        Sanctions
+                        Sanctions (A. Y. 2025-2026)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
