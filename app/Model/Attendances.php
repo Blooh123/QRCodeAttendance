@@ -252,15 +252,38 @@ if (!class_exists('Model\Attendances')) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function StudentAttendanceRecord($id): array
+    /**
+     * Get student attendance records. Optionally filter by academic year start (YYYY -> YYYY-07-01 to YYYY+1-06-30).
+     * @param string|int $studentId
+     * @param int|null $yearStart
+     * @return array
+     */
+    public function StudentAttendanceRecord($studentId, $yearStart = null)
     {
-        $query = "CALL student_attendance_record(:student_id)";
-        $stmt = $this->connect()->prepare($query);
-        $stmt->bindParam(":student_id", $id);
+        $sql = "SELECT CONCAT(s.name) as Name, s.student_id, a.event_name, a.atten_started, att.time_in, att.time_out, a.date_created
+                FROM students s
+                INNER JOIN attendance_record att ON s.student_id = att.student_id
+                INNER JOIN attendance a ON a.atten_id = att.atten_id
+                WHERE s.student_id = :id";
+
+        if ($yearStart) {
+            $start = sprintf('%04d-07-01', (int)$yearStart);
+            $end = sprintf('%04d-06-30', ((int)$yearStart) + 1);
+            $sql .= " AND a.date_created BETWEEN :start AND :end";
+        }
+
+        $sql .= " ORDER BY a.atten_started DESC";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindValue(':id', $studentId);
+        if ($yearStart) {
+            $stmt->bindValue(':start', $start);
+            $stmt->bindValue(':end', $end);
+        }
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-    public function getNotAttendedEvents($studentID): array
+    public function getNotAttendedEvents($studentID, $yearStart = null): array
     {
         $query = "SELECT 
                     a.atten_id,
@@ -278,10 +301,23 @@ if (!class_exists('Model\Attendances')) {
                 AND (
                         ra.program = 'AllStudents'
                         OR (ra.program = s.program AND ra.acad_year = s.acad_year)
-                    );
-                ";
+                    )";
+
+        // apply academic year filter (July 1 -> next year June 30) when provided
+        if ($yearStart) {
+            $start = sprintf('%04d-07-01', (int)$yearStart);
+            $end = sprintf('%04d-06-30', ((int)$yearStart) + 1);
+            $query .= " AND a.date_created BETWEEN :start AND :end";
+        }
+
+        $query .= ";";
+
         $stmt = $this->connect()->prepare($query);
         $stmt->bindParam(":student_id", $studentID);
+        if ($yearStart) {
+            $stmt->bindValue(':start', $start);
+            $stmt->bindValue(':end', $end);
+        }
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

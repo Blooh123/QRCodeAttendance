@@ -47,12 +47,40 @@ class Sanction
         return $stm->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getSanctionSummary(): array
+// ...existing code...
+    public function getSanctionSummary($student_id = null, $yearStart = null): array
     {
-        $sql = "CALL sp_get_sanctions_summary()";
+        // If no filters provided, keep existing stored-proc behaviour
+        if ($student_id === null && $yearStart === null) {
+            $sql = "CALL sp_get_sanctions_summary()";
+            $stm = $this->connect()->prepare($sql);
+            $stm->execute();
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Build dynamic query with optional student and academic-year filter (July 1 -> next year June 30)
+        $sql = "SELECT * FROM sanction WHERE 1=1";
+        if ($student_id !== null) {
+            $sql .= " AND student_id = :id";
+        }
+        if ($yearStart !== null) {
+            $start = sprintf('%04d-07-01', (int)$yearStart);
+            $end = sprintf('%04d-06-30', ((int)$yearStart) + 1);
+            $sql .= " AND date_applied BETWEEN :start AND :end";
+        }
+        $sql .= " ORDER BY date_applied DESC";
+
         $stm = $this->connect()->prepare($sql);
+        if ($student_id !== null) {
+            $stm->bindValue(':id', $student_id);
+        }
+        if ($yearStart !== null) {
+            $stm->bindValue(':start', $start);
+            $stm->bindValue(':end', $end);
+        }
         $stm->execute();
         return $stm->fetchAll(PDO::FETCH_ASSOC);
     }
+// ...existing code...
 
 }

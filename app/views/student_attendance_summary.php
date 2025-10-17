@@ -27,6 +27,24 @@ require "../app/core/imageConfig.php";
                     <i class="fas fa-arrow-left mr-2"></i>
                     Back
                 </a>
+                <!-- Year filter -->
+                <form method="GET" class="flex items-center space-x-2">
+                    <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($_GET['student_id']); ?>">
+                    <label for="year" class="text-sm text-gray-700">Academic Year:</label>
+                    <select id="year" name="year" class="rounded-md border px-2 py-1 text-sm">
+                        <option value="">All</option>
+                        <?php
+                            $current = (int)date('Y');
+                            // produce options for last 6 years (start year)
+                            for ($y = $current; $y >= $current - 6; $y--) {
+                                $label = $y . '-' . ($y + 1);
+                                $sel = (isset($data['selectedYear']) && $data['selectedYear'] == $y) ? 'selected' : '';
+                                echo "<option value=\"{$y}\" {$sel}>{$label}</option>";
+                            }
+                        ?>
+                    </select>
+                    <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm">Filter</button>
+                </form>
             </div>
         </div>
     </header>
@@ -56,6 +74,7 @@ require "../app/core/imageConfig.php";
                         <i class="fas fa-calendar-check text-red-600 mr-2"></i>
                         Attendance Records (A. Y. 2025-2026)
                     </h3>
+                    
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">

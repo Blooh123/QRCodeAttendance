@@ -23,10 +23,12 @@ class StudentAttendanceSummary extends \Controller
     
     
         $userID = $_GET['student_id'];
+        // Accept a year start for academic year filtering (e.g. 2025 => AY 2025-2026)
+        $yearStart = isset($_GET['year']) && ctype_digit($_GET['year']) ? (int)$_GET['year'] : null;
         $sanctionList = $sanction->getStudentSanctions($userID);
-        $attendanceRecord = $attendance->StudentAttendanceRecord($userID);
+        $attendanceRecord = $attendance->StudentAttendanceRecord($userID, $yearStart);
         $studentInfo = $student->getStudentData($userID);
-        $notAttended = $attendance->getNotAttendedEvents($userID);
+        $notAttended = $attendance->getNotAttendedEvents($userID, $yearStart);
 
         if(isset($_POST['id']) && isset($_POST['studentID'])){
             $sanction->deleteSanction($_POST['id']);
@@ -40,6 +42,7 @@ class StudentAttendanceSummary extends \Controller
             'attendanceRecord' => $attendanceRecord,
             'studentInfo' => $studentInfo,
             'notAttended' => $notAttended
+           ,'selectedYear' => $yearStart
         ];
         $this->loadViewWithData('student_attendance_summary', $data);
     }
