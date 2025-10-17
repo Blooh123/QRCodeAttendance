@@ -1,6 +1,14 @@
 <?php
 global $imageSource;
 require "../app/core/imageConfig.php";
+
+// determine year label for headers
+$selectedYear = $data['selectedYear'] ?? null;
+if ($selectedYear && is_numeric($selectedYear)) {
+    $yearLabel = "A. Y. " . htmlspecialchars($selectedYear) . "-" . htmlspecialchars($selectedYear + 1);
+} else {
+    $yearLabel = "All Years";
+}
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +80,7 @@ require "../app/core/imageConfig.php";
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                         <i class="fas fa-calendar-check text-red-600 mr-2"></i>
-                        Attendance Records (A. Y. 2025-2026)
+                        Attendance Records (<?php echo $yearLabel; ?>)
                     </h3>
                     
                 </div>
@@ -113,7 +121,7 @@ require "../app/core/imageConfig.php";
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                         <i class="fas fa-calendar-check text-red-600 mr-2"></i>
-                        Not attended (A. Y. 2025-2026)
+                        Not attended (<?php echo $yearLabel; ?>)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
@@ -145,7 +153,7 @@ require "../app/core/imageConfig.php";
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                         <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
-                        Sanctions (A. Y. 2025-2026)
+                        Sanctions (<?php echo $yearLabel; ?>)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
