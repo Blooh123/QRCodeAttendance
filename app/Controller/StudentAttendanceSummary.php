@@ -25,7 +25,7 @@ class StudentAttendanceSummary extends \Controller
         $userID = $_GET['student_id'];
         // Accept a year start for academic year filtering (e.g. 2025 => AY 2025-2026)
         $yearStart = isset($_GET['year']) && ctype_digit($_GET['year']) ? (int)$_GET['year'] : null;
-        $sanctionList = $sanction->getStudentSanctions($userID);
+        $sanctionList = $sanction->getSanctionSummary($userID, $yearStart);
         $attendanceRecord = $attendance->StudentAttendanceRecord($userID, $yearStart);
         $studentInfo = $student->getStudentData($userID);
         $notAttended = $attendance->getNotAttendedEvents($userID, $yearStart);
