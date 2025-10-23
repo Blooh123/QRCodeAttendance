@@ -123,6 +123,8 @@ if (!in_array($page, $allowed_pages)) {
     <!-- Countdown Timer -->
 <div id="lockCountdown" class="text-xl font-bold text-[#800000] mb-4"></div>
 
+
+
 <!-- Responsive Header -->
 <header class="w-full shadow-lg sticky top-0 z-50 glass-header">
     <div class="max-w-8xl mx-auto px-6 h-24 flex items-center justify-between">
@@ -136,6 +138,13 @@ if (!in_array($page, $allowed_pages)) {
                     class="block"
                 />
             </div>
+            <!-- Lock Configuration Modal Trigger -->
+<button id="openLockConfigBtn" title="Configure lock timer"
+        class="hidden lg:inline-flex items-center px-3 py-2 rounded-xl text-sm font-semibold text-white bg-[#6b1414] hover:bg-[#8a1d1d]">
+    <i class="fas fa-cog mr-2"></i> Lock Config
+</button>
+
+
             
             <!-- Desktop Navigation -->
             <nav class="hidden lg:flex items-center gap-1">
@@ -214,11 +223,11 @@ if (!in_array($page, $allowed_pages)) {
         </nav>
     </aside>
 </header>
-
+ 
 <!-- Main Content -->
 <main class="flex flex-col items-center justify-start p-4 min-h-screen">
     <div class="admin-container w-full max-w-7xl bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg mt-8">
-
+        
         <div>
             <?php require "../app/Controller/{$page}.php"; ?>
         </div>
@@ -226,7 +235,27 @@ if (!in_array($page, $allowed_pages)) {
 </main>
 
 
-
+        <!-- Lock Configuration Modal -->
+        <div id="lockConfigModal" class="fixed inset-0 z-60 hidden items-center justify-center bg-black/50">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
+                <h3 class="text-lg font-bold mb-4">Lock system configuration</h3>
+                <form id="lockConfigForm" class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label for="inactivityMinutes" class="text-sm font-medium">Inactivity (minutes)</label>
+                        <input id="inactivityMinutes" name="inactivityMinutes" type="number" min="1" value="1" class="w-24 p-2 border rounded" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label for="countdownSeconds" class="text-sm font-medium">Countdown (seconds)</label>
+                        <input id="countdownSeconds" name="countdownSeconds" type="number" min="1" value="10" class="w-24 p-2 border rounded" />
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" id="cancelLockConfig" class="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                        <button type="submit" id="saveLockConfig" class="px-4 py-2 rounded bg-[#a31d1d] text-white">Save</button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Settings are applied immediately.</p>
+                </form>
+            </div>
+        </div>   
 <div id="systemLockOverlay" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.25);">
     <div class="flex items-center justify-center min-h-screen">
         <div class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -394,10 +423,11 @@ function showSystemLockOverlay() {
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     clearInterval(countdownTimer);
-    document.getElementById('lockCountdown').style.display = 'none';
+    const lockEl = document.getElementById('lockCountdown');
+    if (lockEl) lockEl.style.display = 'none';
     inactivityTimer = setTimeout(() => {
-        startLockCountdown(); // <-- Start the countdown after inactivity
-    }, 60000); // 1 minute = 60,000 ms
+        startLockCountdown();
+    }, inactivityDelayMs);
 }
 
 function checkIfSystemLocked() {
@@ -497,21 +527,247 @@ let countdownTimer;
 let countdownValue = 10; // seconds
 
 function startLockCountdown() {
-    countdownValue = 10;
-    document.getElementById('lockCountdown').textContent = `System will lock in ${countdownValue} seconds...`;
-    document.getElementById('lockCountdown').style.display = 'block';
+    countdownValue = countdownSeconds;
+    const lockEl = document.getElementById('lockCountdown');
+    lockEl.textContent = `System will lock in ${countdownValue} seconds...`;
+    lockEl.style.display = 'block';
 
     countdownTimer = setInterval(() => {
         countdownValue--;
-        document.getElementById('lockCountdown').textContent = `System will lock in ${countdownValue} seconds...`;
+        lockEl.textContent = `System will lock in ${countdownValue} seconds...`;
         if (countdownValue <= 0) {
             clearInterval(countdownTimer);
-            document.getElementById('lockCountdown').style.display = 'none';
+            lockEl.style.display = 'none';
             showSystemLockOverlay();
         }
     }, 1000);
 }
-  
+
+function setCookie(name, value, days = 365) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+}
+
+function getCookie(name) {
+    return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts.slice(1).join('=')) : r;
+    }, '');
+}
+
+function loadLockConfigFromCookie() {
+    const inMin = parseInt(getCookie('lock_inactivity'), 10);
+    const cd = parseInt(getCookie('lock_countdown'), 10);
+    if (!isNaN(inMin) && inMin > 0) {
+        inactivityDelayMs = inMin * 60 * 1000;
+    }
+    if (!isNaN(cd) && cd > 0) {
+        countdownSeconds = cd;
+    }
+}
+
+// Populate modal inputs with current values
+function openLockConfigModal() {
+    document.getElementById('inactivityMinutes').value = Math.round(inactivityDelayMs / 60000);
+    document.getElementById('countdownSeconds').value = countdownSeconds;
+    document.getElementById('lockConfigModal').classList.remove('hidden');
+    document.getElementById('lockConfigModal').classList.add('flex');
+}
+
+function closeLockConfigModal() {
+    document.getElementById('lockConfigModal').classList.add('hidden');
+    document.getElementById('lockConfigModal').classList.remove('flex');
+}
+
+// apply cookie config to timers and reset inactivity timer
+function applyLockConfig(inMinutes, cdSeconds) {
+    inactivityDelayMs = (parseInt(inMinutes, 10) > 0) ? (parseInt(inMinutes, 10) * 60000) : inactivityDelayMs;
+    countdownSeconds = (parseInt(cdSeconds, 10) > 0) ? parseInt(cdSeconds, 10) : countdownSeconds;
+    setCookie('lock_inactivity', Math.round(inactivityDelayMs / 60000));
+    setCookie('lock_countdown', countdownSeconds);
+    // restart timers with new config
+    resetInactivityTimer();
+}
+
+// load cookie values early
+loadLockConfigFromCookie();
+
+// Wire modal buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const openBtn = document.getElementById('openLockConfigBtn');
+    const cancelBtn = document.getElementById('cancelLockConfig');
+    const modal = document.getElementById('lockConfigModal');
+    const form = document.getElementById('lockConfigForm');
+
+    if (openBtn) openBtn.addEventListener('click', openLockConfigModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeLockConfigModal);
+    if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeLockConfigModal(); });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const inMin = document.getElementById('inactivityMinutes').value;
+        const cd = document.getElementById('countdownSeconds').value;
+        applyLockConfig(inMin, cd);
+        closeLockConfigModal();
+        // show quick confirmation
+        Swal.fire({ icon: 'success', title: 'Saved', text: 'Lock configuration saved.' , confirmButtonColor: '#800000'});
+    });
+});
+
+// ensure timers respect current cookie-config on initial load
+resetInactivityTimer();
+</script>
+<script>
+    // Consolidated lock-config + inactivity logic
+
+    // defaults (defined before any use)
+    let inactivityDelayMs = 1 * 60 * 1000; // default 1 minute
+    let countdownSeconds = 10;             // default 10 seconds
+
+    // Cookie helpers
+    function setCookie(name, value, days = 365) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+    }
+
+    function getCookie(name) {
+        return document.cookie.split('; ').reduce((r, v) => {
+            const parts = v.split('=');
+            return parts[0] === name ? decodeURIComponent(parts.slice(1).join('=')) : r;
+        }, '');
+    }
+
+    // Load saved config (if any)
+    function loadLockConfigFromCookie() {
+        const inMin = parseInt(getCookie('lock_inactivity'), 10);
+        const cd = parseInt(getCookie('lock_countdown'), 10);
+        if (!isNaN(inMin) && inMin > 0) {
+            inactivityDelayMs = inMin * 60 * 1000;
+        }
+        if (!isNaN(cd) && cd > 0) {
+            countdownSeconds = cd;
+        }
+    }
+
+    // Start the visible countdown (called after inactivityDelayMs)
+    function startLockCountdown() {
+        clearInterval(countdownTimer);
+        countdownValue = countdownSeconds;
+        const lockEl = document.getElementById('lockCountdown');
+        if (!lockEl) return;
+        lockEl.textContent = `System will lock in ${countdownValue} seconds...`;
+        lockEl.style.display = 'block';
+
+        countdownTimer = setInterval(() => {
+            countdownValue--;
+            lockEl.textContent = `System will lock in ${countdownValue} seconds...`;
+            if (countdownValue <= 0) {
+                clearInterval(countdownTimer);
+                lockEl.style.display = 'none';
+                showSystemLockOverlay();
+            }
+        }, 1000);
+    }
+
+    // Hide countdown and reset inactivity timer
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        clearInterval(countdownTimer);
+        const lockEl = document.getElementById('lockCountdown');
+        if (lockEl) lockEl.style.display = 'none';
+        inactivityTimer = setTimeout(() => {
+            startLockCountdown();
+        }, inactivityDelayMs);
+    }
+
+    // Show system lock overlay (unchanged behavior)
+    function showSystemLockOverlay() {
+        // AJAX request to set system lock cookies (keep as before)
+        fetch('<?php echo ROOT; ?>adminHome?action=lock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lock: true })
+        }).catch(()=>{});
+        const overlay = document.getElementById('systemLockOverlay');
+        if (overlay) {
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Wire modal buttons and load config once DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        loadLockConfigFromCookie();
+
+        // modal buttons
+        const openBtn = document.getElementById('openLockConfigBtn');
+        const cancelBtn = document.getElementById('cancelLockConfig');
+        const modal = document.getElementById('lockConfigModal');
+        const form = document.getElementById('lockConfigForm');
+
+        function openLockConfigModal() {
+            const inMinInput = document.getElementById('inactivityMinutes');
+            const cdInput = document.getElementById('countdownSeconds');
+            if (inMinInput) inMinInput.value = Math.round(inactivityDelayMs / 60000);
+            if (cdInput) cdInput.value = countdownSeconds;
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeLockConfigModal() {
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openLockConfigModal);
+        if (cancelBtn) cancelBtn.addEventListener('click', closeLockConfigModal);
+        if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeLockConfigModal(); });
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const inMin = parseInt(document.getElementById('inactivityMinutes').value, 10);
+                const cd = parseInt(document.getElementById('countdownSeconds').value, 10);
+                if (!isNaN(inMin) && inMin > 0) inactivityDelayMs = inMin * 60 * 1000;
+                if (!isNaN(cd) && cd > 0) countdownSeconds = cd;
+                setCookie('lock_inactivity', Math.round(inactivityDelayMs / 60000));
+                setCookie('lock_countdown', countdownSeconds);
+                closeLockConfigModal();
+                if (window.Swal) {
+                    Swal.fire({ icon: 'success', title: 'Saved', text: 'Lock configuration saved.' , confirmButtonColor: '#800000'});
+                }
+                resetInactivityTimer();
+            });
+        }
+
+        // activity listeners
+        ['mousemove','keydown','mousedown','touchstart'].forEach(evt => {
+            document.addEventListener(evt, resetInactivityTimer, { passive: true });
+        });
+
+        // start initial timer
+        resetInactivityTimer();
+    });
+
+    // Optional: check server lock flag as before (keep existing behavior)
+    function checkIfSystemLocked() {
+        fetch('<?php echo ROOT; ?>adminHome', {
+            method: 'GET',
+            credentials: 'include',
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.locked) showSystemLockOverlay();
+        })
+        .catch(() => {});
+    }
+    checkIfSystemLocked();
+
 </script>
 </body>
 </html>
