@@ -232,7 +232,9 @@ if (!in_array($page, $allowed_pages)) {
             <?php require "../app/Controller/{$page}.php"; ?>
         </div>
     </div>
-</main>
+
+    <!-- arthur -->
+</main> 
 
 
         <!-- Lock Configuration Modal -->
