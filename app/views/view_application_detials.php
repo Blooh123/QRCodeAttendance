@@ -273,19 +273,19 @@
                             </p>
                             <div class="flex flex-col gap-2">
                                 <?php if (strpos($document1Info['mime_type'], 'image/') === 0): ?>
-                                    <button onclick="viewImage(<?= $application['id'] ?>, 1, '<?= $document1Info['mime_type'] ?>')" 
+                                    <button type="button" onclick="viewImage(<?= $application['id'] ?>, 1, '<?= $document1Info['mime_type'] ?>')"
                                             class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                                         <i class="fas fa-eye"></i>View Image
                                     </button>
                                 <?php else: ?>
-                                                                         <a href="<?= ROOT ?>view_application?action=viewDocument&id=<?= $application['id'] ?>&doc=1" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2" target="_blank">
-                                         <i class="fas fa-eye"></i>View
-                                     </a>
-                                     <a href="<?= ROOT ?>view_application?action=downloadDocument&id=<?= $application['id'] ?>&doc=1" 
-                                        class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
-                                         <i class="fas fa-download"></i>Download
-                                     </a>
+                                    <button type="button" onclick="viewDocument(<?= $application['id'] ?>, 1)"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+                                        <i class="fas fa-eye"></i>View
+                                    </button>
+                                    <a href="<?= ROOT ?>view_application?action=downloadDocument&id=<?= $application['id'] ?>&doc=1"
+                                       class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+                                        <i class="fas fa-download"></i>Download
+                                    </a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -308,10 +308,10 @@
                                         <i class="fas fa-eye"></i>View Image
                                     </button>
                                 <?php else: ?>
-                                                                         <a href="<?= ROOT ?>view_application?action=viewDocument&id=<?= $application['id'] ?>&doc=2" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2" target="_blank">
-                                         <i class="fas fa-eye"></i>View
-                                     </a>
+                                    <button type="button" onclick="viewDocument(<?= $application['id'] ?>, 2)"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
+                                        <i class="fas fa-eye"></i>View
+                                    </button>
                                      <a href="<?= ROOT ?>view_application?action=downloadDocument&id=<?= $application['id'] ?>&doc=2" 
                                         class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-2">
                                          <i class="fas fa-download"></i>Download
@@ -400,8 +400,7 @@
         
         <!-- Image container -->
         <div class="max-w-full max-h-full flex items-center justify-center">
-            <img id="fullscreenImage" src="" alt="Document Image" 
-                 class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+            <img id="fullscreenImage" src="" alt="Document Image" class="zoomable-img rounded-lg shadow-2xl" style="max-width:50%; max-height:50%;">
         </div>
         
         <!-- Loading spinner -->
@@ -413,6 +412,36 @@
         </div>
     </div>
 </div>
+
+<!-- Document Viewer Modal -->
+<div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-6xl h-[85vh] bg-white rounded-lg overflow-hidden">
+        <button onclick="closeDocumentViewer()" 
+                class="absolute top-4 right-4 bg-white bg-opacity-90 hover:bg-opacity-100 text-[#333] p-2 rounded-full z-20">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="flex items-center justify-between p-3 border-b">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-file-alt text-[#a31d1d] text-xl"></i>
+                <span id="docViewerTitle" class="font-semibold text-sm"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <a id="docDownloadBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-sm" href="#" download>
+                    <i class="fas fa-download mr-2"></i>Download
+                </a>
+                <a id="docOpenExternalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm" href="#" target="_blank" style="display:none;">
+                    <i class="fas fa-external-link-alt mr-2"></i>Open
+                </a>
+            </div>
+        </div>
+        <div id="docViewerContent" class="w-full h-full bg-[#f3f4f6] flex items-center justify-center">
+            <!-- iframe or content is injected here -->
+        </div>
+    </div>
+</div>
+
+<!-- include mammoth for DOCX -> HTML conversion in-browser -->
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 
 <script>
     function openApproveModal() {
@@ -427,43 +456,221 @@
         document.getElementById(modalId).classList.add('hidden');
     }
 
+    // Replace previous viewImage function with a generic viewer that supports docs
     function viewImage(applicationId, documentNumber, mimeType) {
-        // Show loading spinner
-        document.getElementById('imageLoading').classList.remove('hidden');
-        document.getElementById('fullscreenImage').classList.add('hidden');
-        document.getElementById('imageViewerModal').classList.remove('hidden');
+        // delegate to generic document viewer
+        viewDocument(applicationId, documentNumber);
+    }
 
-        // Fetch image data
-        fetch(`<?= ROOT ?>view_application?action=viewDocument&id=${applicationId}&doc=${documentNumber}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.type === 'image') {
-                    // Create base64 image source
-                    const imageSrc = `data:${data.mime_type};base64,${data.data}`;
-                    document.getElementById('fullscreenImage').src = imageSrc;
-                    
-                    // Hide loading and show image
-                    document.getElementById('imageLoading').classList.add('hidden');
-                    document.getElementById('fullscreenImage').classList.remove('hidden');
-                } else {
-                    // Handle non-image documents
-                    window.open(`<?= ROOT ?>view_application?action=viewDocument&id=${applicationId}&doc=${documentNumber}`, '_blank');
-                    closeImageViewer();
-                }
+    // Replace the previous viewDocument implementation with this more robust handler
+    function viewDocument(applicationId, documentNumber) {
+        const url = `<?= ROOT ?>view_application?action=viewDocument&id=${applicationId}&doc=${documentNumber}`;
+        const contentEl = document.getElementById('docViewerContent');
+        const titleEl = document.getElementById('docViewerTitle');
+        const downloadBtn = document.getElementById('docDownloadBtn');
+        const externalBtn = document.getElementById('docOpenExternalBtn');
+
+        // UI reset
+        titleEl.textContent = `Document ${documentNumber}`;
+        downloadBtn.href = '#';
+        downloadBtn.style.display = 'inline-block';
+        externalBtn.style.display = 'none';
+        contentEl.innerHTML = '<div class="text-center"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a31d1d] mx-auto"></div><p class="mt-3 text-sm text-gray-600">Loading document...</p></div>';
+        document.getElementById('documentViewerModal').classList.remove('hidden');
+
+        fetch(url, { credentials: 'include' })
+            .then(response => {
+                // always read as arrayBuffer first to avoid automatic download issues
+                return response.arrayBuffer().then(buffer => ({ buffer, headers: response.headers }));
             })
-            .catch(error => {
-                console.error('Error loading image:', error);
-                alert('Error loading image. Please try again.');
-                closeImageViewer();
+            .then(({ buffer, headers }) => {
+                // try to detect JSON response (legacy) by reading initial chunk as text
+                const textPreview = new TextDecoder().decode(buffer.slice(0, 256)).trim();
+                if ((textPreview.startsWith('{') || textPreview.startsWith('[')) && (textPreview.includes('"type"') || textPreview.includes('"data"'))) {
+                    // treat as JSON (server returned base64 JSON)
+                    try {
+                        const jsonText = new TextDecoder().decode(buffer);
+                        const data = JSON.parse(jsonText);
+                        if (data.type === 'image' && data.data) {
+                            const imageSrc = `data:${data.mime_type};base64,${data.data}`;
+                            showImageInModal(imageSrc);
+                            return;
+                        }
+                    } catch (e) {
+                        // fallthrough to blob handling
+                        console.warn('JSON parse failed, falling back to blob', e);
+                    }
+                }
+
+                // prepare blob using header content-type if present
+                const contentType = headers.get('content-type') || '';
+                const mime = contentType.split(';')[0] || '';
+                const blob = new Blob([buffer], { type: mime || 'application/octet-stream' });
+                const blobUrl = URL.createObjectURL(blob);
+
+                // set download link
+                const cd = headers.get('content-disposition') || '';
+                let filename = '';
+                const m = /filename\*=UTF-8''([^;]+)|filename="?([^";]+)?"?/.exec(cd);
+                if (m) filename = decodeURIComponent(m[1] || m[2] || '');
+                const ext = (filename.split('.').pop() || mime.split('/').pop() || 'bin');
+                downloadBtn.href = blobUrl;
+                downloadBtn.download = filename || `document_${applicationId}_${documentNumber}.${ext}`;
+
+                // display according to mime
+                const lowerMime = (mime || blob.type || '').toLowerCase();
+
+                if (lowerMime.startsWith('image/')) {
+                    showImageInModal(blobUrl);
+                    return;
+                }
+
+                if (lowerMime === 'application/pdf' || (filename && filename.toLowerCase().endsWith('.pdf'))) {
+                    contentEl.innerHTML = `<iframe src="${blobUrl}" class="w-full h-full border-0"></iframe>`;
+                    return;
+                }
+
+                const isDocx = lowerMime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || (filename && filename.toLowerCase().endsWith('.docx'));
+                if (isDocx && window.mammoth) {
+                    blob.arrayBuffer().then(ab => {
+                        mammoth.convertToHtml({ arrayBuffer: ab })
+                            .then(result => {
+                                const html = result.value || '<p>(No content)</p>';
+                                contentEl.innerHTML = `<div class="prose max-w-full p-6 overflow-auto" style="height:100%">${html}</div>`;
+                            })
+                            .catch(err => {
+                                console.error('mammoth error', err);
+                                contentEl.innerHTML = '<p class="p-6">Unable to render DOCX preview. You can download the file instead.</p>';
+                            });
+                    });
+                    return;
+                }
+
+                // Office online fallback (requires public URL)
+                const officeMimes = [
+                    'application/msword',
+                    'application/vnd.ms-powerpoint',
+                    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                ];
+                if (officeMimes.includes(lowerMime)) {
+                    const absoluteUrl = window.location.origin + url;
+                    const officeViewer = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absoluteUrl)}`;
+                    externalBtn.href = officeViewer;
+                    externalBtn.style.display = 'inline-block';
+                    externalBtn.target = '_blank';
+                    contentEl.innerHTML = `<iframe src="${officeViewer}" class="w-full h-full border-0"></iframe>`;
+                    return;
+                }
+
+                // text fallback
+                if (lowerMime.startsWith('text/') || lowerMime.includes('json')) {
+                    blob.text().then(txt => {
+                        contentEl.innerHTML = `<pre class="p-4 text-sm text-gray-900 overflow-auto h-full">${escapeHtml(txt)}</pre>`;
+                    }).catch(() => {
+                        contentEl.innerHTML = '<p class="p-6">Unable to read text preview. You can download the file.</p>';
+                    });
+                    return;
+                }
+
+                // final fallback - open in new tab (browser handles)
+                window.open(blobUrl, '_blank');
+                closeDocumentViewer();
+            })
+            .catch(err => {
+                console.error('Error loading document:', err);
+                contentEl.innerHTML = '<p class="p-6 text-sm text-gray-700">Preview not available. Click download to save the file.</p>';
             });
     }
 
+    // ensure image modal handles blob/data URLs reliably
+    function showImageInModal(src) {
+        const modal = document.getElementById('imageViewerModal');
+        const img = document.getElementById('fullscreenImage');
+        const loading = document.getElementById('imageLoading');
+
+        loading.classList.remove('hidden');
+        img.classList.add('hidden');
+
+        // remove previous handlers to avoid double-calls
+        img.onload = img.onerror = null;
+
+        const onLoad = () => {
+            loading.classList.add('hidden');
+            img.classList.remove('hidden');
+            img.removeEventListener('load', onLoad);
+            img.removeEventListener('error', onError);
+        };
+
+        const onError = () => {
+            loading.classList.add('hidden');
+            img.classList.add('hidden');
+            // remove handlers
+            img.removeEventListener('load', onLoad);
+            img.removeEventListener('error', onError);
+            // clear src to prevent repeated errors
+            const failedSrc = img.src;
+            img.src = '';
+            // avoid alert for inline data URIs (these usually work)
+            if (failedSrc && !failedSrc.startsWith('data:')) {
+                alert('Failed to load image preview. You can download the file instead.');
+            }
+            // fallback: open blob in new tab if available
+            if (failedSrc && failedSrc.startsWith('blob:')) {
+                window.open(failedSrc, '_blank');
+            }
+        };
+
+        img.addEventListener('load', onLoad, { once: true });
+        img.addEventListener('error', onError, { once: true });
+
+        img.src = src;
+
+        document.getElementById('documentViewerModal').classList.add('hidden');
+        modal.classList.remove('hidden');
+    }
+
+    function closeDocumentViewer() {
+        document.getElementById('documentViewerModal').classList.add('hidden');
+        const contentEl = document.getElementById('docViewerContent');
+        contentEl.innerHTML = '';
+        // revoke object URLs created by download link if any
+        const dl = document.getElementById('docDownloadBtn');
+        if (dl && dl.href && dl.href.startsWith('blob:')) {
+            URL.revokeObjectURL(dl.href);
+            dl.href = '#';
+        }
+    }
+
     function closeImageViewer() {
-        document.getElementById('imageViewerModal').classList.add('hidden');
-        document.getElementById('imageLoading').classList.add('hidden');
-        document.getElementById('fullscreenImage').classList.add('hidden');
-        // Clear the image source
-        document.getElementById('fullscreenImage').src = '';
+        const modal = document.getElementById('imageViewerModal');
+        const img = document.getElementById('fullscreenImage');
+        const loading = document.getElementById('imageLoading');
+
+        modal.classList.add('hidden');
+        loading.classList.add('hidden');
+        img.classList.add('hidden');
+
+        // remove any handlers
+        img.onload = img.onerror = null;
+
+        // revoke blob URL if used
+        try {
+            if (img && img.src && img.src.startsWith('blob:')) {
+                URL.revokeObjectURL(img.src);
+            }
+        } catch(e) {
+            console.warn('Error revoking image blob URL', e);
+        }
+        img.src = '';
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
     }
 
     // Close modal when clicking outside
@@ -471,16 +678,19 @@
         if (event.target.classList.contains('fixed')) {
             if (event.target.id === 'imageViewerModal') {
                 closeImageViewer();
+            } else if (event.target.id === 'documentViewerModal') {
+                closeDocumentViewer();
             } else {
                 event.target.classList.add('hidden');
             }
         }
     });
 
-    // Close image viewer with Escape key
+    // Close image/document viewer with Escape key
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeImageViewer();
+            closeDocumentViewer();
         }
     });
 </script>

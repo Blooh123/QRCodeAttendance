@@ -269,7 +269,7 @@ require_once '../app/core/config.php';
                             <!-- Document 1 -->
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">
-                                    <i class="fas fa-image mr-1"></i>Image 1 (Optional)
+                                    <i class="fas fa-image mr-1"></i>Image / Document 1 (Optional)
                                 </label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="document1" class="file-upload-zone flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200">
@@ -278,9 +278,9 @@ require_once '../app/core/config.php';
                                             <p class="mb-2 text-sm text-gray-500">
                                                 <span class="font-semibold">Click to upload</span> or drag and drop
                                             </p>
-                                            <p class="text-xs text-gray-500">JPG, PNG, GIF up to 10MB</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG, GIF, PDF, DOC, DOCX up to 10MB</p>
                                         </div>
-                                        <input id="document1" name="document1" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
+                                        <input id="document1" name="document1" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt" />
                                     </label>
                                 </div>
                                 <div id="filePreview1" class="file-preview mt-3 hidden"></div>
@@ -289,7 +289,7 @@ require_once '../app/core/config.php';
                             <!-- Document 2 -->
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">
-                                    <i class="fas fa-image mr-1"></i>Image 2 (Optional)
+                                    <i class="fas fa-image mr-1"></i>Image / Document 2 (Optional)
                                 </label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="document2" class="file-upload-zone flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200">
@@ -298,9 +298,9 @@ require_once '../app/core/config.php';
                                             <p class="mb-2 text-sm text-gray-500">
                                                 <span class="font-semibold">Click to upload</span> or drag and drop
                                             </p>
-                                            <p class="text-xs text-gray-500">JPG, PNG, GIF up to 10MB</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG, GIF, PDF, DOC, DOCX up to 10MB</p>
                                         </div>
-                                        <input id="document2" name="document2" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
+                                        <input id="document2" name="document2" type="file" class="hidden" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt" />
                                     </label>
                                 </div>
                                 <div id="filePreview2" class="file-preview mt-3 hidden"></div>
@@ -518,19 +518,28 @@ require_once '../app/core/config.php';
         }
 
         function showFilePreview(file, previewElement, input) {
-            // Validate file type
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            // Allowed MIME types for images and documents
+            const allowedTypes = [
+                'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'text/plain',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ];
+
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
                     title: 'Invalid File Type',
-                    text: 'Please upload a valid image file (JPG, PNG, or GIF).',
+                    text: 'Please upload a supported file (JPG, PNG, GIF, PDF, DOC, DOCX, TXT, XLS).',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
                 input.value = '';
                 return;
             }
-            
+
             // Validate file size (10MB)
             const maxSize = 10 * 1024 * 1024;
             if (file.size > maxSize) {
@@ -544,31 +553,61 @@ require_once '../app/core/config.php';
                 return;
             }
 
-            previewElement.innerHTML = `
-                <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-image text-blue-500 text-lg"></i>
+            // Different render for images vs other docs
+            const isImage = file.type.startsWith('image/');
+            if (isImage) {
+                const url = URL.createObjectURL(file);
+                previewElement.innerHTML = `
+                    <div class="bg-gray-50 rounded-lg p-3 border border-gray-200 flex items-center gap-3">
+                        <img src="${url}" alt="${file.name}" class="h-16 w-16 object-cover rounded-md border" />
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">${file.name}</p>
+                            <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>
+                        </div>
+                        <div>
+                            <button type="button" onclick="removeFile('${input.id}')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Document preview (no thumbnail)
+                let icon = 'far fa-file';
+                if (file.type === 'application/pdf') icon = 'fas fa-file-pdf text-red-600';
+                if (file.type === 'application/msword' || file.type.includes('wordprocessingml')) icon = 'fas fa-file-word text-blue-700';
+                if (file.type.includes('excel') || file.type.includes('spreadsheet')) icon = 'fas fa-file-excel text-green-600';
+
+                previewElement.innerHTML = `
+                    <div class="bg-gray-50 rounded-lg p-3 border border-gray-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="${icon} text-2xl"></i>
                             <div>
                                 <p class="text-sm font-medium text-gray-900">${file.name}</p>
                                 <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>
                             </div>
                         </div>
-                        <button type="button" onclick="removeFile('${input.id}')" 
-                                class="text-red-500 hover:text-red-700 transition-colors duration-200">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <div>
+                            <button type="button" onclick="removeFile('${input.id}')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }
+
             previewElement.classList.remove('hidden');
         }
 
         function removeFile(inputId) {
             const input = document.getElementById(inputId);
-            const preview = input.closest('div').nextElementSibling;
+            if (!input) return;
             input.value = '';
-            preview.classList.add('hidden');
+            const preview = document.getElementById('filePreview' + inputId.replace('document',''));
+            if (preview) {
+                preview.innerHTML = '';
+                preview.classList.add('hidden');
+            }
         }
 
         // Form submission

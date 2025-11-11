@@ -301,7 +301,7 @@
                                 <?php if (!empty($event['description'])): ?>
                                     <div class="event-description mb-2 text-sm md:text-base"><?php echo $event['description']; ?></div>
                                 <?php endif; ?>
-                                <?php if ($event['atten_status'] === 'not started'): ?>
+                                <?php if ($event['atten_status'] === 'not started' && $event['allow_excuse'] == 1): ?>
                                     <a href="<?php echo ROOT ?>apply_excuse?id=<?php echo $event['atten_id']; ?>" class="event-btn mt-4 inline-block text-sm md:text-base">Apply for Excuse</a>
                                 <?php else: ?>
                                     <div class="mt-4 text-xs md:text-sm text-gray-500 italic">

@@ -14,13 +14,13 @@ if (!class_exists('Model\Attendances')) {
 {
     use Database;
 
-    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude, $longitude, $radius, $description): false|string
+    public function insertAttendance($name, $requiredAttendees, $year, $requiredAttendanceRecord, $sanction, $latitude, $longitude, $radius, $description, $allow_excuse): false|string
     {
         $status = 'not started';  // default
         
         $requiredAttendanceRecordJson = json_encode($requiredAttendanceRecord);
 
-        $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius, :description)";
+        $query = "CALL sp_insert_attendance(:name, :status, :sanction, :requiredAttendanceRecord, :latitude, :longitude, :radius, :description, :allow_excuse)";
         $params = [
             ':name' => $name,
             ':status' => $status,
@@ -29,7 +29,8 @@ if (!class_exists('Model\Attendances')) {
             ':latitude' => $latitude,
             ':longitude' => $longitude,
             ':radius' => $radius,
-            ':description' => $description
+            ':description' => $description,
+            ':allow_excuse' => $allow_excuse
         ];
 
         // Insert attendance and get the new ID

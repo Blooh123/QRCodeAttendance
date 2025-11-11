@@ -72,6 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $description = !empty($_POST['description']) ? $_POST['description'] : '';
         
+        // allow excuse toggle (tinyint 0/1)
+        $allow_excuse = (isset($_POST['allow_excuse']) && $_POST['allow_excuse'] == '1') ? 1 : 0;
++
         // Handle banner image upload
         $banner = null;
         if (isset($_FILES['banner_image']) && $_FILES['banner_image']['error'] === UPLOAD_ERR_OK) {
@@ -120,7 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             return;
         }
         
-        $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius, $description);
+        // pass $allow_excuse to insertAttendance (update model to accept & persist this)
+        $result = $attendance->insertAttendance($_POST['eventName'], $programs, $years, $requiredAttendanceRecord, $_POST['sanction'], $latitude, $longitude, $radius, $description, $allow_excuse);
         $last_id = $attendance->getLastAttendanceId();
         
         // Update banner if image was uploaded

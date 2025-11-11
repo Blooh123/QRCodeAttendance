@@ -167,6 +167,22 @@ require_once '../app/core/config.php';
                             </label>
                         </div>
                     </div>
+
+            <!-- Allow Excuse Toggle -->
+            <div class="mt-4">
+                <label class="block mb-2 text-sm font-medium text-gray-700">Excuse Applications</label>
+                <div class="flex items-center gap-3">
+                    <!-- hidden fallback so unchecked => 0 is submitted -->
+                    <input type="hidden" name="allow_excuse" value="0">
+                    <label class="inline-flex items-center cursor-pointer select-none">
+                        <input id="allow_excuse" name="allow_excuse" type="checkbox" value="1" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-[#a31d1d] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#a31d1d] transition-colors"></div>
+                        <span class="ml-3 text-sm text-gray-700">Allow students to submit excuse applications for this attendance</span>
+                    </label>
+                </div>
+                <p class="mt-2 text-xs text-gray-500">When enabled, students can apply for an excuse tied to this attendance event.</p>
+            </div>
+            
             <div>
                         <label for="sanction" class="block mb-2 text-sm font-medium text-gray-700">Sanction (in hours)</label>
                         <input type="number" name="sanction" id="sanction"
