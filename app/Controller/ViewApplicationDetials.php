@@ -5,16 +5,20 @@ require_once '../app/core/config.php';
 require_once '../app/core/Model.php';
 require_once '../app/Model/User.php';
 require_once '../app/Model/ExcuseApplication.php';
+require_once '../app/Model/ActivityLog.php';
 
 use Controller;
 use Model\User;
-
+use Model\ActivityLog;
 class ViewApplicationDetials extends Controller {
     
     public function index($applicationId = null): void
     {
         $user = new User();
         $userData = $user->checkSession('admin');
+
+
+    
 
         if (!$userData || !isset($userData['role']) || $userData['role'] !== 'admin') {
             $uri = str_replace('/view_application', '/login', $_SERVER['REQUEST_URI']);
@@ -83,9 +87,12 @@ class ViewApplicationDetials extends Controller {
         }
         
         $result = $excuseApp->updateExcuseApplicationStatus($applicationId, $status, $remarks);
-        
+        $user = new User();
+        $userData = $user->checkSession('admin');
         if ($result) {
             $statusText = $status == '1' ? 'approved' : 'rejected';
+            $activityLog = new ActivityLog();
+            $activityLog->createActivityLog($userData['user_id'], $$userData['role'], "Updated excuse application status to {$statusText}", "Updated status for application ID: " . $applicationId);
             $_SESSION['success'] = "Application {$statusText} successfully";
         } else {
             $_SESSION['error'] = 'Failed to update application status';
@@ -123,6 +130,8 @@ class ViewApplicationDetials extends Controller {
         
         if ($result) {
             $statusText = $status == '1' ? 'approved' : 'rejected';
+            $activityLog = new ActivityLog();
+            $activityLog->createActivityLog($userData['user_id'], $userData['role'], "Updated excuse application status to {$statusText}", "Updated status for application ID: " . $applicationId);
             echo json_encode(['success' => true, 'message' => "Application {$statusText} successfully"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update application status']);
@@ -266,6 +275,10 @@ if (isset($_GET['action'])) {
 } else {
     $viewApplicationDetials = new ViewApplicationDetials();
     if (isset($_GET['id'])) {
+                $user = new User();
+        $userData = $user->checkSession('admin');
+        $activityLog = new ActivityLog();
+        $activityLog->createActivityLog($userData['user_id'], $userData['role'], 'Viewed excuse application details', 'Viewed details for application ID: ' . $_GET['id']);
         $viewApplicationDetials->index($_GET['id']);
     } else {
         $viewApplicationDetials->index();

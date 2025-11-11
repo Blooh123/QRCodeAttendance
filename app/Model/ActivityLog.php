@@ -63,6 +63,8 @@ class ActivityLog
                      OR al.evnt LIKE '%login%'
                      OR al.evnt LIKE '%logout%'
                      OR al.evnt LIKE '%backup%'
+                     OR al.evnt LIKE '%Viewed%'
+                     OR al.evnt LIKE '%Updated%'
                   ORDER BY al.time_created DESC";
         
         $stmt = $this->connect()->prepare($query);
