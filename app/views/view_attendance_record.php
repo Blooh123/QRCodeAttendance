@@ -276,7 +276,7 @@ $viewNotAttended = $_GET['view'] ?? '';
                 border-bottom: 3px solid #333 !important;
                 padding-bottom: 20px !important;
                 padding-top: 20px !important;
-                background-color: #f8f9fa !important;
+                background-color: #ffffffff !important;
                 border-radius: 0 !important;
                 width: 100% !important;
             }
@@ -356,13 +356,41 @@ $viewNotAttended = $_GET['view'] ?? '';
 
 <!-- Print Header (hidden on screen, visible in print) -->
 <div class="print-header hidden">
+    <div style="text-align:center; margin-bottom:12px;">
+        <img src="<?= $imageSource8 ?>" alt="USEP Logo" style="height:80px; max-width:100%; object-fit:contain; display:inline-block;" />
+    </div>
+
     <h1 style="font-size: 36px; font-weight: bold; margin-bottom: 12px; text-align: center;">University of Southeastern Philippines</h1>
-    <h2 style="font-size: 26px; margin-bottom: 12px; text-align: center;">Attendance Record Report</h2>
-    <p style="font-size: 20px; color: #333; margin-bottom: 8px; text-align: center;">Event: <?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
-    <?php if (!empty($Description)): ?>
+    <!-- office name -->
+    <h3 style="font-size: 14px; margin-bottom: 12px; text-align: center;">Office of Student Affairs</h3>
+    <h2 style="font-size: 26px; margin-bottom: 12px; text-align: center;">Attendance Sheet</h2>
+    <p style="font-size: 20px; color: #333; margin-bottom: 8px; text-align: center;"><?php echo htmlspecialchars($EventName ?? 'Event Details'); ?></p>
+    <!-- <?php if (!empty($Description)): ?>
         <p style="font-size: 24px; color: #555; margin-bottom: 8px; text-align: center; font-style: italic;"><?php echo ($Description); ?></p>
-    <?php endif; ?>
-    <p style="font-size: 16px; color: #666; text-align: center;">Generated on: <?php echo date('F j, Y'); ?></p>
+    <?php endif; ?> -->
+    <p style="font-size: 16px; color: #666; text-align: center;">
+    <?php
+        if (!empty($AttendanceDate)) {
+            // Using DateTime for safe formatting
+            try {
+                $dt = new DateTime($AttendanceDate);
+                echo htmlspecialchars($dt->format('F d, Y'));
+            } catch (Exception $e) {
+               // fallback if input is not a valid date
+                echo htmlspecialchars(date('F d, Y', strtotime($AttendanceDate)));
+            }
+       }
+        ?>
+    </p>
+    
+    <!-- Data Privacy & Photo Consent notice -->
+    <div class="consent-notice mt-4" style="font-size:11px; color:#333; text-align:justify; line-height:1.25; max-width:900px; margin:0 auto;">
+        <strong>WHY WE NEED YOUR DATA (R.A. 10173):</strong> The (delivery unit) needs your personal data below to provide verifiable evidence in support to this event and that you participated therein. We will include your data in our printed and electronic reports that we will send through secured channels. By signing herein, we will continuously keep your data and under lock and key, and will limit their use to authorized staff. If you do not agree, please inform us and we will permanently destroy your data after we have sent our reports.<br><br>
+
+        <strong>WE WILL TAKE PHOTOS/VIDEOS THROUGHOUT THIS EVENT.</strong> By signing herein, you hereby give your informed consent to be photographed and/or recorded on video throughout the duration of this event. You acknowledge and agree that such images and recordings may be used as documentary evidence of the event, in accordance with applicable government accounting and financial reporting procedures. Furthermore, you grant the organizers and the University the right to publish, display, and disseminate your photographs and/or video recordings via official University platforms, including but not limited to websites, social media channels, printed publicity materials, and other forms of public communication.<br><br>
+
+        Your name, organizational affiliation, and position title may be disclosed and associated with such materials only when reasonably necessary, such as for identifying speakers, presenters, or key participants. Should you wish to withhold your consent to the taking or use of your images and associated personal data, you are required to notify the organizers at the commencement of the event. If you wish to access your images or recordings, file a complaint, or withdraw your consent to the continued use of your personal data, you may do so at any time by sending an email to (delivery unit’s email) or calling (delivery unit’s local number).
+    </div>
 </div>
 
 <!-- Header -->

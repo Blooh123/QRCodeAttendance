@@ -31,6 +31,7 @@ $attendanceDetails = $attendance->getAttendanceDetails($_GET['id'], $_GET['event
 $EventName = $attendanceDetails['event_name'];
 $EventID = $attendanceDetails['atten_id'];
 $Description = $attendanceDetails['description'];
+$AttendanceDate = $attendanceDetails['atten_started'];
 
 // Get required attendees using the proper function
 $requiredAttendees = $attendance->getRequiredAttendees($EventID);
@@ -76,7 +77,8 @@ $data = [
     'EventID' => $EventID,
     'totalStudents' =>  $totalStudents,
     'attendedCount' => $attendedCount,
-    'Description' => $Description
+    'Description' => $Description,
+    'AttendanceDate' => $AttendanceDate,
 ];
 
 $viewAttendanceRecord = new ViewAttendanceRecord();
