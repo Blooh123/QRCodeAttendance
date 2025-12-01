@@ -62,15 +62,6 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
 </head>
 <body class="bg-[#f8f9fa]">
 
-<!-- Toast Notification -->
-<?php if (isset($_SESSION['error'])): ?>
-    <div id="toast" class="toast fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-lg flex items-center justify-between">
-        <span><?php echo $_SESSION['error']; ?></span>
-        <button onclick="hideToast()" class="ml-4 text-red-700 hover:text-red-900">&times;</button>
-    </div>
-    <?php unset($_SESSION['error']); // Clear the error message after displaying ?>
-<?php endif; ?>
-
 
 
 <div class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -211,6 +202,15 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
 
 
 </div>
+
+<!-- Toast Notification -->
+<?php if (isset($_SESSION['error'])): ?>
+    <div id="toast" class="toast fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-lg flex items-center justify-between">
+        <span><?php echo $_SESSION['error']; ?></span>
+        <button onclick="hideToast()" class="ml-4 text-red-700 hover:text-red-900">&times;</button>
+    </div>
+    <?php unset($_SESSION['error']); // Clear the error message after displaying ?>
+<?php endif; ?>
 
 <script>
     // Hide the toast after 5 seconds
