@@ -13,7 +13,7 @@ class Logout2
     use \Database;
     public function updateStatus($userId, $status): void
     {
-        $query = "UPDATE users SET state = ? WHERE id = ?";
+        $query = "UPDATE user_account SET state = ? WHERE id = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$status, $userId]);
 
