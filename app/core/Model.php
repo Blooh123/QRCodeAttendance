@@ -135,7 +135,7 @@ Trait Model
 
     public function updateStatus($username, $status): void
     {
-        $query = "UPDATE users SET state = ? WHERE username = ?";
+        $query = "UPDATE user_account SET state = ? WHERE username = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$status, $username]);
     }

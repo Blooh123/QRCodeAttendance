@@ -16,7 +16,7 @@ if (!class_exists('Model\User')) {
             ':id' => $id
         ];
         $this->query($query, $params);
-        $query = "DELETE FROM users WHERE id = :id";
+        $query = "DELETE FROM user_account WHERE id = :id";
         $params = [
             ':id' => $id
         ];
@@ -25,7 +25,7 @@ if (!class_exists('Model\User')) {
 
     public function updateStatus($id, $status): void
     {
-        $query = "UPDATE users SET state = ? WHERE id = ?";
+        $query = "UPDATE user_account SET state = ? WHERE id = ?";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute([$status, $id]);
     }
@@ -58,7 +58,7 @@ if (!class_exists('Model\User')) {
 
     public function insertUser($id, $username, $password,$role): bool|array
     {
-        $query = "INSERT INTO users (id, username, pass, roles, state) VALUES (:id, :username, :password, :role, :state)";
+        $query = "INSERT INTO user_account (id, username, pass, roles, state) VALUES (:id, :username, :password, :role, :state)";
         $pass = $password;
         $hashed_pass = hash('sha256', $pass);
         $params = [
@@ -81,7 +81,7 @@ if (!class_exists('Model\User')) {
     }
     public function updateUser($id, $username): bool|array
     {
-        $query = "UPDATE users SET username = :username WHERE id = :id";
+        $query = "UPDATE user_account SET username = :username WHERE id = :id";
         $params = [
             ':id' => $id,
             ':username' => $username
@@ -90,7 +90,7 @@ if (!class_exists('Model\User')) {
     }
 
     public function updatePassword($id, $password): bool|array{
-        $query = 'UPDATE users SET pass = SHA2(:password,256) WHERE id = :id';
+        $query = 'UPDATE user_account SET pass = SHA2(:password,256) WHERE id = :id';
         $params = [
             ':id' => $id,
             ':password' => $password
@@ -110,7 +110,7 @@ if (!class_exists('Model\User')) {
             ':id' => $id
         ];
         $this->query($query, $params);
-        $query = "DELETE FROM users WHERE id = :id";
+        $query = "DELETE FROM user_account WHERE id = :id";
         $query2 = "DELETE FROM user_sessions WHERE user_id = :id";
         $params = [
             ':id' => $id
@@ -207,7 +207,7 @@ if (!class_exists('Model\User')) {
 
     public function getUserDataWithPersonalInfo($id): array
     {
-        $sql = 'SELECT * FROM users LEFT JOIN user_personal_info ON users.id = user_personal_info.id WHERE users.id = :id';
+        $sql = 'SELECT * FROM user_account LEFT JOIN user_personal_info ON user_account.id = user_personal_info.id WHERE user_account.id = :id';
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
@@ -227,7 +227,7 @@ if (!class_exists('Model\User')) {
 
     public function getUserIdByUsername($username): ?string
     {
-        $query = "SELECT id FROM users WHERE username = :username";
+        $query = "SELECT id FROM user_account WHERE username = :username";
         $stmt = $this->connect()->prepare($query);
         $stmt->bindParam(':username', $username);
         $stmt->execute();
@@ -284,7 +284,7 @@ if (!class_exists('Model\User')) {
 
     public function updateUserPermissions($userId, $permissionsJson): bool
     {
-        $query = "UPDATE users SET permissions = :permissions WHERE id = :user_id";
+        $query = "UPDATE user_account SET permissions = :permissions WHERE id = :user_id";
         $params = [
             ':user_id' => $userId,
             ':permissions' => $permissionsJson
@@ -299,7 +299,7 @@ if (!class_exists('Model\User')) {
 
     public function getUserPermissions($userId): array
     {
-        $query = "SELECT permissions FROM users WHERE id = :user_id";
+        $query = "SELECT permissions FROM user_account WHERE id = :user_id";
         $params = [
             ':user_id' => $userId
         ];

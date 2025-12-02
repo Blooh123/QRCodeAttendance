@@ -56,7 +56,7 @@ class ActivityLog
     {
         $query = "SELECT al.*, u.username, u.roles
                   FROM activity_log al 
-                  LEFT JOIN users u ON al.user_id = u.id 
+                  LEFT JOIN user_account u ON al.user_id = u.id 
                   WHERE al.evnt LIKE '%add%' 
                      OR al.evnt LIKE '%delete%' 
                      OR al.evnt LIKE '%update%' 
