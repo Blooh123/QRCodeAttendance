@@ -13,6 +13,14 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     define('DBPASS', 'mZ2~G76JP1s5=B=Cy1L*');
     define('DBHOST', 'localhost');
     define('DBPORT', '3306');
+
+//             define('DBNAME', 'qrcode_attendance_system');//u753706103_qr_attendance
+//     define('DBUSER', 'root');//u753706103_christian
+//     define('DBPASS', '');//mZ2~G76JP1s5=B=Cy1L*
+//     define('DBHOST', 'localhost');
+//     define('DBPORT', '3306');
+//     defined('ROOT') or define("ROOT", 'http://192.168.104.67/QRCodeAttendance/QRCodeAttendance/public/');
+//     // defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
 }
 session_start();
 header('Content-Type: application/json');
@@ -32,7 +40,7 @@ try {
     }
     
     // Get user ID by username
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt = $pdo->prepare("SELECT id FROM user_account WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
