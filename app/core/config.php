@@ -1,7 +1,7 @@
 <?php
 if($_SERVER['SERVER_NAME'] == 'localhost'){
 
-    define('DBNAME', 'qrcode_attendance_system');
+    define('DBNAME', 'qrcode_attendance_system2');
     define('DBUSER', 'root');
     define('DBPASS', '');
     define('DBHOST', 'localhost');

@@ -137,7 +137,7 @@ require_once "../app/core/imageConfig.php";
             "required_attendees",
             "sanction",
             "students",
-            "users",
+            "user_account",
             "user_personal_info",
             "user_sessions"
         ];

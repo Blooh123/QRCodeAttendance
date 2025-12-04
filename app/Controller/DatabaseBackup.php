@@ -165,7 +165,7 @@ class DatabaseBackup
         } catch (\Exception $e) {
             // Handle errors
             $_SESSION['error'] = "Backup failed: " . $e->getMessage();
-            header("Location: " . ROOT . "admin-home");
+            header("Location: " . ROOT . "adminHome");
             exit();
         }
     }
