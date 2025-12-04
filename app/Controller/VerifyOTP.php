@@ -32,7 +32,7 @@ class VerifyOTP extends \Controller
                 if ($otp === $_SESSION['reset_otp']) {
                     // Update password using SHA256
                     $hashedPassword = hash('sha256', $newPassword);
-                    $stmt = $this->connect()->prepare("UPDATE users SET pass = ? WHERE id = ?");
+                    $stmt = $this->connect()->prepare("UPDATE user_account SET pass = ? WHERE id = ?");
                     $stmt->execute([$hashedPassword, $userId]);
 
                     // Clear session
