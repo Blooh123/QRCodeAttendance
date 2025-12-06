@@ -24,4 +24,5 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     // define('DBPORT', '3306');
     // defined('ROOT') or define("ROOT", 'http://192.168.104.67/QRCodeAttendance/QRCodeAttendance/public/');
     // // defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    
 }
