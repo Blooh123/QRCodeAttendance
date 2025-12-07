@@ -73,9 +73,9 @@ $EventID = $data['EventID'] ?? '';
 <?php foreach ($multiYearData as $year => $records): ?>
     <div class="year-section <?php echo $year !== array_key_last($multiYearData) ? 'page-break' : ''; ?>">
         <div class="header">
-            <!-- <div style="text-align:center; margin-bottom:12px;">
+            <div style="text-align:center; margin-bottom:12px;">
                 <img src="<?= $imageSource8 ?>" alt="USEP Logo" style="height:80px; max-width:100%; object-fit:contain; display:inline-block;" />
-            </div> -->
+            </div>
             <h1>University of Southeastern Philippines</h1>
             <h2>Attendance Sheet - <?= htmlspecialchars($EventName) ?></h2>
             <p><strong>Program:</strong> <?= htmlspecialchars($printProgram) ?></p>

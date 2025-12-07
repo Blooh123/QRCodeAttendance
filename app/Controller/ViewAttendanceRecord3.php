@@ -9,7 +9,7 @@ use Model\Attendances;
 use Model\Student;
 use Model\User;
 
-class ViewAttendanceRecord extends Controller
+class ViewAttendanceRecord3 extends Controller
 {
     public function index($data): void
     {
@@ -80,25 +80,23 @@ $data = [
     'Description' => $Description,
     'AttendanceDate' => $AttendanceDate,
 ];
-
-$viewAttendanceRecord = new ViewAttendanceRecord();
-$viewAttendanceRecord->index($data);
+$viewAttendanceRecord3 = new ViewAttendanceRecord3();
 
 // Handle print all years request
-// if (isset($_GET['printAllYears']) && $_GET['printAllYears'] == '1' && isset($_GET['program'])) {
-//     $program = $_GET['program'];
-//     $allYears = $student->getAllYear();
-//     $multiYearData = [];
+if (isset($_GET['printAllYears']) && $_GET['printAllYears'] == '1' && isset($_GET['program'])) {
+    $program = $_GET['program'];
+    $allYears = $student->getAllYear();
+    $multiYearData = [];
 
-//     foreach ($allYears as $yearRow) {
-//         $year = $yearRow['acad_year'];
-//         $records = $attendance->AttendanceRecord($program, $year, $_GET['id']);
-//         if (!empty($records)) {
-//             $multiYearData[$year] = $records;
-//         }
-//     }
+    foreach ($allYears as $yearRow) {
+        $year = $yearRow['acad_year'];
+        $records = $attendance->AttendanceRecord($program, $year, $_GET['id']);
+        if (!empty($records)) {
+            $multiYearData[$year] = $records;
+        }
+    }
 
-//     $data['multiYearData'] = $multiYearData;
-//     $data['printProgram'] = $program;
-//     $viewAttendanceRecord->loadViewWithData('view_attendance_record_all_years', $data);
-// }
+    $data['multiYearData'] = $multiYearData;
+    $data['printProgram'] = $program;
+    $viewAttendanceRecord3->loadViewWithData('view_attendance_record_all_years', $data);
+}

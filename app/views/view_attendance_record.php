@@ -657,7 +657,7 @@ $viewNotAttended = $_GET['view'] ?? '';
             return;
         }
         // redirect to print endpoint that generates multi-year report
-        window.location.href = `<?= ROOT ?>view_records?id=<?= $_GET['id'] ?>&eventName=<?= $_GET['eventName'] ?>&printAllYears=1&program=${encodeURIComponent(program)}`;
+        window.location.href = `<?= ROOT ?>view_record?id=<?= $_GET['id'] ?>&eventName=<?= $_GET['eventName'] ?>&printAllYears=1&program=${encodeURIComponent(program)}`;
     });
 
     function deleteRecord(deleteUrl) {

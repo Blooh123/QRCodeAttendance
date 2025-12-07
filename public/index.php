@@ -83,6 +83,7 @@ $routes = [
     '/public/backup-page' => '../app/Controller/BackupPage.php',
     '/public/database-backup-page' => '../app/Controller/BackupPage.php',
     '/public/system-lock' => '../app/Controller/SystemLock.php',
+    'public/view_record' => '../app/Controller/ViewAttendanceRecord3.php',
 
     //maintenance Mode
     // '/' => '../app/Controller/MaintenanceController.php',
@@ -187,6 +188,7 @@ $routes = [
         '/QRCodeAttendance/QRCodeAttendance/public/backup-page' => '../app/Controller/BackupPage.php',
         '/QRCodeAttendance/QRCodeAttendance/public/database-backup-page' => '../app/Controller/BackupPage.php',
         '/QRCodeAttendance/QRCodeAttendance/public/system-lock' => '../app/Controller/SystemLock.php',
+        '/QRCodeAttendance/QRCodeAttendance/public/view_record' => '../app/Controller/ViewAttendanceRecord3.php',
     
 
 
