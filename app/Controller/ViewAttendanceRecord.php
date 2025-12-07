@@ -83,3 +83,22 @@ $data = [
 
 $viewAttendanceRecord = new ViewAttendanceRecord();
 $viewAttendanceRecord->index($data);
+
+// Handle print all years request
+if (isset($_GET['printAllYears']) && $_GET['printAllYears'] == '1' && isset($_GET['program'])) {
+    $program = $_GET['program'];
+    $allYears = $student->getAllYear();
+    $multiYearData = [];
+
+    foreach ($allYears as $yearRow) {
+        $year = $yearRow['acad_year'];
+        $records = $attendance->AttendanceRecord($program, $year, $_GET['id']);
+        if (!empty($records)) {
+            $multiYearData[$year] = $records;
+        }
+    }
+
+    $data['multiYearData'] = $multiYearData;
+    $data['printProgram'] = $program;
+    $viewAttendanceRecord->loadViewWithData('view_attendance_record_all_years', $data);
+}

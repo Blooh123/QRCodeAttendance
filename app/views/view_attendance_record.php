@@ -416,9 +416,37 @@ $viewNotAttended = $_GET['view'] ?? '';
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 no-print">
                 <i class="fas fa-print"></i> Print
             </button>
+            <button onclick="openPrintAllYearsModal()" 
+                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 no-print">
+                <i class="fas fa-print"></i> Print All Years
+            </button>
         </div>
     </div>
 </header>
+
+<!-- Print All Years Modal -->
+<div id="printAllYearsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-bold text-[#a31d1d] mb-4">Print All Years</h3>
+        <form id="printAllYearsForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Program</label>
+                <select id="printProgram" name="program" class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-3 focus:ring-2 focus:ring-[#a31d1d] focus:border-[#a31d1d]" required>
+                    <option value="">-- Select Program --</option>
+                    <?php foreach ($programList as $program): ?>
+                        <option value="<?= htmlspecialchars($program['program']); ?>">
+                            <?= htmlspecialchars($program['program']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closePrintAllYearsModal()" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 font-medium">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-purple-600 text-white font-medium">Print</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="max-w-7xl mx-auto space-y-6">
 
@@ -613,7 +641,26 @@ $viewNotAttended = $_GET['view'] ?? '';
 </div>
 
                 <script>
-function deleteRecord(deleteUrl) {
+    function openPrintAllYearsModal() {
+        document.getElementById('printAllYearsModal').classList.remove('hidden');
+    }
+
+    function closePrintAllYearsModal() {
+        document.getElementById('printAllYearsModal').classList.add('hidden');
+    }
+
+    document.getElementById('printAllYearsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const program = document.getElementById('printProgram').value;
+        if (!program) {
+            alert('Please select a program');
+            return;
+        }
+        // redirect to print endpoint that generates multi-year report
+        window.location.href = `<?= ROOT ?>view_records?id=<?= $_GET['id'] ?>&eventName=<?= $_GET['eventName'] ?>&printAllYears=1&program=${encodeURIComponent(program)}`;
+    });
+
+    function deleteRecord(deleteUrl) {
                                 Swal.fire({
         title: "Delete Attendance Record?",
         text: "This action cannot be undone. The record will be permanently deleted.",
