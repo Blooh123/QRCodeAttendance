@@ -87,7 +87,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                     <?php foreach ($currentSanctions as $sanction): ?>
                         <div class="glass-card p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:shadow-lg transition-all duration-300">
                             <div class="flex justify-between items-start mb-2">
-                                <p class="text-xs md:text-sm font-medium text-[#a31d1d]">
+                                <p class="text-xs md:text-sm font-medium text-[#a31d1d]">Date applied: 
                                     <?= date('F j, Y', strtotime($sanction['date_applied'])); ?>
                                 </p>
                                 <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs md:text-sm font-semibold">
