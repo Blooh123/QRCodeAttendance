@@ -58,15 +58,6 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-        
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
 
         /* Custom Maroon Dark Red */
         .bg-maroon { background-color: #800000; }
