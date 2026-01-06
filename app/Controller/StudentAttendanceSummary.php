@@ -37,12 +37,17 @@ class StudentAttendanceSummary extends \Controller
             exit();
         }
 
+        // Pass the raw 'year' GET param to the view so we can distinguish between
+        // (a) no 'year' param provided => default to 2025 (selected in UI)
+        // (b) 'year' param present and empty string => user selected 'All'
+        $selectedYearForView = array_key_exists('year', $_GET) ? $_GET['year'] : '2025';
+
         $data = [
             'sanctionList' => $sanctionList,
             'attendanceRecord' => $attendanceRecord,
             'studentInfo' => $studentInfo,
-            'notAttended' => $notAttended
-           ,'selectedYear' => $yearStart
+            'notAttended' => $notAttended,
+            'selectedYear' => $selectedYearForView
         ];
         $this->loadViewWithData('student_attendance_summary', $data);
     }
