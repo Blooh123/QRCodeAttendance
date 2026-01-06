@@ -2,7 +2,8 @@
 $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
 
 // Filter current and archived records (before June)
-$currentYear = date('Y');
+// Use fixed cutoff for June 2025
+$currentYear = 2025;
 $juneDate = "$currentYear-06-01";
 
 // Filter sanctions

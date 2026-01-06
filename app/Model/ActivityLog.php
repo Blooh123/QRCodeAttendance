@@ -8,6 +8,7 @@ use DateMalformedStringException;
 use DateTime;
 use DateTimeZone;
 use PDO;
+use Exception;
 class ActivityLog
 {
     use Database;

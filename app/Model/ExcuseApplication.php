@@ -5,7 +5,7 @@ namespace Model;
 // Get the project root directory
 $projectRoot = dirname(dirname(__DIR__));
 require_once $projectRoot . '/app/core/Database.php';
-
+use Exception;
 use Database;
 use PDO;
 
