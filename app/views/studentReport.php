@@ -233,7 +233,12 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                                 </div>
                                 <div>
                                     <p class="text-gray-500 font-medium">Time In</p>
-                                    <p class="text-gray-800"><?= date('g:i A', strtotime($record['time_in'] ?? 'N/A')); ?></p>
+                                        <p class="text-gray-800">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    <i class="fas fa-sign-in-alt mr-1"></i>
+                                                    <?= htmlspecialchars($record['time_in'] ?? 'N/A'); ?>
+                                                </span>
+                                        </p>
                                 </div>
                                 <div>
                                     <p class="text-gray-500 font-medium">Time Out</p>
