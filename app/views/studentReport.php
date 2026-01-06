@@ -75,7 +75,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                 Current Sanctions (June <?= $currentYear ?> onwards)
             </h3>
             <!-- Current Total Hours Card -->
-            <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
+            <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
                 Current Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalCurrentHours); ?></span>
             </div>
             <div class="space-y-4">
