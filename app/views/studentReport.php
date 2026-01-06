@@ -83,7 +83,10 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
             <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
                 Current Sanctions (June <?= $currentYear ?> onwards)
             </h3>
-            
+            <!-- Current Total Hours Card -->
+            <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
+                Current Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalCurrentHours); ?></span>
+            </div>
             <div class="space-y-4">
                 <?php if (empty($currentSanctions)): ?>
                     <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
@@ -107,10 +110,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <!-- Current Total Hours Card -->
-            <div class="mt-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center floating">
-                Current Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalCurrentHours); ?></span>
-            </div>
+
         </div>
 
         <!-- Archived Sanctions Section -->
