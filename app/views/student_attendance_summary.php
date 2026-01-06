@@ -3,12 +3,14 @@ global $imageSource;
 require "../app/core/imageConfig.php";
 
 // determine year label for headers
-$selectedYear = $data['selectedYear'] ?? null;
-if ($selectedYear && is_numeric($selectedYear)) {
+// Default to academic year 2025-2026 when no selection is provided
+$defaultYear = 2025;
+$selectedYear = array_key_exists('selectedYear', $data) ? $data['selectedYear'] : $defaultYear;
+if ($selectedYear !== '' && is_numeric($selectedYear)) {
     $yearLabel = "A. Y. " . htmlspecialchars($selectedYear) . "-" . htmlspecialchars($selectedYear + 1);
 } else {
     $yearLabel = "All Years";
-}
+} 
 ?>
 
 <!DOCTYPE html>
@@ -153,10 +155,12 @@ if ($selectedYear && is_numeric($selectedYear)) {
                 <select id="year" name="year" class="rounded-md border px-2 py-1 text-sm">
                     <option value="">All</option>
                     <?php
-                        $current = (int)date('Y');
+                        // Anchor the select to the chosen year, or default to $defaultYear when none provided
+                        $selectedYearForForm = array_key_exists('selectedYear', $data) ? $data['selectedYear'] : $defaultYear;
+                        $current = (int)(is_numeric($selectedYearForForm) ? $selectedYearForForm : $defaultYear);
                         for ($y = $current; $y >= $current - 6; $y--) {
                             $label = $y . '-' . ($y + 1);
-                            $sel = (isset($data['selectedYear']) && $data['selectedYear'] == $y) ? 'selected' : '';
+                            $sel = ($selectedYearForForm !== '' && $selectedYearForForm == $y) ? 'selected' : '';
                             echo "<option value=\"{$y}\" {$sel}>{$label}</option>";
                         }
                     ?>
