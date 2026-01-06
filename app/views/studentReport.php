@@ -245,7 +245,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                                     <p class="text-gray-800">
                                         <?= !empty($record['time_out']) 
                                             ? date('g:i A', strtotime($record['time_out'])) 
-                                            : '<span class="text-gray-400 italic">Not yet recorded</span>'; ?>
+                                            : '<span class="text-gray-400 italic">No recorded</span>'; ?>
                                     </p>
                                 </div>
                             </div>
