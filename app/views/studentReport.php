@@ -105,7 +105,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
         </div>
 
         <!-- Archived Sanctions Section -->
-        <div>
+        <!-- <div>
             <button onclick="toggleArchive('archivedSanctions')" class="w-full text-left">
                 <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
                     <h3 class="text-xl md:text-2xl font-bold text-gray-600 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
@@ -140,12 +140,12 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <!-- Archived Total Hours Card -->
+        
                 <div class="mt-6 glass-card bg-gray-500 text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
                     Archived Sanction Hours: <span class="text-xl md:text-2xl ml-2"><?= htmlspecialchars($totalArchivedHours); ?></span>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Current Attended Activities -->
         <div>
@@ -256,7 +256,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
         </div>
 
         <!-- Archived Attended Activities -->
-        <div>
+        <!-- <div>
             <button onclick="toggleArchive('archivedAttendance')" class="w-full text-left">
                 <div class="flex items-center justify-between glass-card p-4 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-gray-50/50 transition-all duration-300">
                     <h3 class="text-xl md:text-2xl font-bold text-gray-600 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
@@ -270,7 +270,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
             </button>
             
             <div id="archivedAttendance" class="hidden space-y-4 mt-4">
-                <!-- Desktop Table -->
+        
                 <div class="hidden md:block overflow-hidden rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
                     <div class="overflow-x-auto glass-card">
                         <table class="min-w-full">
@@ -308,7 +308,6 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                     </div>
                 </div>
 
-                <!-- Mobile Cards -->
                 <div class="md:hidden space-y-4">
                     <?php if (empty($archivedAttendance)): ?>
                         <div class="glass-card p-6 rounded-2xl text-center text-gray-500 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
@@ -349,7 +348,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Excuse Applications -->
         <div>
