@@ -42,14 +42,9 @@ class FacilitatorRegister extends \Controller{
             
             // Create database connection
             $pdo = new \PDO(
-                "mysql:host=" . DBHOST . ";dbname=" . DBNAME . ";port=" . DBPORT,
+                "mysql:host=" . DBHOST . ";dbname=" . DBNAME .
                 DBUSER,
                 DBPASS,
-                [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                    \PDO::ATTR_EMULATE_PREPARES => false
-                ]
             );
             
             // Check if user exists and validate credentials
