@@ -24,7 +24,7 @@ class FacilitatorRegister extends \Controller{
             return;
         }
         
-        try {
+  
             // Database configuration
             if($_SERVER['SERVER_NAME'] == 'localhost'){
                 define('DBNAME', 'qrcode_attendance_system');
@@ -42,9 +42,14 @@ class FacilitatorRegister extends \Controller{
             
             // Create database connection
             $pdo = new \PDO(
-                "mysql:host=" . DBHOST . ";dbname=" . DBNAME .
+                "mysql:host=" . DBHOST . ";dbname=" . DBNAME . ";port=" . DBPORT,
                 DBUSER,
                 DBPASS,
+                [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                    \PDO::ATTR_EMULATE_PREPARES => false
+                ]
             );
             
             // Check if user exists and validate credentials
@@ -107,13 +112,7 @@ class FacilitatorRegister extends \Controller{
             header('Location: ' . ROOT . 'face-register?user_id=' . $user['id'] . '&username=' . urlencode($user['username']));
             return;
             
-        } catch (\PDOException $e) {
-            header('Location: ' . ROOT . 'registration17236463?error=database_error');
-            return;
-        } catch (\Exception $e) {
-            header('Location: ' . ROOT . 'registration17236463?error=general_error');
-            return;
-        }
+
     }
 }
 
