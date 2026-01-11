@@ -15,6 +15,11 @@ if (!class_exists('Model\User')) {
         $params = [
             ':id' => $id
         ];
+         $this->query($query, $params);
+        $query = "DELETE FROM facilitator_facial_images WHERE user_id = :id";
+        $params = [
+            ':id' => $id
+        ];
         $this->query($query, $params);
         $query = "DELETE FROM user_account WHERE id = :id";
         $params = [
