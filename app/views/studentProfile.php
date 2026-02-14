@@ -81,6 +81,7 @@
                         <!-- Upload Form -->
                         <form id="profile-form" class="mt-6 flex flex-col items-center gap-4">
                             <p class="text-2xl font-bold text-[#a31d1d] mb-4">My Future Wifey!</p>
+                            <p class="text-sm text-gray-700">Happy 2nd Monthsary 🎉 — love you lots!</p>
                             <label for="file-upload"
                                 class="cursor-pointer bg-white text-[#515050] px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#a31d1d] hover:text-white transition-all duration-200">
                                 Choose File
