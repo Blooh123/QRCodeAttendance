@@ -15,7 +15,7 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     define('DBPASS', 'mZ2~G76JP1s5=B=Cy1L*');//mZ2~G76JP1s5=B=Cy1L*
     define('DBHOST', 'localhost');
     define('DBPORT', '3306');
-    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    defined('ROOT') or define("ROOT", 'https://usepqrattendance.site/public/');
 
     // define('DBNAME', 'qrcode_attendance_system');//u753706103_qr_attendance
     // define('DBUSER', 'root');//u753706103_christian
