@@ -8,7 +8,7 @@ Trait Database
 {
     public function connect(): PDO
     {
-        $string = "mysql:host=". DBHOST.";dbname=". DBNAME;
+        $string = "mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME;
         $con = new PDO($string, DBUSER,DBPASS);
         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable exception handling
         return $con;
