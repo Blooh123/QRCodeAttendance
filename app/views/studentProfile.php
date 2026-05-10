@@ -77,26 +77,12 @@
                         <?php endif; ?>
                     </div>
                     
-                    <?php if ($studentInfo['student_id'] == '2023-00274'): ?>
-                        <!-- Upload Form -->
-                        <form id="profile-form" class="mt-6 flex flex-col items-center gap-4">
-                            <!-- <label for="file-upload"
-                                class="cursor-pointer bg-white text-[#515050] px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#a31d1d] hover:text-white transition-all duration-200">
-                                Choose File
-                            </label> -->
-                            <input type="file" id="file-upload" accept="image/*" class="hidden">
-                            <button type="button" id="upload-button" 
-                                    class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 hidden">
-                                Upload
-                            </button>
-                            <p id="file-name" class="text-gray-500 text-sm hidden"></p>
-                        </form>
-                    <?php else: ?>
+                
                         <!-- take a photo -->
                         <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>" class="bg-[#a31d1d] text-white mt-2 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
                             Take a Photo
                         </a>
-                    <?php endif; ?>
+               
                 </div>
             </div>
 
