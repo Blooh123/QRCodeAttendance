@@ -1,26 +1,29 @@
 <?php
 if($_SERVER['SERVER_NAME'] == 'localhost'){
-    defined('ROOT') or define("ROOT", 'https://localhost/QRCodeAttendance/QRCodeAttendance/public/');
+
     define('DBNAME', 'qrcode_attendance_system');
     define('DBUSER', 'root');
     define('DBPASS', '');
     define('DBHOST', 'localhost');
     define('DBPORT', '3306');
+
+    defined('ROOT') or define("ROOT", 'https://localhost/QRCodeAttendance/QRCodeAttendance/public/');
+
 }else{
-    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+
+    // OLD HOSTINGER DATABASE
     define('DBNAME', 'u753706103_qr_attendance');
     define('DBUSER', 'u753706103_christian');
-    define('DBPASS', 'mZ2~G76JP1s5=B=Cy1L*');
-    define('DBHOST', 'localhost');
+    define('DBPASS', 'BloohGameDev123#');
+
+    // REMOTE MYSQL HOST
+    define('DBHOST', 'srv1401.hstgr.io');
+    // OR: 193.203.184.83
+
     define('DBPORT', '3306');
 
-//             define('DBNAME', 'qrcode_attendance_system');//u753706103_qr_attendance
-//     define('DBUSER', 'root');//u753706103_christian
-//     define('DBPASS', '');//mZ2~G76JP1s5=B=Cy1L*
-//     define('DBHOST', 'localhost');
-//     define('DBPORT', '3306');
-//     defined('ROOT') or define("ROOT", 'http://192.168.104.67/QRCodeAttendance/QRCodeAttendance/public/');
-//     // defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    // NEW DOMAIN
+    defined('ROOT') or define("ROOT", 'https://usepqrattendance.site/public/');
 }
 session_start();
 header('Content-Type: application/json');
