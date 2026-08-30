@@ -446,7 +446,7 @@ require "../app/core/imageConfig.php";
                     <a href="#how-it-works" class="hover:text-red-600 transition-colors">How It Works</a>
                     <a href="#about" class="hover:text-red-600 transition-colors">About</a>
                     <a href="#contact" class="hover:text-red-600 transition-colors">Contact</a>
-                    <a href="#register" class="rounded-full bg-slate-900 px-4 py-2.5 text-white hover:bg-slate-700 transition-colors">Register</a>
+                    <a href="#register" class="rounded-full bg-slate-900 px-4 py-2.5 text-white hover:bg-slate-700 transition-colors">Get Started</a>
                     <a href="<?php echo ROOT ?>login" class="rounded-full border border-slate-300 px-4 py-2.5 text-slate-700 hover:border-red-200 hover:text-red-600 transition-colors">Login</a>
                 </nav>
 
@@ -488,8 +488,7 @@ require "../app/core/imageConfig.php";
                         </p>
 
                         <div class="mt-8 flex flex-col gap-4 sm:flex-row">
-                            <a href="#register" class="hero-cta rounded-full bg-white px-7 py-4 text-red-700 shadow-xl shadow-red-950/20 hover:bg-red-50">Student Registration</a>
-                            <a href="<?php echo ROOT ?>login" class="hero-cta rounded-full border border-white/40 bg-white/5 px-7 py-4 text-white hover:border-white/60 hover:bg-white/10">Facilitator Login</a>
+                            <a href="<?php echo ROOT ?>login" class="hero-cta rounded-full border border-white/40 bg-white/5 px-7 py-4 text-white hover:border-white/60 hover:bg-white/10">Get Startted</a>
                         </div>
 
                         <div class="mt-10 flex flex-wrap gap-3 text-sm text-slate-100/90">
@@ -568,12 +567,6 @@ require "../app/core/imageConfig.php";
                         <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-100 text-xl text-rose-600"><i class="fas fa-scale-balanced"></i></div>
                         <h3 class="text-xl font-bold text-slate-900">Automated Sanctions</h3>
                         <p class="mt-3 text-slate-600">Automatically identify attendance violations and generate corresponding sanctions.</p>
-                    </div>
-
-                    <div class="feature-card card-surface rounded-[1.8rem] p-8" data-aos="fade-up" data-aos-delay="500">
-                        <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-xl text-violet-600"><i class="fas fa-file-circle-check"></i></div>
-                        <h3 class="text-xl font-bold text-slate-900">Excuse Applications</h3>
-                        <p class="mt-3 text-slate-600">Allow students to submit and manage attendance excuse applications.</p>
                     </div>
 
                     <div class="feature-card card-surface rounded-[1.8rem] p-8" data-aos="fade-up" data-aos-delay="600">
