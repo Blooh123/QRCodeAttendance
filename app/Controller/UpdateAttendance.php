@@ -62,7 +62,7 @@ class UpdateAttendance
             $eventId = $_POST['atten_id'] ?? null;
             $action = $_POST['action'] ?? null;
             $eventName = $_POST['eventName'] ?? null;
-            $hours = $_POST['sanction'] ?? null;
+            $sanctionInputHours = $_POST['sanction'] ?? null;
 
             // Validate event ID and action
             if (!$eventId || !$action) {
@@ -142,57 +142,96 @@ class UpdateAttendance
                         $stmt->bindParam(':eventId', $eventId);
                         $stmt->execute();
 
-                        //add sanction to students
+                        // OPTIMIZATION: Use batch operations to reduce database connections
                         $sanction = new Sanction();
                         $student = new Student();
                         $attendances = new Attendances();
                         $qrCode = new QRCode();
-                        $attendanceDetails = $attendances->getAttendanceDetails($eventId, $eventName);
                         
-                        // Get required attendees from the new required_attendees table
+                        // BATCH FETCH 1: Get all required data in ONE query each (not per-student)
+                        $attendanceDetails = $attendances->getAttendanceDetails($eventId, $eventName);
                         $requiredAttendeesData = $attendances->getRequiredAttendees($eventId);
-                        $requiredAttendance = json_decode($attendanceDetails['required_attenRecord'], true);
+                        $requiredAttendance = json_decode($attendanceDetails['required_attenRecord'] ?? '[]', true);
+                        $requiredAttendance = is_array($requiredAttendance) ? $requiredAttendance : [];
+                        $sanctionHours = is_numeric($attendanceDetails['sanction'] ?? null)
+                            ? (int)$attendanceDetails['sanction']
+                            : ((is_numeric($sanctionInputHours) ? (int)$sanctionInputHours : 0));
 
-                        // get sanction hours from the attendance
-                        $sanctionHours = $attendanceDetails['sanction'];
-
-                        $studentList = $student->getAllStudent(); // Fetch students as associative arrays
-
-                        $attendanceRecordList = array_map('strval', array_column($attendances->AttendanceRecord2($eventId), 'student_id'));
+                        $studentList = $student->getAllStudent();
                         $date = new DateTime("now", new DateTimeZone('Asia/Manila'));
-                        $formattedTime = $date->format('Y-m-d H:i:s'); // FULL Date and Time
+                        $formattedTime = $date->format('Y-m-d H:i:s');
+
+                        // CRITICAL OPTIMIZATION: Batch fetch instead of per-student queries
+                        // Before: 3+ connections × number of students
+                        // After: 3 total connections for entire batch
+                        $excusedStudentIds = $this->excuseApp->getApprovedExcuseStudentIds($eventId);
+                        $attendanceRecordRows = $attendances->AttendanceRecord2($eventId);
+                        $attendanceRecordList = is_array($attendanceRecordRows)
+                            ? array_map('strval', array_column($attendanceRecordRows, 'student_id'))
+                            : [];
+                        $attendanceRecords = $qrCode->getAttendanceRecordsByEvent($eventId);
+                        $studentsWithoutTimeOut = is_array($qrCode->getStudentsWithoutTimeOut($eventId))
+                            ? $qrCode->getStudentsWithoutTimeOut($eventId)
+                            : [];
+                        $studentsWithoutTimeIn = is_array($qrCode->getStudentsWithoutTimeIn($eventId))
+                            ? $qrCode->getStudentsWithoutTimeIn($eventId)
+                            : [];
+
+                        // Build array of sanctions to bulk insert (ONE query for all instead of N queries)
+                        $sanctionsToInsert = [];
 
                         // Check if AllStudents is required
                         $hasAllStudents = false;
-                        foreach ($requiredAttendeesData as $requirement) {
-                            if ($requirement['program'] === 'AllStudents') {
-                                $hasAllStudents = true;
-                                break;
+                        if (empty($requiredAttendeesData)) {
+                            error_log("UpdateAttendance finished: no required_attendees found for atten_id={$eventId}. Assuming all students.");
+                            $hasAllStudents = true;
+                        } else {
+                            foreach ($requiredAttendeesData as $requirement) {
+                                if (isset($requirement['program']) && $requirement['program'] === 'AllStudents') {
+                                    $hasAllStudents = true;
+                                    break;
+                                }
                             }
                         }
 
+                        // OPTIMIZED LOOP: Only PHP logic, no database queries inside
                         if ($hasAllStudents) {
                             foreach ($studentList as $student) {
                                 $student_id = (string) $student['student_id'];
                                 
-                                // Check if student has an approved excuse application
-                                if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
-                                    continue; // Skip sanction for students with approved excuses
+                                // Skip if excused (using array_search, not DB query)
+                                if (in_array($student_id, $excusedStudentIds, true)) {
+                                    continue;
                                 }
                                 
-                                if(in_array('time_out', $requiredAttendance)){
-                                    if(in_array($student_id, $attendanceRecordList, true)){
-                                        //check if naka time out
-                                        if(!$qrCode->checkAttendance2($eventId, $student_id)){
-                                            $sanction->insertSanction($student_id, 'Unable to time out ' . $eventName . ' event', 1, $formattedTime);
+                                if (in_array('time_out', $requiredAttendance)) {
+                                    if (in_array($student_id, $attendanceRecordList, true)) {
+                                        // Check using pre-fetched data (not DB query)
+                                        if (in_array($student_id, $studentsWithoutTimeOut, true)) {
+                                            $sanctionsToInsert[] = [
+                                                'student_id' => $student_id,
+                                                'reason' => 'Unable to time out ' . $eventName . ' event',
+                                                'hours' => 1,
+                                                'date_applied' => $formattedTime
+                                            ];
                                         }
-                                        if($qrCode->checkAttendance3($eventId, $student_id)){
-                                            $sanction->insertSanction($student_id, 'Unable to time in ' . $eventName . ' event', 1, $formattedTime);
+                                        if (in_array($student_id, $studentsWithoutTimeIn, true)) {
+                                            $sanctionsToInsert[] = [
+                                                'student_id' => $student_id,
+                                                'reason' => 'Unable to time in ' . $eventName . ' event',
+                                                'hours' => 1,
+                                                'date_applied' => $formattedTime
+                                            ];
                                         }
                                     }
                                 }
-                                if (!in_array($student_id, $attendanceRecordList, true)){
-                                    $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', 2, $formattedTime);
+                                if (!in_array($student_id, $attendanceRecordList, true)) {
+                                    $sanctionsToInsert[] = [
+                                        'student_id' => $student_id,
+                                        'reason' => 'Unable to attend ' . $eventName . ' event',
+                                        'hours' => 2,
+                                        'date_applied' => $formattedTime
+                                    ];
                                 }
                             }
                         } else {
@@ -203,18 +242,16 @@ class UpdateAttendance
 
                                 $studentIsRequired = false;
 
-                                // Check if student is required based on required_attendees table
+                                // Check if student is required based on required_attendees (PHP logic, not DB)
                                 foreach ($requiredAttendeesData as $requirement) {
                                     $requiredProgram = $requirement['program'];
                                     $requiredYear = $requirement['acad_year'];
 
                                     if ($student_program === $requiredProgram) {
-                                        // If year is empty/null, it means all years for this program
                                         if (empty($requiredYear) || $requiredYear === '' || $requiredYear === null) {
                                             $studentIsRequired = true;
                                             break;
                                         }
-                                        // If year is specified, check if it matches
                                         if ($requiredYear === $student_year) {
                                             $studentIsRequired = true;
                                             break;
@@ -222,30 +259,39 @@ class UpdateAttendance
                                     }
                                 }
 
-                                // If student is required but did NOT attend
-                                if ($studentIsRequired && in_array($student_id, $attendanceRecordList, true)) {
-                                    // Check if student has an approved excuse application
-                                    if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
-                                        continue; // Skip sanction for students with approved excuses
-                                    }
-                                    
-                                    if(in_array('time_out',$requiredAttendance)){
-                                        if(in_array($student_id, $attendanceRecordList, true)){
-                                            //check if naka time out
-                                            if(!$qrCode->checkAttendance2($eventId, $student_id)){
-                                                $sanction->insertSanction($student_id, 'Unable to time out ' . $eventName . ' event', $hours, $formattedTime);
+                                if ($studentIsRequired && !in_array($student_id, $excusedStudentIds, true)) {
+                                    if (in_array('time_out', $requiredAttendance)) {
+                                        if (in_array($student_id, $attendanceRecordList, true)) {
+                                            if (in_array($student_id, $studentsWithoutTimeOut, true)) {
+                                                $sanctionsToInsert[] = [
+                                                    'student_id' => $student_id,
+                                                    'reason' => 'Unable to time out ' . $eventName . ' event',
+                                                    'hours' => $hours,
+                                                    'date_applied' => $formattedTime
+                                                ];
                                             }
                                         }
                                     }
-                                }elseif($studentIsRequired && !in_array($student_id, $attendanceRecordList, true)){
-                                    // Check if student has an approved excuse application
-                                    if ($this->excuseApp->hasApprovedExcuse($student_id, $eventId)) {
-                                        continue; // Skip sanction for students with approved excuses
+                                    if (!in_array($student_id, $attendanceRecordList, true)) {
+                                        $sanctionsToInsert[] = [
+                                            'student_id' => $student_id,
+                                            'reason' => 'Unable to attend ' . $eventName . ' event',
+                                            'hours' => $hours,
+                                            'date_applied' => $formattedTime
+                                        ];
                                     }
-                                    
-                                    $sanction->insertSanction($student_id, 'Unable to attend ' . $eventName . ' event', $hours, $formattedTime);
                                 }
                             }
+                        }
+
+                        // BULK INSERT: All sanctions in ONE query instead of N queries
+                        if (!empty($sanctionsToInsert)) {
+                            $inserted = $sanction->bulkInsertSanctions($sanctionsToInsert);
+                            if ($inserted === false) {
+                                error_log("UpdateAttendance failed to insert sanctions for atten_id={$eventId}");
+                            }
+                        } else {
+                            error_log("UpdateAttendance finished with no sanctions to insert for atten_id={$eventId}");
                         }
 
                         $message = 'Attendance finished successfully.';
@@ -255,9 +301,15 @@ class UpdateAttendance
                     default:
                         throw new Exception('Invalid action.');
                 }
+                if ($action === 'finished') {
+                    $redirectUrl = ROOT . "public/view_record2?eventName=" . urlencode($eventName) . "&id=" . urlencode($eventId);
+                } else {
+                    $redirectUrl = str_replace('/update_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']);
+                }
+
                 echo "<script>
                     alert('$message');
-                    window.location.href = '" . str_replace('/update_attendance', '/adminHome?page=Attendance', $_SERVER['REQUEST_URI']) . "';
+                    window.location.href = '$redirectUrl';
                 </script>";
                 exit;
 

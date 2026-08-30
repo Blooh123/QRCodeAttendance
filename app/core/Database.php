@@ -6,17 +6,55 @@ require_once $projectRoot . '/app/core/config.php';
 
 Trait Database
 {
+    /**
+     * Static connection pool to reuse PDO connections
+     * CRITICAL FIX for max_connections_per_hour exceeded error
+     */
+    private static ?PDO $connection = null;
+
+    /**
+     * Get or create a pooled database connection
+     * Instead of creating new connections each time, reuse the same connection
+     * 
+     * @return PDO
+     */
     public function connect(): PDO
     {
+        // If connection already exists and is valid, reuse it
+        if (self::$connection !== null) {
+            return self::$connection;
+        }
+
+        // Create new connection only if needed
         $string = "mysql:host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME;
-        $con = new PDO($string, DBUSER,DBPASS);
-        $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable exception handling
-        return $con;
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_TIMEOUT => 5,                    // 5 second timeout
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
+            PDO::ATTR_PERSISTENT => false              // Don't use persistent connections on shared hosting
+        ];
+        
+        try {
+            self::$connection = new PDO($string, DBUSER, DBPASS, $options);
+        } catch (PDOException $e) {
+            error_log("Database Connection Error: " . $e->getMessage());
+            throw $e;
+        }
+
+        return self::$connection;
+    }
+
+    /**
+     * Close the connection pool (optional, called on script termination)
+     */
+    public function closeConnection(): void
+    {
+        self::$connection = null;
     }
 
     public function query($query, $params = [])
     {
-        $con = $this->connect();
+        $con = $this->connect();  // Reuses pooled connection
         $stmt = $con->prepare($query);
 
         try {
@@ -46,7 +84,7 @@ Trait Database
             }
         } catch (PDOException $e) {
             // Handle query exceptions
-            echo "Query Error: " . $e->getMessage();
+            error_log("Query Error: " . $e->getMessage() . " Query: " . $query);
             return false;
         }
 
@@ -56,7 +94,7 @@ Trait Database
 
     public function query2($query, $params = [])
     {
-        $con = $this->connect();
+        $con = $this->connect();  // Reuses pooled connection
         $stmt = $con->prepare($query);
 
         try {
@@ -72,24 +110,10 @@ Trait Database
             }
         } catch (PDOException $e) {
             // Handle query exceptions
-            echo "Query Error: " . $e->getMessage();
+            error_log("Query2 Error: " . $e->getMessage() . " Query: " . $query);
             return false;
         }
 
         return false;
     }
 }
-
-// Usage Example:
-// $database = new class {
-//     use Database;
-// };
-//
-// $result = $database->query("CALL ValidateUser(:username, :password)", [
-//     'username' => 'test_user',
-//     'password' => 'test_password'
-// ]);
-//
-// echo "<pre>";
-// print_r($result);
-// echo "</pre>";

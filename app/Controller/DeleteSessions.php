@@ -2,18 +2,24 @@
 
 namespace Controller;
 
-
-
 use DateMalformedStringException;
 use DateTime;
 use DateTimeZone;
 use PDO;
+
+require_once __DIR__ . '/../core/config.php';
+
 class DeleteSessions
 {
     public function connect(): PDO
     {
-        $string = "mysql:host="."localhost".";dbname="."u753706103_qr_attendance";
-        $con = new PDO($string, "u753706103_christian", "mZ2~G76JP1s5=B=Cy1L*");
+        $string = "mysql:host=" . DBHOST . ";port=" . DBPORT . ";dbname=" . DBNAME;
+
+        $con = new PDO(
+            $string,
+            DBUSER,
+            DBPASS
+        );
         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable exception handling
         return $con;
     }

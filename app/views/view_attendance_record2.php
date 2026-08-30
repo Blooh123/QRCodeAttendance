@@ -196,7 +196,7 @@
     </div>
 
     <!-- Sanctioned Students Table -->
-    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black overflow-hidden">
+        <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black overflow-hidden">
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
                 <i class="fas fa-table"></i> Sanctioned Students
@@ -247,6 +247,60 @@
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-600 mb-2">No Sanctioned Students</h3>
                                 <p class="text-gray-500">No students have been sanctioned for this event.</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Attendance Details for Sanctioned Students -->
+    <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
+                <i class="fas fa-clipboard-list"></i> Attendance Record Details
+                <span class="text-sm font-normal text-gray-600">(Sanctioned students only)</span>
+            </h2>
+        </div>
+        <div class="overflow-x-auto hide-scrollbar">
+            <table class="w-full">
+                <thead class="bg-[#a31d1d] text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Student ID</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Program</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Year</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Time In</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Time Out</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <?php if (!empty($attendanceList)): ?>
+                        <?php foreach ($attendanceList as $record): ?>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($record['student_id']); ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($record['name']); ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($record['program']); ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($record['acad_year']); ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($record['time_in'] ?? 'N/A'); ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-600"><?php echo !empty($record['time_out']) ? htmlspecialchars($record['time_out']) : '<span class="text-gray-400 italic">Not recorded</span>'; ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    <?php if (empty($record['time_in'])): ?>
+                                        <span class="text-red-600 font-semibold">No Time In</span>
+                                    <?php elseif (empty($record['time_out'])): ?>
+                                        <span class="text-orange-600 font-semibold">No Time Out</span>
+                                    <?php else: ?>
+                                        <span class="text-green-600 font-semibold">Attended</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                No attendance record details are available for sanctioned students.
                             </td>
                         </tr>
                     <?php endif; ?>

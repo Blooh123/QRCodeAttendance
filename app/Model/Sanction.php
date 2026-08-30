@@ -81,6 +81,46 @@ class Sanction
         $stm->execute();
         return $stm->fetchAll(PDO::FETCH_ASSOC);
     }
-// ...existing code...
+
+    /**
+     * BATCH INSERT: Add multiple sanctions in a single connection
+     * CRITICAL OPTIMIZATION: Reduces connections from 1 per sanction to 1 for all
+     * 
+     * @param array $sanctions Array of ['student_id', 'reason', 'hours', 'date']
+     * @return bool
+     */
+    public function bulkInsertSanctions(array $sanctions): bool
+    {
+        if (empty($sanctions)) {
+            return true;
+        }
+
+        try {
+            $con = $this->connect();
+            $sql = "INSERT INTO sanction (student_id, reason, hours, date_applied) VALUES (?, ?, ?, ?)";
+            $stmt = $con->prepare($sql);
+
+            // Use transaction to batch insert
+            $con->beginTransaction();
+
+            foreach ($sanctions as $sanction) {
+                $stmt->execute([
+                    $sanction['student_id'],
+                    $sanction['reason'],
+                    $sanction['hours'],
+                    $sanction['date_applied']
+                ]);
+            }
+
+            $con->commit();
+            return true;
+        } catch (\PDOException $e) {
+            error_log("Bulk insert sanctions error: " . $e->getMessage());
+            if (isset($con)) {
+                $con->rollBack();
+            }
+            return false;
+        }
+    }
 
 }

@@ -198,4 +198,68 @@ class QRCode
         return strtoupper(bin2hex(random_bytes(4))) . '-' . $student_id;
     }
 
+    /**
+     * BATCH FETCH: Get all attendance records for an event with time_in/time_out status
+     * CRITICAL OPTIMIZATION: Reduces N individual queries to 1 batch query
+     * 
+     * @param int $attenId Attendance event ID
+     * @return array Associative array keyed by student_id
+     */
+    public function getAttendanceRecordsByEvent($attenId): array
+    {
+        $query = 'SELECT student_id, time_in, time_out FROM attendance_record WHERE atten_id = ?';
+        $result = $this->query($query, [$attenId]);
+        
+        if (!is_array($result) || empty($result)) {
+            return [];
+        }
+        
+        // Key by student_id for easy lookups
+        $records = [];
+        foreach ($result as $row) {
+            $records[$row['student_id']] = $row;
+        }
+        return $records;
+    }
+
+    /**
+     * BATCH FETCH: Get students who attended but didn't time out
+     * CRITICAL OPTIMIZATION: Reduces N checks to 1 query
+     * 
+     * @param int $attenId Attendance event ID
+     * @return array Array of student IDs without time_out
+     */
+    public function getStudentsWithoutTimeOut($attenId): array
+    {
+        $query = 'SELECT DISTINCT student_id FROM attendance_record 
+                  WHERE atten_id = ? AND time_out IS NULL AND time_in IS NOT NULL';
+        $result = $this->query($query, [$attenId]);
+        
+        if (!is_array($result) || empty($result)) {
+            return [];
+        }
+        
+        return array_column($result, 'student_id');
+    }
+
+    /**
+     * BATCH FETCH: Get students who attended but didn't time in
+     * CRITICAL OPTIMIZATION: Reduces N checks to 1 query
+     * 
+     * @param int $attenId Attendance event ID
+     * @return array Array of student IDs without time_in
+     */
+    public function getStudentsWithoutTimeIn($attenId): array
+    {
+        $query = 'SELECT DISTINCT student_id FROM attendance_record 
+                  WHERE atten_id = ? AND time_in IS NULL';
+        $result = $this->query($query, [$attenId]);
+        
+        if (!is_array($result) || empty($result)) {
+            return [];
+        }
+        
+        return array_column($result, 'student_id');
+    }
+
 }

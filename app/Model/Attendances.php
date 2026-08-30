@@ -210,11 +210,17 @@ if (!class_exists('Model\Attendances')) {
 
     public function AttendanceRecord2($atten_id): array
     {
-        $sql = 'CALL sp_attendance_record(:id)';
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(":id", $atten_id);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $sql = 'CALL sp_attendance_record(:id)';
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(":id", $atten_id);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return is_array($result) ? $result : [];
+        } catch (\PDOException $e) {
+            error_log("AttendanceRecord2 error for atten_id={$atten_id}: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function checkAttendanceOnGoing(): bool|array

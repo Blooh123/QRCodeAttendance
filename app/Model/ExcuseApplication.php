@@ -383,5 +383,33 @@ if (!class_exists('Model\ExcuseApplication')) {
             return false;
         }
     }
+
+    /**
+     * BATCH FETCH: Get all excused student IDs for an event in ONE query
+     * CRITICAL OPTIMIZATION: Reduces connections from N checks to 1 fetch
+     * 
+     * @param int $eventId The attendance event ID
+     * @return array Array of student IDs with approved excuses
+     */
+    public function getApprovedExcuseStudentIds($eventId): array
+    {
+        try {
+            $query = "SELECT DISTINCT student_id FROM excuse_application 
+                      WHERE atten_id = :event_id AND application_status = 1";
+            
+            $params = [':event_id' => $eventId];
+            
+            $result = $this->query($query, $params);
+            if (is_array($result) && !empty($result)) {
+                // Return array of just the student IDs for easy array_key_exists checks
+                return array_column($result, 'student_id');
+            }
+            
+            return [];
+        } catch (Exception $e) {
+            error_log("Error fetching approved excuse students: " . $e->getMessage());
+            return [];
+        }
+    }
 }
 } 
