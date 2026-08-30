@@ -124,6 +124,25 @@
                         <i class="fas fa-camera"></i>
                         Take a Photo
                     </a>
+
+                    <?php if (!empty($profileUploadAllowed)): ?>
+                        <form method="POST" enctype="multipart/form-data" class="mt-4 w-full text-left">
+                            <label for="profile_picture" class="block text-sm font-semibold text-gray-700 mb-2">Upload Profile Picture</label>
+                            <input id="profile_picture" name="profile_picture" type="file" accept="image/jpeg,image/png,image/webp" required
+                                   class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[#f5e5e5] file:px-3 file:py-2 file:font-semibold file:text-[#a31d1d] hover:file:bg-[#eed4d4]">
+                            <p class="mt-2 text-xs text-gray-500">JPG, PNG, or WEBP. Maximum size: 5 MB.</p>
+                            <button type="submit" class="mt-3 w-full bg-blue-600 text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_3px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-blue-700 transition-all duration-200 text-sm flex items-center justify-center gap-2">
+                                <i class="fas fa-upload"></i>
+                                Upload Picture
+                            </button>
+                        </form>
+                    <?php endif; ?>
+
+                    <?php if (!empty($uploadMessage)): ?>
+                        <p class="mt-4 w-full rounded-lg bg-green-100 px-3 py-2 text-center text-sm font-semibold text-green-700"><?php echo htmlspecialchars($uploadMessage); ?></p>
+                    <?php elseif (!empty($uploadError)): ?>
+                        <p class="mt-4 w-full rounded-lg bg-red-100 px-3 py-2 text-center text-sm font-semibold text-red-700"><?php echo htmlspecialchars($uploadError); ?></p>
+                    <?php endif; ?>
                 </div>
             </aside>
 

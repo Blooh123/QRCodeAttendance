@@ -17,20 +17,29 @@ class StudentProfile extends \Controller
 $student = new Student();
 $studentInfo = $student->getStudentInfo();
 $uploadError = '';
+$uploadMessage = '';
 $passwordMessage = '';
 $studentId = $studentInfo['student_id'] ?? null;
 $response = '';
+$profileUploadAllowed = in_array((string) $studentId, ['2023-00274', '2023-00006'], true);
 // Handle profile picture upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_picture'])) {
 
-    if ($studentId && $_FILES['profile_picture']['error'] == 0) {
-        $imageData = file_get_contents($_FILES['profile_picture']['tmp_name']);
-
-        if (!$student->updateProfilePicture($studentId, $imageData)) {
-            $uploadError = "Failed to upload image.";
-        }
+    $uploadedFile = $_FILES['profile_picture'];
+    if (!$profileUploadAllowed) {
+        $uploadError = "Profile picture upload is not available for this student.";
+    } elseif ($uploadedFile['error'] !== UPLOAD_ERR_OK || $uploadedFile['size'] > 5 * 1024 * 1024) {
+        $uploadError = "Please select an image smaller than 5 MB.";
+    } elseif (@getimagesize($uploadedFile['tmp_name']) === false) {
+        $uploadError = "The selected file is not a valid image.";
     } else {
-        $uploadError = "Invalid file or student ID missing.";
+        $imageData = file_get_contents($uploadedFile['tmp_name']);
+
+        if ($imageData === false || !$student->updateProfilePicture($studentId, $imageData)) {
+            $uploadError = "Failed to upload image.";
+        } else {
+            $uploadMessage = "Profile picture uploaded successfully.";
+        }
     }
 }elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
     $currentPassword = trim($_POST['current_password']);
@@ -56,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_picture'])) {
 $data = [
     'studentInfo' => $studentInfo,
     'uploadError' => $uploadError,
+    'uploadMessage' => $uploadMessage,
+    'profileUploadAllowed' => $profileUploadAllowed,
     'Message' => $response,
 
 
