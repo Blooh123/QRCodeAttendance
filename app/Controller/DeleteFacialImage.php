@@ -30,11 +30,11 @@ if (!$input) {
     exit();
 }
 
-$imageId = filter_var($input['image_id'] ?? null, FILTER_VALIDATE_INT);
-$userId = filter_var($input['user_id'] ?? null, FILTER_VALIDATE_INT);
+$imageId = isset($input['image_id']) ? trim((string) $input['image_id']) : '';
+$userId = isset($input['user_id']) ? trim((string) $input['user_id']) : '';
 
 // Validate input
-if (!$imageId || !$userId) {
+if ($imageId === '' || $userId === '') {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Missing required parameters']);
     exit();
@@ -62,7 +62,7 @@ try {
     }
 
     // Verify the image belongs to the specified user
-    if ((int) $image['user_id'] !== $userId) {
+    if ((string) $image['user_id'] !== $userId) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Image does not belong to this user']);
         exit();

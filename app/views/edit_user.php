@@ -150,7 +150,7 @@
                                                 <i class="fas fa-search-plus text-sm"></i>
                                             </button>
                                             <button 
-                                                onclick="deleteFacialImage(<?php echo (int) $image['id']; ?>, <?php echo (int) $image['user_id']; ?>, <?php echo $index + 1; ?>)"
+                                                onclick="deleteFacialImage(<?php echo htmlspecialchars(json_encode((string) $image['id']), ENT_QUOTES, 'UTF-8'); ?>, <?php echo htmlspecialchars(json_encode((string) $image['user_id']), ENT_QUOTES, 'UTF-8'); ?>, <?php echo $index + 1; ?>)"
                                                 class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-all duration-200"
                                                 title="Delete Image"
                                             >
