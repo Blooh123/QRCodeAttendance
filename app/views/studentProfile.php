@@ -52,190 +52,178 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-6">
-    <div class="max-w-5xl mx-auto space-y-8">
-        <!-- Profile Section -->
-        <div>
-            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Student Profile
-            </h3>
-
-            <!-- Profile Picture Card -->
-            <div class="glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black space-y-6">
-                <div class="flex flex-col items-center">
-                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-[#a31d1d] shadow-lg">
-                        <?php if (!empty($studentInfo['studentProfile'])): ?>
-                            <img id="profile-img"
-                                 src="data:image/jpeg;base64,<?= base64_encode($studentInfo['studentProfile']) ?>"
-                                 class="w-full h-full object-cover"
-                                 alt="Profile Picture">
-                        <?php else: ?>
-                            <img id="profile-img"
-                                 src="<?php echo $imageSource5 ?>"
-                                 class="w-full h-full object-cover"
-                                 alt="Default Profile">
-                        <?php endif; ?>
-                    </div>
-                    
-                
-                        <!-- take a photo -->
-                        <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>" class="bg-[#a31d1d] text-white mt-2 px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
-                            Take a Photo
-                        </a>
-               
+<body class="p-4 md:p-6 bg-[#f8f9fa]">
+    <div class="max-w-6xl mx-auto space-y-8">
+        <header class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-[#a31d1d]/80">Account</p>
+                    <h1 class="text-2xl md:text-4xl font-extrabold text-[#a31d1d] mt-2">Student Profile</h1>
                 </div>
+                <a href="<?= ROOT ?>studentHome" class="inline-flex items-center gap-2 bg-[#a31d1d] text-white px-5 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
             </div>
+        </header>
 
-            <!-- Personal Information Card -->
-            <?php if (!empty($studentInfo)): ?>
-                <div class="mt-8 glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                    <h4 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-6">Personal Information</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">Full Name</p>
-                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['name'] ?? 'N/A'); ?></p>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">Email</p>
-                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['email'] ?? 'N/A'); ?></p>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">Student ID</p>
-                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
-                        </div>
-                        <!-- <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Contact</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['contact_num'] ?? 'N/A'); ?></p>
-                        </div> -->
-                        <div class="space-y-2">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">Program</p>
-                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?></p>
-                        </div>
-                        <!-- <div class="space-y-2">
-                            <p class="text-gray-500 font-medium">Section</p>
-                            <p class="text-gray-800 text-lg"><?php echo htmlspecialchars($studentInfo['section'] ?? 'N/A'); ?></p>
-                        </div> -->
-                        <div class="space-y-2">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">Year</p>
-                            <p class="text-sm md:text-lg text-gray-800"><?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?></p>
+        <div class="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-8">
+            <aside class="glass-card rounded-3xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-6 xl:sticky xl:top-6 self-start">
+                <div class="flex flex-col items-center text-center">
+                    <div class="relative mb-5">
+                        <div class="absolute inset-0 rounded-full bg-[#a31d1d]/20 blur-2xl scale-125"></div>
+                        <div class="relative w-40 h-40 rounded-full overflow-hidden border-4 border-[#a31d1d] shadow-xl ring-4 ring-white">
+                            <?php if (!empty($studentInfo['studentProfile'])): ?>
+                                <img id="profile-img"
+                                     src="data:image/jpeg;base64,<?= base64_encode($studentInfo['studentProfile']) ?>"
+                                     class="w-full h-full object-cover"
+                                     alt="Profile Picture">
+                            <?php else: ?>
+                                <img id="profile-img"
+                                     src="<?php echo $imageSource5 ?>"
+                                     class="w-full h-full object-cover"
+                                     alt="Default Profile">
+                            <?php endif; ?>
                         </div>
                     </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($studentInfo['name'] ?? 'Student'); ?></h2>
+                    <p class="text-sm text-gray-500 mt-1"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
+
+                    <div class="mt-5 flex flex-wrap justify-center gap-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                            <i class="fas fa-graduation-cap mr-1"></i>
+                            <?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?>
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
+                            <i class="fas fa-calendar mr-1"></i>
+                            <?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?>
+                        </span>
+                    </div>
+
+                    <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>"
+                       class="mt-6 w-full bg-[#a31d1d] text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base flex items-center justify-center gap-2">
+                        <i class="fas fa-camera"></i>
+                        Take a Photo
+                    </a>
                 </div>
-            <?php endif; ?>
+            </aside>
 
-            <!-- Change Password Card -->
-            <!-- Security Header and Developer Info Dropdown -->
-            <div class="mt-8">
-                <h4 class="text-2xl font-bold text-[#a31d1d] mb-4">Security</h4>
+            <main class="space-y-8">
+                <?php if (!empty($studentInfo)): ?>
+                    <section class="glass-card p-6 md:p-8 rounded-3xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                        <div class="flex items-center justify-between gap-3 mb-6">
+                            <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d]">Personal Information</h3>
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-[#f5e5e5] text-[#a31d1d] text-xs font-semibold">
+                                <i class="fas fa-user-check mr-1"></i>
+                                Active Student
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4">
+                                <p class="text-xs uppercase tracking-[0.15em] text-gray-500 font-semibold">Full Name</p>
+                                <p class="mt-2 text-base md:text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($studentInfo['name'] ?? 'N/A'); ?></p>
+                            </div>
+                            <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4">
+                                <p class="text-xs uppercase tracking-[0.15em] text-gray-500 font-semibold">Email</p>
+                                <p class="mt-2 text-base md:text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($studentInfo['email'] ?? 'N/A'); ?></p>
+                            </div>
+                            <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4">
+                                <p class="text-xs uppercase tracking-[0.15em] text-gray-500 font-semibold">Student ID</p>
+                                <p class="mt-2 text-base md:text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($studentInfo['student_id'] ?? 'N/A'); ?></p>
+                            </div>
+                            <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4">
+                                <p class="text-xs uppercase tracking-[0.15em] text-gray-500 font-semibold">Program</p>
+                                <p class="mt-2 text-base md:text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($studentInfo['program'] ?? 'N/A'); ?></p>
+                            </div>
+                            <div class="rounded-2xl bg-gray-50 border border-gray-200 p-4 md:col-span-2">
+                                <p class="text-xs uppercase tracking-[0.15em] text-gray-500 font-semibold">Academic Year</p>
+                                <p class="mt-2 text-base md:text-lg font-semibold text-gray-800"><?php echo htmlspecialchars($studentInfo['acad_year'] ?? 'N/A'); ?></p>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; ?>
 
-            </div>
-            <div class="glass-card p-8 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-                <h4 class="text-lg md:text-xl font-bold text-[#a31d1d] mb-6">Change Password</h4>
-                <form method="POST" class="space-y-4">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-xs md:text-sm text-gray-500 font-medium">Current Password</label>
-                            <input type="password" name="current_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
-                        </div>
-                        <div>
-                            <label class="text-xs md:text-sm text-gray-500 font-medium">New Password</label>
-                            <input type="password" name="new_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
-                        </div>
-                        <div>
-                            <label class="text-xs md:text-sm text-gray-500 font-medium">Confirm New Password</label>
-                            <input type="password" name="confirm_password" required 
-                                   class="w-full mt-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
-                        </div>
+                <section class="glass-card p-6 md:p-8 rounded-3xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
+                    <div class="flex items-center justify-between gap-3 mb-6">
+                        <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d]">Security</h3>
+                        <span class="inline-flex items-center text-xs font-semibold text-gray-500 uppercase tracking-[0.15em]">
+                            <i class="fas fa-shield-alt mr-2 text-[#a31d1d]"></i>
+                            Password
+                        </span>
                     </div>
-                    <button type="submit" name="change_password" 
-                            class="bg-[#a31d1d] text-white px-6 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
-                        Update Password
-                    </button>
-                </form>
-            </div>
+                    <form method="POST" class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs md:text-sm text-gray-500 font-medium uppercase tracking-[0.12em] mb-2">Current Password</label>
+                                <input type="password" name="current_password" required
+                                       class="w-full p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm text-gray-500 font-medium uppercase tracking-[0.12em] mb-2">New Password</label>
+                                <input type="password" name="new_password" required
+                                       class="w-full p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm text-gray-500 font-medium uppercase tracking-[0.12em] mb-2">Confirm New Password</label>
+                                <input type="password" name="confirm_password" required
+                                       class="w-full p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#a31d1d] text-sm md:text-base">
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" name="change_password"
+                                    class="bg-[#a31d1d] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base">
+                                Update Password
+                            </button>
+                        </div>
+                    </form>
+                </section>
 
-                <!-- Developer Info Dropdown -->
-                <div class="glass-card rounded-2xl shadow-[0px_6px_0px_2px_rgba(163,29,29,0.15)] outline outline-2 outline-[#a31d1d] mt-8">
-                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-8 py-5 text-xl font-bold text-[#a31d1d] bg-[#f8f9fa] rounded-t-2xl focus:outline-none transition-colors hover:bg-[#f3eaea]">
+                <div class="glass-card rounded-3xl shadow-[0px_6px_0px_2px_rgba(163,29,29,0.15)] outline outline-2 outline-[#a31d1d]">
+                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-6 md:px-8 py-5 text-lg md:text-xl font-bold text-[#a31d1d] bg-[#f8f9fa] rounded-t-3xl focus:outline-none transition-colors hover:bg-[#f3eaea]">
                         <span class="flex items-center gap-2">
-                            <svg class="h-7 w-7 text-[#a31d1d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01" />
-                            </svg>
+                            <i class="fas fa-info-circle text-[#a31d1d]"></i>
                             Developer Info
                         </span>
-                        <svg id="devInfoChevron" class="h-7 w-7 text-[#a31d1d] transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="devInfoChevron" class="h-6 w-6 text-[#a31d1d] transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div id="devInfoPanel" class="px-8 pb-8 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none bg-gradient-to-br from-[#fff] via-[#f8f9fa] to-[#ffeaea] rounded-b-2xl">
+                    <div id="devInfoPanel" class="px-6 md:px-8 pb-8 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none bg-gradient-to-br from-[#fff] via-[#f8f9fa] to-[#ffeaea] rounded-b-3xl">
                         <div class="flex flex-col md:flex-row items-center gap-8 mt-6">
                             <div class="relative group">
-                                <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-32 h-32 rounded-full border-4 border-[#a31d1d] shadow-xl object-cover transition-transform duration-300 group-hover:scale-105">
-                                <span class="absolute bottom-2 right-2 bg-[#a31d1d] text-white text-xs px-2 py-0.5 rounded-full shadow-md font-semibold">Dev</span>
+                                <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-[#a31d1d] shadow-xl object-cover transition-transform duration-300 group-hover:scale-105">
+                                <span class="absolute bottom-2 right-2 bg-[#a31d1d] text-white text-[10px] px-2 py-0.5 rounded-full shadow-md font-semibold">Dev</span>
                             </div>
                             <div class="flex-1 text-center md:text-left">
-                                <div class="text-2xl font-extrabold text-[#a31d1d] mb-1 tracking-wide">Dave D. Tiongson</div>
-                                <div class="flex flex-col md:flex-row md:items-center md:gap-4 mb-2">
-                                    <span class="text-gray-700 font-medium">Program:</span>
-                                    <span class="font-semibold text-[#a31d1d]">Bachelor of Science in Information Technology</span>
-                                </div>
-                                <div class="flex flex-col md:flex-row md:items-center md:gap-4 mb-2">
-                                    <span class="text-gray-700 font-medium">Skills:</span>
-                                    <span class="font-semibold text-[#a31d1d]">Fullstack Developer, UI/UX Designer, Database Administrator</span>
-                                </div>
-                                <div class="flex items-center justify-center md:justify-start gap-2 mt-2">
-                                    <span class="text-gray-600 text-base italic">Takbong pogi</span>
-                                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/>
-                                    </svg>
-                                </div>
-                                <div class="flex justify-center md:justify-start gap-4 mt-4">
-                                    <a href="mailto:ddtiongson00006@usep.edu.ph" class="inline-flex items-center gap-1 text-[#a31d1d] hover:underline font-medium transition-colors">
-                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 12H8m8 0a4 4 0 11-8 0 4 4 0 018 0zm2 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1" />
+                                <div class="text-2xl font-extrabold text-[#a31d1d] mb-2 tracking-wide">Dave D. Tiongson</div>
+                                <div class="space-y-2 text-sm md:text-base">
+                                    <div class="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <span class="text-gray-700 font-medium">Program:</span>
+                                        <span class="font-semibold text-[#a31d1d]">Bachelor of Science in Information Technology</span>
+                                    </div>
+                                    <div class="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <span class="text-gray-700 font-medium">Skills:</span>
+                                        <span class="font-semibold text-[#a31d1d]">Fullstack Developer, UI/UX Designer, Database Administrator</span>
+                                    </div>
+                                    <div class="flex items-center justify-center md:justify-start gap-2 mt-2">
+                                        <span class="text-gray-600 italic">Takbong pogi</span>
+                                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/>
                                         </svg>
-                                        Email
+                                    </div>
+                                </div>
+                                <div class="mt-5">
+                                    <a href="https://web.facebook.com/debbytrades" class="inline-flex items-center gap-2 text-[#a31d1d] hover:underline font-medium transition-colors">
+                                        <i class="fab fa-facebook"></i>
+                                        Follow
                                     </a>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const devInfoToggle = document.getElementById('devInfoToggle');
-                    const devInfoPanel = document.getElementById('devInfoPanel');
-                    const devInfoChevron = document.getElementById('devInfoChevron');
-
-                    devInfoToggle.addEventListener('click', function () {
-                        const isOpen = devInfoPanel.classList.contains('pointer-events-auto');
-                        if (!isOpen) {
-                            devInfoPanel.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
-                            devInfoPanel.classList.add('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
-                            devInfoChevron.style.transform = 'rotate(180deg)';
-                        } else {
-                            devInfoPanel.classList.remove('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
-                            devInfoPanel.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
-                            devInfoChevron.style.transform = '';
-                        }
-                    });
-                });
-                </script>
-                <style>
-                    /* For smooth max-height transition */
-                    #devInfoPanel.max-h-\[500px\] {
-                        max-height: 500px !important;
-                    }
-                    #devInfoPanel.opacity-100 {
-                        opacity: 1 !important;
-                    }
-                    #devInfoPanel.pointer-events-auto {
-                        pointer-events: auto !important;
-                    }
-                </style>
+            </main>
         </div>
     </div>
 
