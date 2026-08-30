@@ -44,13 +44,13 @@ class ForgotPassword extends \Controller
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'ddtiongson00006@usep.edu.ph'; // usep.qrattendance
-                        $mail->Password = 'cwqt aoet uyew snsk'; // vvyg egpy egtv ajms
+                        $mail->Username = 'usep.qrattendance@gmail.com'; // usep.qrattendance@gmail.com
+                        $mail->Password = 'vvyg egpy egtv ajms'; // vvyg egpy egtv ajms  //cwqt aoet uyew snsk
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port = 587;
 
                         // Recipients
-                        $mail->setFrom('usep.qrattendance@gmail.com', 'USeP QR Attendance');
+                        $mail->setFrom('usep.qrattendance@gmail.com', 'USeP QR Attendance Team');
                         $mail->addAddress($email, $user['username']);
 
                         // Content
