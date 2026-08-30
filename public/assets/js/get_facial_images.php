@@ -12,13 +12,14 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
 }else{
 
     // OLD HOSTINGER DATABASE
+    // OLD HOSTINGER DATABASE
     define('DBNAME', 'u753706103_qr_attendance');
     define('DBUSER', 'u753706103_christian');
-    define('DBPASS', 'BloohGameDev123#');
+    define('DBPASS', 'UsepDatabaseQRAttendance123#');
 
     // REMOTE MYSQL HOST
-    define('DBHOST', 'srv1401.hstgr.io');
-    // OR: 193.203.184.83
+    define('DBHOST', '');
+
 
     define('DBPORT', '3306');
 
