@@ -19,7 +19,6 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     // REMOTE MYSQL HOST
     define('DBHOST', 'localhost');
     // OR: 193.203.184.83
-    
 
     define('DBPORT', '3306');
 
