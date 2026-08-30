@@ -408,244 +408,123 @@
     </div>
 
     <?php
-    // Separate attendance records by date
-    $beforeJune2025 = [];
-    $fromJune2025 = [];
-    $june2025Date = '2025-06-01';
-    
+    // Show only records dated after August 2026
+    $filteredAttendanceList = [];
+    $minimumDate = '2026-08-31';
+
     if (!empty($attendanceList)) {
         foreach ($attendanceList as $attendance) {
             $dateCreated = $attendance['date_created'] ?? '';
-            if ($dateCreated && $dateCreated < $june2025Date) {
-                $beforeJune2025[] = $attendance;
-            } else {
-                $fromJune2025[] = $attendance;
+            if ($dateCreated && $dateCreated > $minimumDate) {
+                $filteredAttendanceList[] = $attendance;
             }
         }
     }
     ?>
 
-    <!-- Grid Layout for Both Sections -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-8">
-        
-        <!-- Records Before June 2025 -->
-        <div class="attendance-card glass-card p-4 md:p-6 min-w-0 fade-in">
-            <div class="section-header">
-                <div class="flex items-center gap-3 md:gap-4 relative z-10">
-                    <div class="bg-white/20 p-2 md:p-3 rounded-full">
-                        <i class="fas fa-history text-xl md:text-2xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xl md:text-2xl font-bold">Historical Records</h2>
-                        <p class="text-xs md:text-sm opacity-90">Records created before June 2025</p>
-                    </div>
+    <div class="attendance-card glass-card p-4 md:p-6 min-w-0 fade-in" style="animation-delay: 0.2s;">
+        <div class="section-header">
+            <div class="flex items-center gap-3 md:gap-4 relative z-10">
+                <div class="bg-white/20 p-2 md:p-3 rounded-full">
+                    <i class="fas fa-calendar-alt text-xl md:text-2xl"></i>
                 </div>
-            </div>
-
-            <div class="card-content">
-                <?php if (empty($beforeJune2025)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-archive"></i>
-                        <h3 class="text-lg md:text-xl font-semibold mb-2">No Historical Records</h3>
-                        <p class="text-gray-500 text-sm md:text-base">Records created before June 2025 will appear here.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="scrollable-container">
-                        <div class="grid grid-cols-1 gap-4 md:gap-6">
-                            <?php foreach ($beforeJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-3 md:p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin-left: 20px; margin-top: 20px;">
-                                    <div class="flex items-center space-x-2 md:space-x-3 mb-2">
-                                        <i class="fas fa-file-alt text-[#a31d1d] text-xl md:text-2xl"></i>
-                                        <h3 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate flex-1">
-                                            <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
-                                        </h3>
-                                        <span class="status-badge bg-gradient-to-r from-orange-400 to-orange-500 text-white text-xs md:text-sm">
-                                            <i class="fas fa-clock mr-1"></i><span class="hidden sm:inline">Historical</span>
-                                        </span>
-                                    </div>
-                                    <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
-                                    <p class="text-gray-700"><strong>Status:</strong> 
-                                        <?php
-                                        $status = $attendance['atten_status'] ?? 'unknown';
-                                        $statusClass = '';
-                                        $statusIcon = '';
-                                        switch ($status) {
-                                            case 'on going': 
-                                                $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
-                                                $statusIcon = 'fas fa-play-circle';
-                                                break;
-                                            case 'stopped': 
-                                                $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
-                                                $statusIcon = 'fas fa-pause-circle';
-                                                break;
-                                            case 'finished': 
-                                                $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
-                                                $statusIcon = 'fas fa-check-circle';
-                                                break;
-                                            case 'closed': 
-                                                $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
-                                                $statusIcon = 'fas fa-times-circle';
-                                                break;
-                                            default: 
-                                                $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
-                                                $statusIcon = 'fas fa-question-circle';
-                                        }
-                                        ?>
-                                        <span class="status-badge <?php echo $statusClass; ?>">
-                                            <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
-                                        </span>
-                                    </p>
-                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
-                                        <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                            <i class="fas fa-eye"></i> <span class="hidden xs:inline">View</span>
-                                        </a>
-                                        <!-- check facilitator and has permission -->
-                                        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('edit attendance', $facilitatorPermissions)): ?>
-                                        <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                            <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
-                                        </a>
-                                        <?php endif; ?>
-                                        <!-- check facilitator and has permission -->
-                                        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete attendance', $facilitatorPermissions)): ?>
-                                        <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                           onclick="return confirmDelete(event, this.href);"
-                                           class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                            <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
-                                        </a>
-                                        <?php endif; ?>
-                                        <!-- check if admin -->
-                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
-                                            </a>
-                                        <?php endif; ?>
-                                        <!-- display delete -->
-                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                            onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold">Attendance Records</h2>
+                    <p class="text-xs md:text-sm opacity-90">Records dated after August 2026</p>
+                </div>
             </div>
         </div>
 
-        <!-- Records From June 2025 Onwards -->
-        <div class="attendance-card glass-card p-4 md:p-6 min-w-0 fade-in" style="animation-delay: 0.2s;">
-            <div class="section-header">
-                <div class="flex items-center gap-3 md:gap-4 relative z-10">
-                    <div class="bg-white/20 p-2 md:p-3 rounded-full">
-                        <i class="fas fa-calendar-alt text-xl md:text-2xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xl md:text-2xl font-bold">Current Records</h2>
-                        <p class="text-xs md:text-sm opacity-90">Records from June 2025 onwards</p>
+        <div class="card-content">
+            <?php if (empty($filteredAttendanceList)): ?>
+                <div class="empty-state">
+                    <i class="fas fa-calendar-plus"></i>
+                    <h3 class="text-lg md:text-xl font-semibold mb-2">No Records Available</h3>
+                    <p class="text-gray-500 text-sm md:text-base">Attendance records dated after August 2026 will appear here.</p>
+                </div>
+            <?php else: ?>
+                <div class="scrollable-container">
+                    <div class="grid grid-cols-1 gap-4 md:gap-6">
+                        <?php foreach ($filteredAttendanceList as $index => $attendance): ?>
+                            <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-3 md:p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin-left: 20px; margin-top: 20px;">
+                                <div class="flex items-center space-x-2 md:space-x-3 mb-2">
+                                    <i class="fas fa-file-alt text-[#a31d1d] text-xl md:text-2xl"></i>
+                                    <h3 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate flex-1">
+                                        <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
+                                    </h3>
+                                    <span class="status-badge bg-gradient-to-r from-green-400 to-green-500 text-white text-xs md:text-sm">
+                                        <i class="fas fa-check-circle mr-1"></i><span class="hidden sm:inline">Current</span>
+                                    </span>
+                                </div>
+                                <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
+                                <p class="text-gray-700"><strong>Status:</strong> 
+                                    <?php
+                                    $status = $attendance['atten_status'] ?? 'unknown';
+                                    $statusClass = '';
+                                    $statusIcon = '';
+                                    switch ($status) {
+                                        case 'on going': 
+                                            $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
+                                            $statusIcon = 'fas fa-play-circle';
+                                            break;
+                                        case 'stopped': 
+                                            $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
+                                            $statusIcon = 'fas fa-pause-circle';
+                                            break;
+                                        case 'finished': 
+                                            $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
+                                            $statusIcon = 'fas fa-check-circle';
+                                            break;
+                                        case 'closed': 
+                                            $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
+                                            $statusIcon = 'fas fa-times-circle';
+                                            break;
+                                        default: 
+                                            $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
+                                            $statusIcon = 'fas fa-question-circle';
+                                    }
+                                    ?>
+                                    <span class="status-badge <?php echo $statusClass; ?>">
+                                        <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
+                                    </span>
+                                </p>
+                                <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
+                                    <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                       class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                        <i class="fas fa-eye"></i> <span class="hidden xs:inline">View</span>
+                                    </a>
+                                    <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('edit attendance', $facilitatorPermissions)): ?>
+                                        <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                                        <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete attendance', $facilitatorPermissions)): ?>
+                                        <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                                        onclick="return confirmDelete(event, this.href);"
+                                        class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if (isset($userRole) && $userRole === 'admin'): ?>
+                                        <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
+                                        onclick="return confirmDelete(event, this.href);"
+                                        class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
+                                            <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-            </div>
-
-            <div class="card-content">
-                <?php if (empty($fromJune2025)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-plus"></i>
-                        <h3 class="text-lg md:text-xl font-semibold mb-2">No Current Records</h3>
-                        <p class="text-gray-500 text-sm md:text-base">Records from June 2025 onwards will appear here.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="scrollable-container">
-                        <div class="grid grid-cols-1 gap-4 md:gap-6">
-                            <?php foreach ($fromJune2025 as $index => $attendance): ?>
-                                <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-3 md:p-4 flex flex-col space-y-2 hover-card" style="max-width: 95%; margin-left: 20px; margin-top: 20px;">
-                                    <div class="flex items-center space-x-2 md:space-x-3 mb-2">
-                                        <i class="fas fa-file-alt text-[#a31d1d] text-xl md:text-2xl"></i>
-                                        <h3 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate flex-1">
-                                            <?php echo htmlspecialchars($attendance['event_name'] ?? 'No Event Name'); ?>
-                                        </h3>
-                                        <span class="status-badge bg-gradient-to-r from-green-400 to-green-500 text-white text-xs md:text-sm">
-                                            <i class="fas fa-check-circle mr-1"></i><span class="hidden sm:inline">Current</span>
-                                        </span>
-                                    </div>
-                                    <p class="text-gray-700"><strong>Date:</strong> <?php echo htmlspecialchars($attendance['date_created'] ?? 'No Date'); ?></p>
-                                    <p class="text-gray-700"><strong>Status:</strong> 
-                                        <?php
-                                        $status = $attendance['atten_status'] ?? 'unknown';
-                                        $statusClass = '';
-                                        $statusIcon = '';
-                                        switch ($status) {
-                                            case 'on going': 
-                                                $statusClass = 'bg-gradient-to-r from-blue-400 to-blue-500 text-white';
-                                                $statusIcon = 'fas fa-play-circle';
-                                                break;
-                                            case 'stopped': 
-                                                $statusClass = 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
-                                                $statusIcon = 'fas fa-pause-circle';
-                                                break;
-                                            case 'finished': 
-                                                $statusClass = 'bg-gradient-to-r from-green-400 to-green-500 text-white';
-                                                $statusIcon = 'fas fa-check-circle';
-                                                break;
-                                            case 'closed': 
-                                                $statusClass = 'bg-gradient-to-r from-red-400 to-red-500 text-white';
-                                                $statusIcon = 'fas fa-times-circle';
-                                                break;
-                                            default: 
-                                                $statusClass = 'bg-gradient-to-r from-gray-400 to-gray-500 text-white';
-                                                $statusIcon = 'fas fa-question-circle';
-                                        }
-                                        ?>
-                                        <span class="status-badge <?php echo $statusClass; ?>">
-                                            <i class="<?php echo $statusIcon; ?> mr-1"></i><?php echo htmlspecialchars($status); ?>
-                                        </span>
-                                    </p>
-                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
-                                        <a href="<?php echo ROOT ?>view_records?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                           class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                            <i class="fas fa-eye"></i> <span class="hidden xs:inline">View</span>
-                                        </a>
-                                        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('edit attendance', $facilitatorPermissions)): ?>
-                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
-                                            </a>
-                                        <?php endif; ?>
-                                        <!-- check if admin -->
-                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                                            <a href="<?php echo ROOT ?>edit_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>&eventName=<?php echo urlencode($attendance['event_name'] ?? ''); ?>"
-                                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-pencil-alt"></i> <span class="hidden xs:inline">Edit</span>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if (isset($userRole) && $userRole === 'Facilitator' && in_array('delete attendance', $facilitatorPermissions)): ?>
-                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                            onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
-                                            </a>
-                                        <?php endif; ?>
-                                        <!-- check if admin -->
-                                        <?php if (isset($userRole) && $userRole === 'admin'): ?>
-                                            <a href="<?php echo ROOT ?>delete_attendance?id=<?php echo urlencode($attendance['atten_id'] ?? ''); ?>"
-                                            onclick="return confirmDelete(event, this.href);"
-                                            class="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm sm:text-base">
-                                                <i class="fas fa-trash"></i> <span class="hidden xs:inline">Delete</span>
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

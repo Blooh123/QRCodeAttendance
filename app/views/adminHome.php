@@ -154,7 +154,7 @@ if (!in_array($page, $allowed_pages)) {
                     'Students' => ['Students', 'fas fa-user-graduate'],
                     'Attendance' => ['Attendance', 'fas fa-clipboard-check'],
                     'Users' => ['Accounts', 'fas fa-users-cog'],
-                    'StudentApplication' => ['Excuse Applications', 'fas fa-file-medical'],
+                    'StudentApplication' => ['Excuse Student', 'fas fa-file-medical'],
                     'ProfileAdmin' => ['Profile', 'fas fa-user-circle'],
                     'ActivityLogs' => ['Activity Log', 'fas fa-history']
                 ];
