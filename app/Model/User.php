@@ -345,6 +345,22 @@ class User
 
         return $result ?: [];
     }
+
+    public function getUserPermissions($userId): array
+    {
+        $stmt = $this->connect()->prepare(
+            "SELECT permissions FROM user_account WHERE id = ?"
+        );
+
+        $stmt->execute([$userId]);
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $result;
+    }   
 }
 
 }
