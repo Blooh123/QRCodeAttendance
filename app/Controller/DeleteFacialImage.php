@@ -4,6 +4,7 @@ require_once '../app/Model/User.php';
 require_once '../app/Model/ActivityLog.php';
 use Model\User;
 use Model\ActivityLog;
+use Exception;
 session_start();
 
 // Check if user is logged in and has admin privileges
@@ -29,8 +30,8 @@ if (!$input) {
     exit();
 }
 
-$imageId = $input['image_id'] ?? null;
-$userId = $input['user_id'] ?? null;
+$imageId = filter_var($input['image_id'] ?? null, FILTER_VALIDATE_INT);
+$userId = filter_var($input['user_id'] ?? null, FILTER_VALIDATE_INT);
 
 // Validate input
 if (!$imageId || !$userId) {
@@ -61,14 +62,14 @@ try {
     }
 
     // Verify the image belongs to the specified user
-    if ($image['user_id'] != $userId) {
+    if ((int) $image['user_id'] !== $userId) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Image does not belong to this user']);
         exit();
     }
 
     // Delete the image
-    $result = $userModel->deleteFacialImage($imageId);
+    $result = $userModel->deleteFacialImage($imageId, $userId);
     
     if ($result) {
         echo json_encode(['success' => true, 'message' => 'Image deleted successfully']);

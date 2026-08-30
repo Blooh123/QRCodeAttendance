@@ -5,6 +5,7 @@ namespace Model;
 require_once __DIR__ . '/../core/Database.php';
 
 use PDO;
+use PDOException;
 
 if (!class_exists('Model\User')) {
 
@@ -471,14 +472,17 @@ class User
         return $result ?: null;
     }
 
-    public function deleteFacialImage($imageId): bool
+    public function deleteFacialImage($imageId, $userId): bool
     {
         $sql = "
             DELETE FROM facilitator_facial_images
-            WHERE id = :id
+            WHERE id = :id AND user_id = :user_id
         ";
 
-        return (bool) $this->query($sql, [':id' => $imageId]);
+        return (bool) $this->query($sql, [
+            ':id' => $imageId,
+            ':user_id' => $userId
+        ]);
     }
 
     public function updateUserPermissions($userId, $permissionsJson): bool|array
