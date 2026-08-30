@@ -133,7 +133,7 @@
                             </button>
                         </form>
                     <?php else: ?>
-                        <?php if (!empty($studentInfo['studentProfile'])): ?>
+                        <?php if (empty($studentInfo['studentProfile'])): ?>
                                 <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>"
                             class="mt-6 w-full bg-[#a31d1d] text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base flex items-center justify-center gap-2">
                                 <i class="fas fa-camera"></i>
