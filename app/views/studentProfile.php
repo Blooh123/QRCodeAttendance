@@ -119,11 +119,7 @@
                         </span>
                     </div>
 
-                    <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>"
-                       class="mt-6 w-full bg-[#a31d1d] text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base flex items-center justify-center gap-2">
-                        <i class="fas fa-camera"></i>
-                        Take a Photo
-                    </a>
+
 
                     <?php if ($studentInfo['student_id'] == "2023-00006" || $studentInfo['student_id'] == "2023-00274"): ?>
                         <form method="POST" enctype="multipart/form-data" class="mt-4 w-full text-left">
@@ -136,6 +132,13 @@
                                 Upload Picture
                             </button>
                         </form>
+                    <?php else: ?>
+                            <a href="<?= ROOT ?>take-photo?id=<?php echo $studentInfo['student_id']?>"
+                        class="mt-6 w-full bg-[#a31d1d] text-white px-4 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200 text-sm md:text-base flex items-center justify-center gap-2">
+                            <i class="fas fa-camera"></i>
+                            Take a Photo
+                        </a>
+                        <p class="mt-2 text-xs text-gray-500">Uploading photo is not supported..</p>
                     <?php endif; ?>
 
                     <?php if (!empty($uploadMessage)): ?>
