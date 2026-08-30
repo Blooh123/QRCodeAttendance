@@ -479,10 +479,20 @@ class User
             WHERE id = :id AND user_id = :user_id
         ";
 
-        return (bool) $this->query($sql, [
-            ':id' => $imageId,
-            ':user_id' => $userId
-        ]);
+        try {
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute([
+                ':id' => $imageId,
+                ':user_id' => $userId
+            ]);
+
+            $deleted = $stmt->rowCount() === 1;
+            $stmt->closeCursor();
+            return $deleted;
+        } catch (PDOException $e) {
+            error_log('Failed to delete facial image: ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function updateUserPermissions($userId, $permissionsJson): bool|array
