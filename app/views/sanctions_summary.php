@@ -1,6 +1,11 @@
 <?php
 global $imageSource, $imageSource2, $imageSource4;
 require "../app/core/imageConfig.php";
+
+$cutoffDate = '2026-08-31';
+$visibleSanctions = array_values(array_filter($data['sanctionSummary'] ?? [], function ($item) use ($cutoffDate) {
+    return isset($item['date_applied']) && strtotime($item['date_applied']) > strtotime($cutoffDate);
+}));
 ?>
 
 <!DOCTYPE html>
@@ -181,7 +186,7 @@ require "../app/core/imageConfig.php";
                 <div>
                     <p class="text-sm font-medium text-gray-600">Student With Sanctions</p>
                     <p class="text-3xl font-bold text-red-600">
-                        <?= count(array_filter($data['sanctionSummary'], function($item) { return $item['hours'] > 0; })) ?>
+                        <?= count(array_filter($visibleSanctions, function($item) { return ($item['hours'] ?? 0) > 0; })) ?>
                     </p>
                 </div>
                 <div class="bg-red-100 p-3 rounded-full">
@@ -195,7 +200,7 @@ require "../app/core/imageConfig.php";
                 <div>
                     <p class="text-sm font-medium text-gray-600">Clean Record</p>
                     <p class="text-3xl font-bold text-green-600">
-                        <?= count(array_filter($data['sanctionSummary'], function($item) { return $item['hours'] == 0; })) ?>
+                        <?= count(array_filter($visibleSanctions, function($item) { return ($item['hours'] ?? 0) == 0; })) ?>
                     </p>
                 </div>
                 <div class="bg-green-100 p-3 rounded-full">
@@ -211,7 +216,7 @@ require "../app/core/imageConfig.php";
             <h2 class="text-xl font-bold text-[#a31d1d] flex items-center gap-2">
                 <i class="fas fa-table"></i> Sanctions Records
                 <span class="text-sm font-normal text-gray-600">
-                    (<?= count($data['sanctionSummary']) ?> students)
+                    (<?= count($visibleSanctions) ?> students)
                 </span>
             </h2>
         </div>
@@ -242,9 +247,9 @@ require "../app/core/imageConfig.php";
                     $searchTerm = isset($_GET['search']) ? strtolower($_GET['search']) : '';
                     
                     // Filter data based on search term
-                    $filteredData = $data['sanctionSummary'];
+                    $filteredData = $visibleSanctions;
                     if ($searchTerm) {
-                        $filteredData = array_filter($data['sanctionSummary'], function($item) use ($searchTerm) {
+                        $filteredData = array_filter($visibleSanctions, function($item) use ($searchTerm) {
                             return strpos(strtolower($item['student_id']), $searchTerm) !== false ||
                                    strpos(strtolower($item['name']), $searchTerm) !== false ||
                                    strpos(strtolower($item['program']), $searchTerm) !== false;

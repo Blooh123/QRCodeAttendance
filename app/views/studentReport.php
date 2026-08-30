@@ -1,16 +1,14 @@
 <?php
 $totalHours = array_sum(array_column($sanctionList, 'sanction_hours'));
 
-// Filter current and archived records (before June)
-// Use fixed cutoff for June 2025
-$currentYear = 2025;
-$juneDate = "$currentYear-06-01";
+// Filter records to only include entries dated after August 2026
+$cutoffDate = '2026-08-31';
 
 // Filter sanctions
 $currentSanctions = [];
 $archivedSanctions = [];
 foreach ($sanctionList as $sanction) {
-    if (strtotime($sanction['date_applied']) >= strtotime($juneDate)) {
+    if (strtotime($sanction['date_applied']) > strtotime($cutoffDate)) {
         $currentSanctions[] = $sanction;
     } else {
         $archivedSanctions[] = $sanction;
@@ -21,7 +19,7 @@ foreach ($sanctionList as $sanction) {
 $currentAttendance = [];
 $archivedAttendance = [];
 foreach ($attendanceRecord as $record) {
-    if (strtotime($record['atten_started']) >= strtotime($juneDate)) {
+    if (strtotime($record['atten_started']) > strtotime($cutoffDate)) {
         $currentAttendance[] = $record;
     } else {
         $archivedAttendance[] = $record;
@@ -72,7 +70,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
         <!-- Current Sanctions Section -->
         <div>
             <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Current Sanctions (June <?= $currentYear ?> onwards)
+                Current Sanctions (After August 2026)
             </h3>
             <!-- Current Total Hours Card -->
             <div class="mt-6 mb-6 glass-card bg-[#a31d1d] text-base md:text-lg font-bold p-6 rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-center">
@@ -150,7 +148,7 @@ $totalArchivedHours = array_sum(array_column($archivedSanctions, 'sanction_hours
         <!-- Current Attended Activities -->
         <div>
             <h3 class="text-xl md:text-2xl font-bold text-[#a31d1d] mb-6 [text-shadow:_0px_1px_0px_rgb(0_0_0_/_0.1)]">
-                Current Attended Activities (June <?= $currentYear ?> onwards)
+                Current Attended Activities (After August 2026)
             </h3>
             <!-- Download Report Button -->
             <div class="mt-6 flex justify-end">
