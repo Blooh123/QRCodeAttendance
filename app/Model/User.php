@@ -354,13 +354,117 @@ class User
 
         $stmt->execute([$userId]);
 
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $result['permissions'] ? json_decode($result['permissions'], true) ?? [] : [];
+    }
+
+    public function updatePersonalInfo($id, $name, $email): bool|array
+    {
+        $query = "
+            UPDATE user_personal_info
+            SET name = :name, email = :email
+            WHERE id = :id
+        ";
+
+        $params = [
+            ':id' => $id,
+            ':name' => $name,
+            ':email' => $email
+        ];
+
+        return $this->query($query, $params);
+    }
+
+    public function deleteUsers($id): bool|array
+    {
+        $queries = [
+            "DELETE FROM user_sessions WHERE user_id = :id",
+            "DELETE FROM facilitator_facial_images WHERE user_id = :id",
+            "DELETE FROM user_personal_info WHERE id = :id",
+            "DELETE FROM user_account WHERE id = :id"
+        ];
+
+        try {
+            $conn = $this->connect();
+            $conn->beginTransaction();
+
+            foreach ($queries as $query) {
+                $stmt = $conn->prepare($query);
+                $stmt->execute([':id' => $id]);
+            }
+
+            $conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            if (isset($conn) && $conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            error_log('Failed to delete user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getUserSession($userId): array
+    {
+        $sql = "
+            SELECT *
+            FROM user_sessions
+            WHERE user_id = :user_id
+            ORDER BY created_at DESC
+            LIMIT 1
+        ";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $result ?: [];
+    }
+
+    public function getFacialImages($userId): array
+    {
+        $sql = "
+            SELECT *
+            FROM facilitator_facial_images
+            WHERE user_id = :user_id
+        ";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt->closeCursor();
         $stmt = null;
 
         return $result;
-    }   
+    }
+
+    public function updateUserPermissions($userId, $permissionsJson): bool|array
+    {
+        $query = "
+            UPDATE user_account
+            SET permissions = :permissions
+            WHERE id = :id
+        ";
+
+        $params = [
+            ':id' => $userId,
+            ':permissions' => $permissionsJson
+        ];
+
+        return $this->query($query, $params);
+    }
 }
 
 }
