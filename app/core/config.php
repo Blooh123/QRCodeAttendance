@@ -23,5 +23,5 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     define('DBPORT', '3306');
 
     // NEW DOMAIN
-    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.com/public/');
 }
