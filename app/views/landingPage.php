@@ -30,12 +30,19 @@ require "../app/core/imageConfig.php";
 
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
             color: var(--text);
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
         a {
@@ -423,7 +430,27 @@ require "../app/core/imageConfig.php";
         @media (max-width: 768px) {
             .process-step::before { display: none; }
             .qr-screen { min-height: 440px; }
-            .floating-card { transform: scale(0.9); }
+            .qr-phone {
+                max-width: 100%;
+                width: min(100%, 320px);
+            }
+            .floating-card {
+                position: static;
+                transform: none;
+                width: 100%;
+                margin-bottom: 0.75rem;
+            }
+            .floating-card:nth-child(1),
+            .floating-card:nth-child(2) {
+                right: auto;
+                left: auto;
+                top: auto;
+                bottom: auto;
+            }
+            .hero-shell::before,
+            .hero-shell::after {
+                display: none;
+            }
         }
     </style>
 </head>
