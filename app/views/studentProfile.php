@@ -50,6 +50,28 @@
             font-weight: 600;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+
+        .dev-panel {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.25s ease;
+            pointer-events: none;
+        }
+
+        .dev-panel.is-open {
+            max-height: 700px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dev-toggle .chevron {
+            transition: transform 0.25s ease;
+        }
+
+        .dev-toggle[aria-expanded="true"] .chevron {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 bg-[#f8f9fa]">
@@ -60,10 +82,6 @@
                     <p class="text-sm font-semibold uppercase tracking-[0.2em] text-[#a31d1d]/80">Account</p>
                     <h1 class="text-2xl md:text-4xl font-extrabold text-[#a31d1d] mt-2">Student Profile</h1>
                 </div>
-                <a href="<?= ROOT ?>studentHome" class="inline-flex items-center gap-2 bg-[#a31d1d] text-white px-5 py-3 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black hover:bg-[#8a1818] transition-all duration-200">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Home
-                </a>
             </div>
         </header>
 
@@ -179,17 +197,17 @@
                     </form>
                 </section>
 
-                <div class="glass-card rounded-3xl shadow-[0px_6px_0px_2px_rgba(163,29,29,0.15)] outline outline-2 outline-[#a31d1d]">
-                    <button type="button" id="devInfoToggle" class="w-full flex items-center justify-between px-6 md:px-8 py-5 text-lg md:text-xl font-bold text-[#a31d1d] bg-[#f8f9fa] rounded-t-3xl focus:outline-none transition-colors hover:bg-[#f3eaea]">
+                <div class="glass-card rounded-3xl shadow-[0px_6px_0px_2px_rgba(163,29,29,0.15)] outline outline-2 outline-[#a31d1d] overflow-hidden">
+                    <button type="button" id="devInfoToggle" aria-expanded="false" class="dev-toggle w-full flex items-center justify-between px-6 md:px-8 py-5 text-lg md:text-xl font-bold text-[#a31d1d] bg-[#f8f9fa] rounded-t-3xl focus:outline-none transition-colors hover:bg-[#f3eaea]">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-info-circle text-[#a31d1d]"></i>
                             Developer Info
                         </span>
-                        <svg id="devInfoChevron" class="h-6 w-6 text-[#a31d1d] transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="devInfoChevron" class="chevron h-6 w-6 text-[#a31d1d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div id="devInfoPanel" class="px-6 md:px-8 pb-8 pt-0 max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out pointer-events-none bg-gradient-to-br from-[#fff] via-[#f8f9fa] to-[#ffeaea] rounded-b-3xl">
+                    <div id="devInfoPanel" class="dev-panel px-6 md:px-8 pb-8 pt-0 bg-gradient-to-br from-[#fff] via-[#f8f9fa] to-[#ffeaea] rounded-b-3xl">
                         <div class="flex flex-col md:flex-row items-center gap-8 mt-6">
                             <div class="relative group">
                                 <img src="<?php echo $imageSource6 ?>" alt="Developer Picture" class="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-[#a31d1d] shadow-xl object-cover transition-transform duration-300 group-hover:scale-105">
@@ -236,70 +254,96 @@
             const uploadButton = document.getElementById('upload-button');
             const fileNameDisplay = document.getElementById('file-name');
             const previewImg = document.getElementById('profile-img');
-            let resizedBlob = null; // To store resized Blob
+            let resizedBlob = null;
 
-            fileInput.addEventListener("change", function (event) {
-                const file = event.target.files[0];
+            if (fileInput && uploadButton && fileNameDisplay) {
+                fileInput.addEventListener("change", function (event) {
+                    const file = event.target.files[0];
 
-                if (file) {
-                    if (file.size > 2 * 1024 * 1024) {
-                        alert("❌ File is too large. Maximum allowed size is 2MB.");
-                        fileInput.value = "";
+                    if (file) {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("❌ File is too large. Maximum allowed size is 2MB.");
+                            fileInput.value = "";
+                            uploadButton.classList.add("hidden");
+                            fileNameDisplay.classList.add("hidden");
+                            return;
+                        }
+
+                        fileNameDisplay.textContent = "Selected: " + file.name;
+                        fileNameDisplay.classList.remove("hidden");
+                        uploadButton.classList.remove("hidden");
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = new Image();
+                            img.onload = function () {
+                                const canvas = document.createElement("canvas");
+                                const ctx = canvas.getContext("2d");
+
+                                const maxWidth = 300;
+                                const maxHeight = 300;
+                                let width = img.width;
+                                let height = img.height;
+
+                                if (width > height) {
+                                    if (width > maxWidth) {
+                                        height *= maxWidth / width;
+                                        width = maxWidth;
+                                    }
+                                } else {
+                                    if (height > maxHeight) {
+                                        width *= maxHeight / height;
+                                        height = maxHeight;
+                                    }
+                                }
+
+                                canvas.width = width;
+                                canvas.height = height;
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+                                if (previewImg) {
+                                    previewImg.src = compressedBase64;
+                                }
+
+                                resizedBlob = dataURLtoBlob(compressedBase64);
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
                         uploadButton.classList.add("hidden");
                         fileNameDisplay.classList.add("hidden");
+                    }
+                });
+
+                uploadButton.addEventListener("click", function () {
+                    if (!resizedBlob) {
+                        alert("No resized image available!");
                         return;
                     }
 
-                    fileNameDisplay.textContent = "Selected: " + file.name;
-                    fileNameDisplay.classList.remove("hidden");
-                    uploadButton.classList.remove("hidden");
+                    const formData = new FormData();
+                    formData.append("profile_picture", resizedBlob, "profile.jpg");
 
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const img = new Image();
-                        img.onload = function () {
-                            const canvas = document.createElement("canvas");
-                            const ctx = canvas.getContext("2d");
+                    fetch("<?php echo ROOT ?>student", {
+                        method: "POST",
+                        body: formData
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log(data);
+                            showPopup("✅ Profile picture uploaded successfully!");
+                            uploadButton.classList.add("hidden");
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert("Upload failed.");
+                        });
+                });
+            }
 
-                            const maxWidth = 300;
-                            const maxHeight = 300;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > maxWidth) {
-                                    height *= maxWidth / width;
-                                    width = maxWidth;
-                                }
-                            } else {
-                                if (height > maxHeight) {
-                                    width *= maxHeight / height;
-                                    height = maxHeight;
-                                }
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
-
-                            if (previewImg) {
-                                previewImg.src = compressedBase64;
-                            }
-
-                            resizedBlob = dataURLtoBlob(compressedBase64);
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    uploadButton.classList.add("hidden");
-                    fileNameDisplay.classList.add("hidden");
-                }
-            });
-
-            // Convert Base64 to Blob
             function dataURLtoBlob(dataurl) {
                 const arr = dataurl.split(',');
                 const mime = arr[0].match(/:(.*?);/)[1];
@@ -314,34 +358,9 @@
                 return new Blob([u8arr], { type: mime });
             }
 
-            // Handle Upload Button Click
-            uploadButton.addEventListener("click", function () {
-                if (!resizedBlob) {
-                    alert("No resized image available!");
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append("profile_picture", resizedBlob, "profile.jpg");
-
-                fetch("<?php echo ROOT ?>student", {
-                    method: "POST",
-                    body: formData
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                        showPopup("✅ Profile picture uploaded successfully!");
-                        uploadButton.classList.add("hidden");
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert("Upload failed.");
-                    });
-            });
-
             function showPopup(message) {
                 const popup = document.getElementById('popup');
+                if (!popup) return;
                 popup.textContent = message;
                 popup.style.display = 'block';
                 setTimeout(() => {
@@ -349,22 +368,14 @@
                 }, 3000);
             }
 
-            // Developer Info Dropdown
             const devInfoToggle = document.getElementById('devInfoToggle');
             const devInfoPanel = document.getElementById('devInfoPanel');
             const devInfoChevron = document.getElementById('devInfoChevron');
             if (devInfoToggle && devInfoPanel && devInfoChevron) {
                 devInfoToggle.addEventListener('click', function () {
-                    const isOpen = devInfoPanel.classList.contains('opacity-100');
-                    if (!isOpen) {
-                        devInfoPanel.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
-                        devInfoPanel.classList.add('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
-                        devInfoChevron.classList.add('rotate-180');
-                    } else {
-                        devInfoPanel.classList.remove('max-h-[500px]', 'opacity-100', 'pointer-events-auto');
-                        devInfoPanel.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
-                        devInfoChevron.classList.remove('rotate-180');
-                    }
+                    const nextOpen = devInfoToggle.getAttribute('aria-expanded') !== 'true';
+                    devInfoToggle.setAttribute('aria-expanded', String(nextOpen));
+                    devInfoPanel.classList.toggle('is-open', nextOpen);
                 });
             }
         });
