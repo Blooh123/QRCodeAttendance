@@ -43,6 +43,13 @@ try {
     // Create User model instance directly
     $userModel = new User();
     $userData = $userModel->checkSession('delete_facial_image');
+
+    if (!$userData || !isset($userData['user_id'], $userData['role'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
+        exit();
+    }
+
     $activityLog = new ActivityLog();
     // Check if the image belongs to the user
     $image = $userModel->getFacialImageById($imageId);

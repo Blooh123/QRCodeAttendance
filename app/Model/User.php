@@ -450,6 +450,37 @@ class User
         return $result;
     }
 
+    public function getFacialImageById($imageId): ?array
+    {
+        $sql = "
+            SELECT *
+            FROM facilitator_facial_images
+            WHERE id = :id
+            LIMIT 1
+        ";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':id', $imageId);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $result ?: null;
+    }
+
+    public function deleteFacialImage($imageId): bool
+    {
+        $sql = "
+            DELETE FROM facilitator_facial_images
+            WHERE id = :id
+        ";
+
+        return (bool) $this->query($sql, [':id' => $imageId]);
+    }
+
     public function updateUserPermissions($userId, $permissionsJson): bool|array
     {
         $query = "
