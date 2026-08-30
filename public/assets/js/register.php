@@ -9,7 +9,7 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     define('DBHOST', 'localhost');
     define('DBPORT', '3306');
 }else{
-    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.site/public/');
+    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.com/public/');
     define('DBNAME', 'u753706103_qr_attendance');
     define('DBUSER', 'u753706103_christian');
     define('DBPASS', 'UsepDatabaseQRAttendance123#');

@@ -23,7 +23,7 @@ if($_SERVER['SERVER_NAME'] == 'localhost'){
     define('DBPORT', '3306');
 
     // NEW DOMAIN
-    defined('ROOT') or define("ROOT", 'https://usepqrattendance.site/public/');
+    defined('ROOT') or define("ROOT", 'https://usep-qrattendance.com/public/');
 }
 session_start();
 header('Content-Type: application/json');
