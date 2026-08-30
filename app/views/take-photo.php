@@ -17,6 +17,7 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="<?= ROOT ?>assets/js/face-api.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -211,15 +212,24 @@
 </header>
 
 <div class="max-w-2xl mx-auto glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-8 flex flex-col items-center space-y-6 main-container">
+
+    <div id="cameraNotice" class="w-full rounded-xl border border-[#a31d1d]/30 bg-[#fff5f5] p-5 text-center">
+        <i class="fas fa-user-check text-[#a31d1d] text-3xl mb-3"></i>
+        <h2 class="text-lg font-bold text-gray-800">Face detection is necessary before capturing your photo.</h2>
+        <p class="mt-2 text-sm text-gray-600">Allow camera access only after you are ready, then position your face inside the camera frame.</p>
+        <button id="startCameraBtn" type="button" class="mt-4 bg-[#a31d1d] hover:bg-[#8a1818] text-white px-6 py-3 rounded-xl font-semibold shadow-[0px_3px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200">
+            <i class="fas fa-camera mr-2"></i> Continue to Camera
+        </button>
+    </div>
     
     <!-- Video container -->
-    <div class="w-full flex flex-col items-center">
+    <div id="cameraArea" class="w-full flex flex-col items-center hidden">
         <div class="video-container scanning-border">
             <video id="video" width="600" height="450" autoplay muted playsinline></video>
             <div id="status"></div>
         </div>
         <div class="flex justify-center mt-4 relative" style="position: relative; z-index: 10;">
-            <button id="captureBtn" class="bg-[#4CAF50] hover:bg-[#45a049] text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+            <button id="captureBtn" disabled class="bg-gray-400 text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 cursor-not-allowed">
                 <i class="fas fa-camera"></i>
                 <span>Take Photo</span>
             </button>
@@ -229,7 +239,7 @@
         <div id="statusIndicator" class="status-indicator mt-6 px-6 py-3 rounded-lg bg-blue-100 text-blue-700 font-semibold text-center border border-blue-200">
             <div class="flex items-center justify-center space-x-2">
                 <div class="w-2 h-2 bg-blue-500 rounded-full pulse"></div>
-                <span>Camera ready</span>
+                <span>Waiting for camera permission</span>
             </div>
         </div>
     </div>
@@ -254,8 +264,13 @@
     const captureBtn = document.getElementById('captureBtn');
     const statusDiv = document.getElementById('status');
     const statusIndicator = document.getElementById('statusIndicator');
+    const cameraNotice = document.getElementById('cameraNotice');
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const cameraArea = document.getElementById('cameraArea');
     
     let isCapturing = false;
+    let faceDetected = false;
+    let detectionTimer = null;
     
     // iOS-optimized video constraints
     const videoConstraints = {
@@ -267,8 +282,26 @@
         }
     };
     
-    // Start camera
+    function waitForFaceApi() {
+        if (typeof faceapi === 'undefined') {
+            updateStatusIndicator('Loading face detection...', 'detecting');
+            setTimeout(waitForFaceApi, 100);
+            return;
+        }
+
+        faceapi.nets.tinyFaceDetector.loadFromUri('<?= ROOT ?>assets/js/models')
+            .then(startCamera)
+            .catch(error => {
+                console.error('Face detection model error:', error);
+                updateStatusIndicator('Face detection could not be loaded. Please refresh.', 'error');
+                startCameraBtn.disabled = false;
+            });
+    }
+
     function startCamera() {
+        cameraNotice.classList.add('hidden');
+        cameraArea.classList.remove('hidden');
+        startCameraBtn.disabled = true;
         updateStatusIndicator('Starting camera...', 'detecting');
         
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -303,11 +336,46 @@
         }
     }
     
+    function beginFaceDetection() {
+        if (detectionTimer) {
+            clearInterval(detectionTimer);
+        }
+
+        detectionTimer = setInterval(async () => {
+            if (video.readyState < 2 || isCapturing) return;
+
+            try {
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({
+                    inputSize: 320,
+                    scoreThreshold: 0.5
+                }));
+                faceDetected = detections.length > 0;
+
+                if (faceDetected) {
+                    captureBtn.disabled = false;
+                    captureBtn.className = 'bg-[#4CAF50] hover:bg-[#45a049] text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2';
+                    updateStatusIndicator('Face detected - you can now capture your photo.', 'success');
+                } else {
+                    captureBtn.disabled = true;
+                    captureBtn.className = 'bg-gray-400 text-white px-8 py-4 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2 cursor-not-allowed';
+                    updateStatusIndicator('Position your face in the frame.', 'detecting');
+                }
+            } catch (error) {
+                console.error('Face detection error:', error);
+                updateStatusIndicator('Face detection is still starting...', 'detecting');
+            }
+        }, 300);
+    }
+
     // Capture button event listener
     captureBtn.addEventListener('click', capturePhoto);
+    startCameraBtn.addEventListener('click', waitForFaceApi);
     
     function capturePhoto() {
-        if (isCapturing) return;
+        if (isCapturing || !faceDetected) {
+            updateStatusIndicator('A face must be detected before capturing.', 'error');
+            return;
+        }
         
         isCapturing = true;
         captureBtn.disabled = true;
@@ -403,8 +471,7 @@
         }
     }
     
-    // Start camera when page loads
-    window.addEventListener('load', startCamera);
+    video.addEventListener('playing', beginFaceDetection);
 </script>
 
 </body>
