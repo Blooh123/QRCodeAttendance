@@ -120,7 +120,7 @@ Trait Model
 
     public function getAllFaci(): array
     {
-        $stmt = $this->connect()->prepare("SELECT * FROM viewfaci");
+        $stmt = $this->connect()->prepare("SELECT * FROM user_account WHERE role = 'Facilitator'");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_NUM);
     }
