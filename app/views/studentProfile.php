@@ -121,7 +121,7 @@
 
 
 
-                    <?php if ($studentInfo['student_id'] == "2023-00274"): ?>
+                    <?php if ($studentInfo['student_id'] == "2023-00274" || $studentInfo['student_id'] == "2023-00060"): ?>
                         <form method="POST" enctype="multipart/form-data" class="mt-4 w-full text-left">
                             <label for="profile_picture" class="block text-sm font-semibold text-gray-700 mb-2">Upload Profile Picture</label>
                             <input id="profile_picture" name="profile_picture" type="file" accept="image/jpeg,image/png,image/webp" required
