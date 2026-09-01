@@ -423,12 +423,12 @@ class User
         $stmt->bindParam(':user_id', $userId);
         $stmt->execute();
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt->closeCursor();
         $stmt = null;
 
-        return $result ?: [];
+        return $result;
     }
 
     public function getFacialImages($userId): array

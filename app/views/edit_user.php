@@ -379,7 +379,7 @@
                             <?php if ($login !== null): ?>
                                 <p class="text-gray-700"><strong>Last Login:</strong> <?php echo htmlspecialchars($login); ?></p>
                             <?php endif; ?>
-                            <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($session['id']) ?>&user_id=<?php echo urlencode($session['id']) ?>"
+                            <a href="<?php echo ROOT ?>logout2?sessionID=<?php echo urlencode($session['id']) ?>&user_id=<?php echo urlencode($userData['id']) ?>"
                             class="mt-3 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-[0px_2px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
@@ -660,7 +660,7 @@
                              text: "Permissions have been saved successfully.",
                              icon: "success",
                              confirmButtonColor: "#a31d1d"
-                         });
+                         }).then(() => window.location.reload());
                      } else {
                          Swal.fire({
                              title: "Error!",

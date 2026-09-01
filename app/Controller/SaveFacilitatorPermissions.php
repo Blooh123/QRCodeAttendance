@@ -39,6 +39,12 @@ class SaveFacilitatorPermissions extends \Controller
         // Validate user exists and is a facilitator
         $user = new User();
         $userSession = $user->checkSession('save_facilitator_permissions');
+        if (!$userSession || !in_array($userSession['role'], ['admin', 'Facilitator'], true)) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+            return;
+        }
+
         $userData = $user->getUserDataWithPersonalInfo($userId);
         
         if (!$userData) {
@@ -47,7 +53,7 @@ class SaveFacilitatorPermissions extends \Controller
             return;
         }
 
-        if ($userData['roles'] !== 'Facilitator') {
+        if (($userData['role'] ?? $userData['roles'] ?? null) !== 'Facilitator') {
             http_response_code(403);
             echo json_encode(['success' => false, 'error' => 'User is not a facilitator']);
             return;
