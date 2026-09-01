@@ -21,7 +21,7 @@ $uploadMessage = '';
 $passwordMessage = '';
 $studentId = $studentInfo['student_id'] ?? null;
 $response = '';
-$profileUploadAllowed = in_array((string) $studentId, ['2023-00274', '2023-00006'], true);
+$profileUploadAllowed = in_array((string) $studentId, ['2023-00274', '2023-00006', '2023-00060'], true);
 // Handle profile picture upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_picture'])) {
 
