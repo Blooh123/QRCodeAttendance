@@ -104,6 +104,141 @@
 </head>
 <body class="bg-light">
     <div class="container-fluid">
+        <?php if (!$application): ?>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">
+                            <i class="fas fa-user-check me-2"></i>
+                            Excuse a Student
+                        </h2>
+                        <a href="<?= ROOT ?>student_application" class="btn back-btn">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Applications
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i><?= htmlspecialchars($_SESSION['success']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i><?= htmlspecialchars($_SESSION['error']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
+            <div class="detail-card">
+                <h4 class="mb-3"><i class="fas fa-calendar-check me-2"></i>Choose an Event</h4>
+                <form method="GET" action="<?= ROOT ?>view_application" class="row g-3">
+                    <div class="col-md-8">
+                        <label for="event_id" class="form-label">Event</label>
+                        <select name="event_id" id="event_id" class="form-select" required>
+                            <option value="">Select an event</option>
+                            <?php foreach ($events as $event): ?>
+                                <option value="<?= htmlspecialchars($event['atten_id']) ?>" <?= (string) $selectedEventId === (string) $event['atten_id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($event['event_name']) ?> - <?= htmlspecialchars($event['date_created'] ?? '') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-arrow-right me-2"></i>Load Students
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <?php if ($selectedEventId): ?>
+                <div class="detail-card">
+                    <h4 class="mb-3"><i class="fas fa-search me-2"></i>Find Student</h4>
+                    <form method="GET" action="<?= ROOT ?>view_application" class="row g-3">
+                        <input type="hidden" name="event_id" value="<?= htmlspecialchars($selectedEventId) ?>">
+                        <div class="col-md-9">
+                            <label for="search" class="form-label">Student name or ID</label>
+                            <input type="search" name="search" id="search" class="form-control"
+                                   value="<?= htmlspecialchars($searchQuery) ?>"
+                                   placeholder="Search by student name or ID">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-dark w-100">
+                                <i class="fas fa-search me-2"></i>Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="detail-card">
+                    <h4 class="mb-3"><i class="fas fa-users me-2"></i>Students</h4>
+                    <?php if (empty($students)): ?>
+                        <p class="text-muted mb-0">No students matched your search.</p>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Student ID</th>
+                                        <th>Application Status</th>
+                                        <th style="min-width: 360px;">Excuse Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($students as $student): ?>
+                                        <tr>
+                                            <td>
+                                                <strong><?= htmlspecialchars($student['name']) ?></strong><br>
+                                                <small class="text-muted"><?= htmlspecialchars($student['program'] ?? '') ?> <?= htmlspecialchars($student['acad_year'] ?? '') ?></small>
+                                            </td>
+                                            <td><?= htmlspecialchars($student['student_id']) ?></td>
+                                            <td>
+                                                <?php if ($student['application_id']): ?>
+                                                    <?php $statusLabels = ['Pending', 'Approved', 'Rejected']; ?>
+                                                    <span class="badge bg-<?= $student['application_status'] == 1 ? 'success' : ($student['application_status'] == 2 ? 'danger' : 'warning') ?>">
+                                                        <?= $statusLabels[(int) $student['application_status']] ?? 'Unknown' ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">No application</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if ($student['application_id']): ?>
+                                                    <a href="<?= ROOT ?>view_application?id=<?= htmlspecialchars($student['application_id']) ?>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye me-1"></i>View application
+                                                    </a>
+                                                <?php else: ?>
+                                                    <form method="POST" action="<?= ROOT ?>view_application">
+                                                        <input type="hidden" name="action" value="create_excuse">
+                                                        <input type="hidden" name="atten_id" value="<?= htmlspecialchars($selectedEventId) ?>">
+                                                        <input type="hidden" name="student_id" value="<?= htmlspecialchars($student['student_id']) ?>">
+                                                        <textarea name="application_description" class="form-control form-control-sm mb-2" rows="2" required placeholder="Reason for excuse"></textarea>
+                                                        <div class="input-group input-group-sm">
+                                                            <select name="application_status" class="form-select">
+                                                                <option value="1" selected>Approved</option>
+                                                                <option value="0">Pending</option>
+                                                                <option value="2">Rejected</option>
+                                                            </select>
+                                                            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Save</button>
+                                                        </div>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-12">
@@ -312,8 +447,10 @@
             </div>
         </div>
     </div>
+        <?php endif; ?>
 
     <!-- Approve Modal -->
+    <?php if ($application): ?>
     <div class="modal fade" id="approveModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -374,6 +511,7 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

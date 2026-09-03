@@ -42,6 +42,52 @@ if (!class_exists('Model\ExcuseApplication')) {
         }
     }
 
+    public function insertAdminExcuseApplication($attenId, $studentId, $description, $status = '1'): bool
+    {
+        try {
+            $dateTime = new \DateTime('now', new \DateTimeZone('Asia/Manila'));
+            $query = "INSERT INTO excuse_application
+                      (atten_id, student_id, application_description, application_status, date_submitted)
+                      VALUES (:atten_id, :student_id, :description, :status, :date_submitted)";
+            return $this->query($query, [
+                ':atten_id' => $attenId,
+                ':student_id' => $studentId,
+                ':description' => $description,
+                ':status' => $status,
+                ':date_submitted' => $dateTime->format('Y-m-d H:i:s')
+            ]) !== false;
+        } catch (Exception $e) {
+            error_log("Error inserting admin excuse application: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function searchStudentsForEvent($attenId, $searchQuery = ''): array
+    {
+        try {
+            $query = "SELECT s.student_id, s.name, s.program, s.acad_year,
+                             ea.id AS application_id, ea.application_description,
+                             ea.application_status
+                      FROM students s
+                      LEFT JOIN excuse_application ea
+                        ON ea.student_id = s.student_id AND ea.atten_id = :atten_id
+                      WHERE (:search = '' OR s.name LIKE :name_search OR s.student_id LIKE :id_search)
+                      ORDER BY s.name ASC
+                      LIMIT 100";
+            $search = '%' . $searchQuery . '%';
+            $result = $this->query($query, [
+                ':atten_id' => $attenId,
+                ':search' => $searchQuery,
+                ':name_search' => $search,
+                ':id_search' => $search
+            ]);
+            return is_array($result) ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error searching students for event: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getApprovedExcuseApplicationsByStudent($studentId){
         try{
             $query = "SELECT ea.*, a.event_name, a.date_created as event_date 

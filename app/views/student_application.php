@@ -180,6 +180,9 @@
             <i class="fas fa-file-alt text-[#a31d1d] text-3xl"></i>
             <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Student Applications</h1>
         </div>
+        <a href="<?= ROOT ?>view_application" class="bg-[#a31d1d] hover:bg-[#8a1818] text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+            <i class="fas fa-user-check"></i>Excuse a Student
+        </a>
     </div>
 </header>
 
