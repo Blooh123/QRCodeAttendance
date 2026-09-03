@@ -270,7 +270,7 @@
             <?php if ($selectedEventId): ?>
                 <div class="detail-card">
                     <h4 class="mb-3"><i class="fas fa-search me-2"></i>Find Student</h4>
-                    <form method="GET" action="<?= ROOT ?>view_application" class="row g-3">
+                    <form id="application-student-search-form" method="GET" action="<?= ROOT ?>view_application" class="row g-3">
                         <input type="hidden" name="event_id" value="<?= htmlspecialchars($selectedEventId) ?>">
                         <div class="col-md-9">
                             <label for="search" class="form-label">Student name or ID</label>
@@ -301,7 +301,7 @@
                                         <th style="min-width: 360px;">Excuse Reason</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="application-student-results">
                                     <?php foreach ($students as $student): ?>
                                         <tr>
                                             <td>
@@ -618,4 +618,56 @@
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php if (!$application): ?>
+    <script>
+        const applicationSearchForm = document.getElementById('application-student-search-form');
+        const applicationSearchInput = document.getElementById('search');
+        const applicationStudentResults = document.getElementById('application-student-results');
+        const applicationSearchEndpoint = new URL('student_search', window.location.href).toString();
+
+        function escapeApplicationHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, function (character) {
+                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[character];
+            });
+        }
+
+        function renderApplicationStudents(students) {
+            if (!students.length) {
+                applicationStudentResults.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">No students matched your search.</td></tr>';
+                return;
+            }
+
+            applicationStudentResults.innerHTML = students.map(function (student) {
+                const hasApplication = student.application_id !== null && student.application_id !== undefined;
+                const statusLabels = ['Pending', 'Approved', 'Rejected'];
+                const statusColors = ['warning', 'success', 'danger'];
+                const status = hasApplication
+                    ? '<span class="badge bg-' + statusColors[Number(student.application_status)] + '">' + statusLabels[Number(student.application_status)] + '</span>'
+                    : '<span class="text-muted">No application</span>';
+                const action = hasApplication
+                    ? '<a href="<?= ROOT ?>view_application?id=' + encodeURIComponent(student.application_id) + '" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye me-1"></i>View application</a>'
+                    : '<form method="POST" action="<?= ROOT ?>view_application"><input type="hidden" name="action" value="create_excuse"><input type="hidden" name="atten_id" value="' + escapeApplicationHtml('<?= htmlspecialchars($selectedEventId) ?>') + '"><input type="hidden" name="student_id" value="' + escapeApplicationHtml(student.student_id) + '"><textarea name="application_description" class="form-control form-control-sm mb-2" rows="2" required placeholder="Reason for excuse"></textarea><button type="submit" class="btn btn-success btn-sm"><i class="fas fa-user-check me-1"></i>Excuse Student</button></form>';
+                return '<tr><td><strong>' + escapeApplicationHtml(student.name) + '</strong><br><small class="text-muted">' + escapeApplicationHtml(student.program) + ' ' + escapeApplicationHtml(student.acad_year) + '</small></td><td>' + escapeApplicationHtml(student.student_id) + '</td><td>' + status + '</td><td>' + action + '</td></tr>';
+            }).join('');
+        }
+
+        applicationSearchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = applicationSearchInput.value.trim();
+            const eventId = '<?= htmlspecialchars($selectedEventId) ?>';
+            applicationStudentResults.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin me-2"></i>Searching...</td></tr>';
+            fetch(applicationSearchEndpoint + '?atten_id=' + encodeURIComponent(eventId) + '&search=' + encodeURIComponent(query), {credentials: 'include', cache: 'no-store', headers: {'Accept': 'application/json'}})
+                .then(function (response) {
+                    return response.text().then(function (body) {
+                        let data;
+                        try { data = JSON.parse(body); } catch (error) { throw new Error('The search server returned an invalid response.'); }
+                        if (!response.ok || !data.success) throw new Error(data.message || 'Student search failed.');
+                        return data;
+                    });
+                })
+                .then(function (data) { renderApplicationStudents(data.students); })
+                .catch(function (error) { applicationStudentResults.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">' + escapeApplicationHtml(error.message) + '</td></tr>'; });
+        });
+    </script>
+    <?php endif; ?>
 </div>

@@ -4,9 +4,11 @@ namespace Controller;
 
 require_once '../app/Model/Student.php';
 require_once '../app/Model/User.php';
+require_once '../app/Model/ExcuseApplication.php';
 
 use Model\Student;
 use Model\User;
+use Model\ExcuseApplication;
 
 $user = new User();
 $userData = $user->checkSession('students');
@@ -19,6 +21,22 @@ if (!$userData || !isset($userData['role'])) {
 }
 
 $searchQuery = trim($_GET['search'] ?? '');
+$attenId = trim($_GET['atten_id'] ?? '');
+
+if ($attenId !== '') {
+    try {
+        $students = (new ExcuseApplication())->searchStudentsForEvent($attenId, $searchQuery);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'students' => $students]);
+    } catch (\Throwable $exception) {
+        error_log('Event student search failed: ' . $exception->getMessage());
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Event student search is temporarily unavailable.']);
+    }
+    exit();
+}
+
 if ($searchQuery === '') {
     header('Content-Type: application/json');
     echo json_encode(['success' => true, 'students' => []]);
