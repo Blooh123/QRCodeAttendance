@@ -118,6 +118,95 @@
             background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0), linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
             background-size: 24px 24px;
             background-color: #f8f9fa;
+            padding: 1rem;
+        }
+        .container-fluid {
+            max-width: 80rem;
+            margin: 0 auto;
+        }
+        .detail-card,
+        .student-info {
+            border-radius: 1rem;
+        }
+        .detail-card {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .detail-card h4,
+        .detail-card h5 {
+            color: #a31d1d;
+            font-weight: 700;
+        }
+        .student-info {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary,
+        .btn-dark,
+        .btn-success,
+        .btn-danger,
+        .btn-secondary,
+        .btn-outline-primary,
+        .btn-outline-secondary {
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-primary,
+        .btn-dark,
+        .btn-success {
+            background-color: #a31d1d;
+            border-color: #a31d1d;
+            color: #fff;
+            box-shadow: 0 4px 0 #000;
+            outline: 1px solid #000;
+        }
+        .btn-primary:hover,
+        .btn-dark:hover,
+        .btn-success:hover {
+            background-color: #8a1818;
+            border-color: #8a1818;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .btn-secondary {
+            background-color: #6b7280;
+            border-color: #6b7280;
+            color: #fff;
+        }
+        .btn-outline-primary,
+        .btn-outline-secondary {
+            color: #a31d1d;
+            border-color: #a31d1d;
+        }
+        .btn-outline-primary:hover,
+        .btn-outline-secondary:hover {
+            background-color: #a31d1d;
+            border-color: #a31d1d;
+            color: #fff;
+        }
+        .modal-content {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .detail-card,
+            .student-info {
+                padding: 1rem;
+            }
+            .student-info .text-end {
+                margin-top: 1rem;
+                text-align: left !important;
+            }
         }
         .table thead th {
             color: #a31d1d;
