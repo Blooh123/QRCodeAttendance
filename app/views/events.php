@@ -71,7 +71,7 @@
                     <i class="fas fa-file-medical"></i>
                     My Recent Applications
                 </h2>
-                <button onclick="toggleApplicationsDropdown()" class="text-[#a31d1d] hover:text-[#8a1818] transition-colors duration-200">
+                <button type="button" id="applicationsDropdownButton" aria-expanded="false" class="text-[#a31d1d] hover:text-[#8a1818] transition-colors duration-200">
                     <i class="fas fa-chevron-down" id="applicationsDropdownIcon"></i>
                 </button>
             </div>
@@ -430,18 +430,23 @@
         function toggleApplicationsDropdown() {
             const dropdown = document.getElementById('applicationsDropdown');
             const icon = document.getElementById('applicationsDropdownIcon');
+            const button = document.getElementById('applicationsDropdownButton');
             const isHidden = dropdown.classList.contains('hidden');
             
             if (isHidden) {
                 dropdown.classList.remove('hidden');
                 icon.classList.remove('fa-chevron-down');
                 icon.classList.add('fa-chevron-up');
+                button.setAttribute('aria-expanded', 'true');
             } else {
                 dropdown.classList.add('hidden');
                 icon.classList.remove('fa-chevron-up');
                 icon.classList.add('fa-chevron-down');
+                button.setAttribute('aria-expanded', 'false');
             }
         }
+
+        document.getElementById('applicationsDropdownButton').addEventListener('click', toggleApplicationsDropdown);
 
         // Toggle archive sections
         function toggleArchive(elementId) {
