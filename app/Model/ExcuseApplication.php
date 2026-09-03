@@ -42,18 +42,17 @@ if (!class_exists('Model\ExcuseApplication')) {
         }
     }
 
-    public function insertAdminExcuseApplication($attenId, $studentId, $description, $status = '1'): bool
+    public function insertAdminExcuseApplication($attenId, $studentId, $description): bool
     {
         try {
             $dateTime = new \DateTime('now', new \DateTimeZone('Asia/Manila'));
             $query = "INSERT INTO excuse_application
                       (atten_id, student_id, application_description, application_status, date_submitted)
-                      VALUES (:atten_id, :student_id, :description, :status, :date_submitted)";
+                      VALUES (:atten_id, :student_id, :description, 1, :date_submitted)";
             return $this->query($query, [
                 ':atten_id' => $attenId,
                 ':student_id' => $studentId,
                 ':description' => $description,
-                ':status' => $status,
                 ':date_submitted' => $dateTime->format('Y-m-d H:i:s')
             ]) !== false;
         } catch (Exception $e) {

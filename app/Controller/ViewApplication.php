@@ -91,10 +91,9 @@ class ViewApplication extends Controller {
         $attenId = trim($_POST['atten_id'] ?? '');
         $studentId = trim($_POST['student_id'] ?? '');
         $description = trim($_POST['application_description'] ?? '');
-        $status = $_POST['application_status'] ?? '1';
 
-        if ($attenId === '' || $studentId === '' || $description === '' || !in_array($status, ['0', '1', '2'], true)) {
-            $_SESSION['error'] = 'Event, student, description, and a valid status are required.';
+        if ($attenId === '' || $studentId === '' || $description === '') {
+            $_SESSION['error'] = 'Event, student, and reason are required.';
             return;
         }
 
@@ -103,8 +102,8 @@ class ViewApplication extends Controller {
             return;
         }
 
-        if ($excuseApp->insertAdminExcuseApplication($attenId, $studentId, $description, $status)) {
-            $_SESSION['success'] = 'Excuse application created successfully.';
+        if ($excuseApp->insertAdminExcuseApplication($attenId, $studentId, $description)) {
+            $_SESSION['success'] = 'Student excused successfully for the selected event.';
         } else {
             $_SESSION['error'] = 'Failed to create the excuse application.';
         }

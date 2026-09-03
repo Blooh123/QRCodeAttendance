@@ -186,8 +186,8 @@
                                     <tr>
                                         <th>Student</th>
                                         <th>Student ID</th>
-                                        <th>Application Status</th>
-                                        <th style="min-width: 360px;">Excuse Details</th>
+                                        <th>Excuse Status</th>
+                                        <th style="min-width: 360px;">Excuse Reason</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -219,14 +219,7 @@
                                                         <input type="hidden" name="atten_id" value="<?= htmlspecialchars($selectedEventId) ?>">
                                                         <input type="hidden" name="student_id" value="<?= htmlspecialchars($student['student_id']) ?>">
                                                         <textarea name="application_description" class="form-control form-control-sm mb-2" rows="2" required placeholder="Reason for excuse"></textarea>
-                                                        <div class="input-group input-group-sm">
-                                                            <select name="application_status" class="form-select">
-                                                                <option value="1" selected>Approved</option>
-                                                                <option value="0">Pending</option>
-                                                                <option value="2">Rejected</option>
-                                                            </select>
-                                                            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Save</button>
-                                                        </div>
+                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-user-check me-1"></i>Excuse Student</button>
                                                     </form>
                                                 <?php endif; ?>
                                             </td>
