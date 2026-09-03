@@ -31,8 +31,6 @@ class StudentApplication extends Controller{
                 $this->loadFilteredApplications($userData);
                 return;
             } else {
-                // Handle approve/reject actions
-                $this->handlePostAction();
                 $this->loadFilteredApplications($userData);
                 return;
             }
