@@ -26,7 +26,15 @@ if ($searchQuery === '') {
 }
 
 $studentModel = new Student();
-$students = $studentModel->searchStudents($searchQuery);
+try {
+    $students = $studentModel->searchStudents($searchQuery);
+} catch (\Throwable $exception) {
+    error_log('Student search failed: ' . $exception->getMessage());
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Student search is temporarily unavailable.']);
+    exit();
+}
 
 if ($userData['role'] === 'Facilitator') {
     $permissions = $user->getUserPermissions($userData['user_id']);

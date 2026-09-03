@@ -72,6 +72,7 @@ $routes = [
     '/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
     '/public/student_application' => '../app/Controller/StudentApplication.php',
     '/public/student_search' => '../app/Controller/StudentSearch.php',
+    '/student_search' => '../app/Controller/StudentSearch.php',
     '/public/take-photo' => '../app/Controller/TakePhoto.php',
     '/public/view_application' => '../app/Controller/ViewApplication.php',
 

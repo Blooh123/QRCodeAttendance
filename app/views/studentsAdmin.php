@@ -432,13 +432,23 @@ if (empty($_SESSION['csrf_token'])) {
             }
 
             startLoading();
-            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {credentials: 'same-origin', headers: {'Accept': 'application/json'}})
+            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {credentials: 'include', cache: 'no-store', headers: {'Accept': 'application/json'}})
                 .then(function (response) {
-                    if (!response.ok) throw new Error('Search request failed');
-                    return response.json();
+                    return response.text().then(function (body) {
+                        let data;
+                        try {
+                            data = JSON.parse(body);
+                        } catch (error) {
+                            throw new Error('The search server returned an invalid response.');
+                        }
+                        if (!response.ok || !data.success) {
+                            throw new Error(data.message || 'Student search failed.');
+                        }
+                        return data;
+                    });
                 })
                 .then(function (data) { renderSearchResults(data.success ? data.students : []); })
-                .catch(function () { studentResults.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">Unable to search students right now.</div>'; })
+                .catch(function (error) { studentResults.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">' + escapeHtml(error.message) + '</div>'; })
                 .finally(stopLoading);
         });
 
