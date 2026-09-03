@@ -117,7 +117,7 @@
             <i class="fas fa-file-alt text-[#a31d1d] text-3xl"></i>
             <h1 class="text-3xl md:text-4xl font-extrabold text-[#a31d1d] tracking-tight">Application Details</h1>
         </div>
-        <a href="<?= ROOT ?>adminHome?page=StudentApplication" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
+        <a href="<?= ROOT ?>adminHome" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center gap-2">
             <i class="fas fa-arrow-left"></i>Back to Applications
         </a>
     </div>
