@@ -4,7 +4,7 @@ require_once "../app/core/imageConfig.php";
 
 
 $page = $_GET['page'] ?? 'Dashboard';
-$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'ViewApplication', 'ActivityLogs', 'BackupPage'];
+$allowed_pages = ['Dashboard', 'Students', 'Attendance', 'Users', 'ProfileAdmin', 'StudentApplication', 'ActivityLogs', 'BackupPage'];
 if (!in_array($page, $allowed_pages)) {
     $page = 'Dashboard';
 }
@@ -154,7 +154,7 @@ if (!in_array($page, $allowed_pages)) {
                     'Students' => ['Students', 'fas fa-user-graduate'],
                     'Attendance' => ['Attendance', 'fas fa-clipboard-check'],
                     'Users' => ['Accounts', 'fas fa-users-cog'],
-                    'ViewApplication' => ['Excuse Student', 'fas fa-file-alt'],
+                    'StudentApplication' => ['Excuse Student', 'fas fa-file-alt'],
                     'ProfileAdmin' => ['Profile', 'fas fa-user-circle'],
                     'ActivityLogs' => ['Activity Log', 'fas fa-history']
                 ];
