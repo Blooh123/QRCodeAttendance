@@ -393,7 +393,7 @@ if (empty($_SESSION['csrf_token'])) {
         const searchForm = document.getElementById('student-search-form');
         const searchInput = document.getElementById('search-input');
         const studentResults = document.getElementById('student-results');
-        const searchEndpoint = '<?php echo ROOT ?>student_search';
+        const searchEndpoint = new URL('student_search', window.location.href).toString();
         const canDeleteStudents = <?php echo json_encode(
             (isset($userRole) && $userRole === 'admin') ||
             (isset($userRole) && $userRole === 'Facilitator' && in_array('delete student', $facilitatorPermissions ?? []))
@@ -432,7 +432,7 @@ if (empty($_SESSION['csrf_token'])) {
             }
 
             startLoading();
-            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {headers: {'Accept': 'application/json'}})
+            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {credentials: 'same-origin', headers: {'Accept': 'application/json'}})
                 .then(function (response) {
                     if (!response.ok) throw new Error('Search request failed');
                     return response.json();
