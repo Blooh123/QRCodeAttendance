@@ -393,7 +393,6 @@ if (empty($_SESSION['csrf_token'])) {
         const searchForm = document.getElementById('student-search-form');
         const searchInput = document.getElementById('search-input');
         const studentResults = document.getElementById('student-results');
-        const searchEndpoint = new URL('student_search', window.location.href).toString();
         const canDeleteStudents = <?php echo json_encode(
             (isset($userRole) && $userRole === 'admin') ||
             (isset($userRole) && $userRole === 'Facilitator' && in_array('delete student', $facilitatorPermissions ?? []))
@@ -431,25 +430,13 @@ if (empty($_SESSION['csrf_token'])) {
                 return;
             }
 
-            startLoading();
-            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {credentials: 'include', cache: 'no-store', headers: {'Accept': 'application/json'}})
-                .then(function (response) {
-                    return response.text().then(function (body) {
-                        let data;
-                        try {
-                            data = JSON.parse(body);
-                        } catch (error) {
-                            throw new Error('The search server returned an invalid response.');
-                        }
-                        if (!response.ok || !data.success) {
-                            throw new Error(data.message || 'Student search failed.');
-                        }
-                        return data;
-                    });
-                })
-                .then(function (data) { renderSearchResults(data.success ? data.students : []); })
-                .catch(function (error) { studentResults.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">' + escapeHtml(error.message) + '</div>'; })
-                .finally(stopLoading);
+            const students = <?php echo json_encode(array_values($studentsList ?? []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+            const normalizedQuery = query.toLowerCase();
+            const matches = students.filter(function (student) {
+                return String(student.name ?? '').toLowerCase().includes(normalizedQuery) ||
+                    String(student.student_id ?? '').toLowerCase().includes(normalizedQuery);
+            });
+            renderSearchResults(matches);
         });
 
         // Show loading for filter form

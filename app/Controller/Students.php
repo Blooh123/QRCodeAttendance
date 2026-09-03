@@ -154,14 +154,16 @@ if (!empty($_GET['search'])) {
     }
 } else {
     // No search or filter - show all students or filtered by facilitator permissions
+    $allStudents = $student->getAllStudents();
+    $studentsList = $allStudents;
+
     if ($userData['role'] === 'Facilitator' && !empty($facilitatorCoursePermissions)) {
         // For facilitators, show only students from their permitted courses
-        $allStudents = $student->getAllStudents();
         $studentsList = array_filter($allStudents, function($student) use ($facilitatorCoursePermissions) {
             return in_array($student['program'], $facilitatorCoursePermissions);
         });
-        $numOfStudent = count($studentsList);
     }
+    $numOfStudent = count($studentsList);
 }
 
 $data = [
