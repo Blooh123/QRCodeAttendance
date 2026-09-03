@@ -351,7 +351,7 @@
                         <i class="fas fa-file-alt me-2"></i>
                         Application Details
                     </h2>
-                    <a href="<?= ROOT ?>student_application" class="btn back-btn">
+                    <a href="<?= ROOT ?>adminHome?page=StudentApplication" class="btn back-btn">
                         <i class="fas fa-arrow-left me-2"></i>Back to Applications
                     </a>
                 </div>
