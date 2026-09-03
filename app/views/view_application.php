@@ -223,7 +223,7 @@
                             <i class="fas fa-user-check me-2"></i>
                             Excuse a Student
                         </h2>
-                        <a href="<?= ROOT ?>student_application" class="btn back-btn">
+                        <a href="<?= ROOT ?>adminHome?page=StudentApplication" class="btn back-btn">
                             <i class="fas fa-arrow-left me-2"></i>Back to Applications
                         </a>
                     </div>
