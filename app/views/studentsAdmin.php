@@ -201,7 +201,7 @@ if (empty($_SESSION['csrf_token'])) {
 <div class="max-w-7xl mx-auto">
     <!-- Search and Filter Section -->
     <div class="glass-card rounded-2xl p-4 md:p-6 mb-6 md:mb-8 shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black">
-        <form action="<?php echo ROOT ?>adminHome" method="GET" class="space-y-4">
+        <form id="student-search-form" action="<?php echo ROOT ?>adminHome" method="GET" class="space-y-4">
             <input type="hidden" name="page" value="Students">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div class="flex-1 flex items-center gap-2">
@@ -283,7 +283,7 @@ if (empty($_SESSION['csrf_token'])) {
 
     <!-- Students Grid -->
     <?php if (!empty($studentsList)): ?>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mt-6">
+        <div id="student-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mt-6">
             <?php foreach ($studentsList as $student): ?>
                 <div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 md:p-6 flex flex-col space-y-3 hover-card">
                     <div class="flex items-center space-x-2 md:space-x-3 mb-2">
@@ -323,13 +323,13 @@ if (empty($_SESSION['csrf_token'])) {
             <?php endforeach; ?>
         </div>
     <?php elseif ($isFiltered): ?>
-        <div class="text-center py-12">
+        <div id="student-results" class="text-center py-12">
             <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
             <p class="text-gray-600 text-lg">No students found for the selected filters.</p>
             <p class="text-gray-500 text-sm mt-2">Try adjusting your search criteria.</p>
         </div>
     <?php elseif(!$isFiltered):?>
-        <div class="text-center py-12">
+        <div id="student-results" class="text-center py-12">
             <i class="fas fa-user-graduate text-gray-400 text-4xl mb-4"></i>
             <p class="text-gray-600 text-lg">Student Information will be displayed here.</p>
             <p class="text-gray-500 text-sm mt-2">Use the search and filter options above to find students.</p>
@@ -390,9 +390,56 @@ if (empty($_SESSION['csrf_token'])) {
             clearInterval(loadingInterval);
         }
 
-        // Show loading for search form
-        document.querySelector('form[action*="adminHome"]').addEventListener('submit', function() {
+        const searchForm = document.getElementById('student-search-form');
+        const searchInput = document.getElementById('search-input');
+        const studentResults = document.getElementById('student-results');
+        const searchEndpoint = '<?php echo ROOT ?>student_search';
+        const canDeleteStudents = <?php echo json_encode(
+            (isset($userRole) && $userRole === 'admin') ||
+            (isset($userRole) && $userRole === 'Facilitator' && in_array('delete student', $facilitatorPermissions ?? []))
+        ); ?>;
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, function (character) {
+                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[character];
+            });
+        }
+
+        function renderSearchResults(students) {
+            if (!students.length) {
+                studentResults.innerHTML = '<div class="col-span-full text-center py-12"><i class="fas fa-search text-gray-400 text-4xl mb-4"></i><p class="text-gray-600 text-lg">No students found.</p><p class="text-gray-500 text-sm mt-2">Try another name or student ID.</p></div>';
+                return;
+            }
+
+            studentResults.innerHTML = students.map(function (student) {
+                const deleteButton = canDeleteStudents
+                    ? `<a href="${'<?php echo ROOT ?>'}delete_student?id=${encodeURIComponent(student.student_id)}" onclick="return confirmDelete(event, this.href);" class="flex-1 bg-red-600 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base"><i class="fas fa-trash"></i><span class="hidden sm:inline">Delete</span></a>`
+                    : '';
+                return `<div class="glass-card rounded-2xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black p-4 md:p-6 flex flex-col space-y-3 hover-card">
+                    <div class="flex items-center space-x-2 md:space-x-3 mb-2"><i class="fas fa-user-graduate text-[#a31d1d] text-xl md:text-2xl"></i><h2 class="text-lg md:text-xl font-semibold text-[#a31d1d] truncate">${escapeHtml(student.name)}</h2></div>
+                    <div class="space-y-2 text-sm md:text-base"><p class="text-gray-700"><strong>ID:</strong> <span class="break-all">${escapeHtml(student.student_id)}</span></p><p class="text-gray-700"><strong>Program:</strong> <span class="break-words">${escapeHtml(student.program)}</span></p><p class="text-gray-700"><strong>Year:</strong> ${escapeHtml(student.acad_year)}</p><p class="text-gray-700"><strong>Email:</strong> <span class="break-all text-xs md:text-sm">${escapeHtml(student.email)}</span></p></div>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-4"><a href="${'<?php echo ROOT ?>'}edit_student?id=${encodeURIComponent(student.student_id)}" class="flex-1 bg-blue-600 hover:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-semibold shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black transition-all duration-200 flex items-center justify-center gap-1 text-sm md:text-base"><i class="fas fa-edit"></i><span class="hidden sm:inline">Edit</span></a>${deleteButton}</div>
+                </div>`;
+            }).join('');
+        }
+
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const query = searchInput.value.trim();
+            if (!query) {
+                studentResults.innerHTML = '<div class="col-span-full text-center py-12"><i class="fas fa-user-graduate text-gray-400 text-4xl mb-4"></i><p class="text-gray-600 text-lg">Enter a name or student ID to search.</p></div>';
+                return;
+            }
+
             startLoading();
+            fetch(searchEndpoint + '?search=' + encodeURIComponent(query), {headers: {'Accept': 'application/json'}})
+                .then(function (response) {
+                    if (!response.ok) throw new Error('Search request failed');
+                    return response.json();
+                })
+                .then(function (data) { renderSearchResults(data.success ? data.students : []); })
+                .catch(function () { studentResults.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">Unable to search students right now.</div>'; })
+                .finally(stopLoading);
         });
 
         // Show loading for filter form

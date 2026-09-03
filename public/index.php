@@ -71,6 +71,7 @@ $routes = [
 
     '/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
     '/public/student_application' => '../app/Controller/StudentApplication.php',
+    '/public/student_search' => '../app/Controller/StudentSearch.php',
     '/public/take-photo' => '../app/Controller/TakePhoto.php',
     '/public/view_application' => '../app/Controller/ViewApplication.php',
 
@@ -171,6 +172,7 @@ $routes = [
 
     '/QRCodeAttendance/QRCodeAttendance/public/apply_excuse' => '../app/Controller/ApplyExcuse.php',
     '/QRCodeAttendance/QRCodeAttendance/public/student_application' => '../app/Controller/StudentApplication.php',
+    '/QRCodeAttendance/QRCodeAttendance/public/student_search' => '../app/Controller/StudentSearch.php',
 
     '/QRCodeAttendance/QRCodeAttendance/public/take-photo' => '../app/Controller/TakePhoto.php',
     '/QRCodeAttendance/QRCodeAttendance/public/view_application' => '../app/Controller/ViewApplication.php',
