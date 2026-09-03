@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Details - Admin Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -113,12 +107,13 @@
             background: #8a1818;
             transform: translateY(-2px);
         }
-        body {
+        .application-page {
             font-family: 'Poppins', sans-serif;
             background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0), linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
             background-size: 24px 24px;
             background-color: #f8f9fa;
-            padding: 1rem;
+            padding: 0.25rem;
+            min-height: 100%;
         }
         .container-fluid {
             max-width: 80rem;
@@ -196,8 +191,8 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         }
         @media (max-width: 640px) {
-            body {
-                padding: 1rem;
+            .application-page {
+                padding: 0;
             }
             .detail-card,
             .student-info {
@@ -218,8 +213,7 @@
             box-shadow: 0 0 0 0.25rem rgba(163, 29, 29, 0.15);
         }
     </style>
-</head>
-<body class="bg-light">
+<div class="application-page">
     <div class="container-fluid">
         <?php if (!$application): ?>
             <div class="row mb-4">
@@ -624,5 +618,4 @@
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
