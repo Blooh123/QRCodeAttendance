@@ -4,84 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details - Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .status-badge {
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.875rem;
         }
         .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 2px solid #ffeaa7;
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 2px solid #f59e0b;
         }
         .status-approved {
-            background-color: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
         }
         .status-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
         }
         .detail-card {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
             padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1), 0 1.5px 0 #000;
+            outline: 1px solid #000;
             margin-bottom: 2rem;
         }
         .student-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #a31d1d;
             color: white;
-            border-radius: 15px;
+            border-radius: 1rem;
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1), 0 1.5px 0 #000;
+            outline: 1px solid #000;
         }
         .document-card {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: rgba(248, 249, 250, 0.9);
+            border-radius: 0.75rem;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            border: 2px solid #e9ecef;
+            border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
         .document-card:hover {
-            border-color: #667eea;
+            border-color: #a31d1d;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .action-btn {
-            border-radius: 25px;
-            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
             transition: all 0.3s ease;
+            outline: 1px solid #000;
+            box-shadow: 0 4px 0 #000;
         }
         .action-btn:hover {
             transform: translateY(-2px);
         }
         .btn-approve {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: #198754;
             border: none;
             color: white;
         }
         .btn-reject {
-            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            background: #dc3545;
             border: none;
             color: white;
         }
         .description-box {
             background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 0.75rem;
             padding: 1.5rem;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #a31d1d;
         }
         .remarks-box {
-            background: #fff3cd;
-            border-radius: 10px;
+            background: #fff7ed;
+            border-radius: 0.75rem;
             padding: 1.5rem;
             border-left: 4px solid #ffc107;
         }
@@ -90,15 +100,33 @@
             margin-bottom: 1rem;
         }
         .back-btn {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            background: #a31d1d;
             border: none;
             color: white;
-            border-radius: 25px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            outline: 1px solid #000;
+            box-shadow: 0 4px 0 #000;
         }
         .back-btn:hover {
             color: white;
+            background: #8a1818;
             transform: translateY(-2px);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0), linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.2));
+            background-size: 24px 24px;
+            background-color: #f8f9fa;
+        }
+        .table thead th {
+            color: #a31d1d;
+            font-weight: 700;
+            border-bottom-color: #a31d1d;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #a31d1d;
+            box-shadow: 0 0 0 0.25rem rgba(163, 29, 29, 0.15);
         }
     </style>
 </head>
