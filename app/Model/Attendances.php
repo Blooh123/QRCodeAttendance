@@ -125,7 +125,7 @@ if (!class_exists('Model\Attendances')) {
 
     function getAllAttendance(): array
     {
-        $query = "SELECT * FROM attendance ORDER BY date_created DESC";
+        $query = "SELECT * FROM attendance WHERE date_created > '2026-08-31' ORDER BY date_created DESC";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
