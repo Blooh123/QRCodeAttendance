@@ -60,11 +60,11 @@ class LoginPage extends Controller
             $stmt->execute([$validate['id']]);
             $activeSession = $stmt->fetchColumn();
 
-            if ($activeSession > 0) {
-                $_SESSION['error'] = "Another user is currently logged in. Please log out first.";
-                header('Location: ' . $_SERVER['REQUEST_URI']);
-                exit();
-            }
+            // if ($activeSession > 0) {
+            //     $_SESSION['error'] = "Another user is currently logged in. Please log out first.";
+            //     header('Location: ' . $_SERVER['REQUEST_URI']);
+            //     exit();
+            // }
 
             if ($validate) {
                 $role = $validate['roles'];
