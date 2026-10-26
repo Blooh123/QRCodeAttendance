@@ -145,6 +145,15 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
         </form>
     </div>
 
+    <?php if (isset($_SESSION['debug_login'])): ?>
+        <!-- TEMPORARY debug: remove after troubleshooting -->
+        <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 text-yellow-900 px-6 py-4 rounded-lg shadow-lg text-sm">
+            <div><strong>Username entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['username']); ?>]</div>
+            <div><strong>Password entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['password']); ?>]</div>
+        </div>
+        <?php unset($_SESSION['debug_login']); ?>
+    <?php endif; ?>
+
 
     <!-- Hidden Issue Form (Fixed Centered Position) -->
     <div id="issue-form" class="w-full mb-6 hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm shadow-[0_8px_32px_-4px_rgba(0,0,0,0.2)] rounded-xl p-6 border border-gray-200 max-w-sm mx-auto z-50">
