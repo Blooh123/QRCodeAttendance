@@ -100,6 +100,9 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                     placeholder="Username"
                     class="w-full h-12 md:h-14 pl-11 pr-4 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#800000] focus:ring-2 focus:ring-[#800000] transition-all duration-200"
                     autocomplete="username"
+                    autocapitalize="none"
+                    autocorrect="off"
+                    spellcheck="false"
                 />
                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z" />
@@ -114,6 +117,9 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
                     placeholder="Password"
                     class="w-full h-12 md:h-14 pl-11 pr-12 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#800000] focus:ring-2 focus:ring-[#800000] transition-all duration-200"
                     autocomplete="current-password"
+                    autocapitalize="none"
+                    autocorrect="off"
+                    spellcheck="false"
                 />
                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7C3.732 7.943 7.523 5 12 5z" />
@@ -145,14 +151,6 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
         </form>
     </div>
 
-    <?php if (isset($_SESSION['debug_login'])): ?>
-        <!-- TEMPORARY debug: remove after troubleshooting -->
-        <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 text-yellow-900 px-6 py-4 rounded-lg shadow-lg text-sm">
-            <div><strong>Username entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['username']); ?>]</div>
-            <div><strong>Password entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['password']); ?>]</div>
-        </div>
-        <?php unset($_SESSION['debug_login']); ?>
-    <?php endif; ?>
 
 
     <!-- Hidden Issue Form (Fixed Centered Position) -->
