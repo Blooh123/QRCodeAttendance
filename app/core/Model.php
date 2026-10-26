@@ -87,7 +87,10 @@ Trait Model
 
     //validate user
     public function validateLogIn($username, $password){
-        $query = 'CALL sp_validate_user(:username, :password)';
+        $query = '    SELECT id, username, roles
+    FROM user_account
+    WHERE username = BINARY :username
+    AND pass = SHA2(:password, 256);';
         $result = $this->query($query, ['username' => $username, 'password' => $password]);
         return $result[0];
     }
