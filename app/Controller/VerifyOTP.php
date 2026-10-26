@@ -60,7 +60,11 @@ class VerifyOTP extends \Controller
                     unset($_SESSION['reset_user_id']);
                     unset($_SESSION['reset_expiry']);
 
-                    $_SESSION['success'] = "Password has been reset successfully. Please login with your new password.";
+                    $nameStmt = $this->connect()->prepare("SELECT username FROM user_account WHERE id = ?");
+                    $nameStmt->execute([$userId]);
+                    $exactUsername = $nameStmt->fetchColumn();
+
+                    $_SESSION['success'] = "Password has been reset successfully. Please login with username \"" . htmlspecialchars((string)$exactUsername) . "\" (exact spelling) and your new password.";
                     header('Location: ' . ROOT . 'login');
                     exit();
                 } else {

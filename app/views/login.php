@@ -209,7 +209,14 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
         <span><?php echo $_SESSION['error']; ?></span>
         <button onclick="hideToast()" class="ml-4 text-red-700 hover:text-red-900">&times;</button>
     </div>
-    <?php unset($_SESSION['error']); // Clear the error message after displaying ?>
+<?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+<?php if (isset($_SESSION['success'])): ?>
+    <div id="toast" class="toast fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-lg flex items-center justify-between">
+        <span><?php echo $_SESSION['success']; ?></span>
+        <button onclick="hideToast()" class="ml-4 text-green-700 hover:text-green-900">&times;</button>
+    </div>
+    <?php unset($_SESSION['success']); ?>
 <?php endif; ?>
 
 <script>

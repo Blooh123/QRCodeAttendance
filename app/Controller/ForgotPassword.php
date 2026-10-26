@@ -22,8 +22,8 @@ class ForgotPassword extends \Controller
                 $email = trim($_POST['email']);
                 
                 // Check if email exists in database
-                $stmt = $this->connect()->prepare("SELECT id, username FROM user_account WHERE username = ?");
-                $stmt->execute([$email]);
+                $stmt = $this->connect()->prepare("SELECT id, username FROM user_account                 WHERE username = ? ORDER BY (username = BINARY ?) DESC LIMIT 1");
+                                $stmt->execute([$email, $email]);
                 $user = $stmt->fetch();
 
                 if ($user) {
