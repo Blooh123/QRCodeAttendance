@@ -66,6 +66,9 @@ require "../app/core/imageConfig.php";
             />
         </div>
     </div>
+    <?php
+        echo $_SESSION['reset_user_id'];
+    ?>
 
     <!-- Main Content -->
     <div class="w-full max-w-md flex flex-col items-center justify-center relative bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-[0_8px_32px_-4px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_48px_-8px_rgba(0,0,0,0.2)] transition-all duration-300 floating">
