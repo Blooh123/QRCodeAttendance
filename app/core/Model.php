@@ -89,7 +89,7 @@ Trait Model
     public function validateLogIn($username, $password){
         $query = 'SELECT id, username, roles
                 FROM user_account
-                WHERE username = BINARY :username
+                WHERE username = :username
                 AND pass = SHA2(:password, 256);';
         $result = $this->query($query, ['username' => $username, 'password' => $password]);
         return $result[0] ?? null;
