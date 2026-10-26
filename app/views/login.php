@@ -211,6 +211,14 @@ global $imageSource, $imageSource2, $imageSource4, $imageSource7;
     </div>
 <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
+<?php if (isset($_SESSION['debug_login'])): ?>
+    <!-- TEMPORARY debug: remove after troubleshooting -->
+    <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 text-yellow-900 px-6 py-4 rounded-lg shadow-lg text-sm">
+        <div><strong>Username entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['username']); ?>]</div>
+        <div><strong>Password entered:</strong> [<?php echo htmlspecialchars($_SESSION['debug_login']['password']); ?>]</div>
+    </div>
+    <?php unset($_SESSION['debug_login']); ?>
+<?php endif; ?>
 <?php if (isset($_SESSION['success'])): ?>
     <div id="toast" class="toast fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-lg flex items-center justify-between">
         <span><?php echo $_SESSION['success']; ?></span>

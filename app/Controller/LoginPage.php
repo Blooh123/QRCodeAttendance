@@ -158,6 +158,11 @@ class LoginPage extends Controller
 
             } else {
                 $_SESSION['error'] = "Username or Password is invalid";
+                // TEMPORARY debug: remove after troubleshooting
+                $_SESSION['debug_login'] = [
+                    'username' => trim($_POST['username']),
+                    'password' => trim($_POST['password']),
+                ];
                 header('Location: ' . $_SERVER['REQUEST_URI']);
                 exit();
             }
