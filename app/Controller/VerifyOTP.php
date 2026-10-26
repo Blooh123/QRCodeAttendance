@@ -20,7 +20,14 @@ class VerifyOTP extends \Controller
                 $otp = trim($_POST['otp']);
                 $newPassword = trim($_POST['new_password']);
                 $confirmPassword = trim($_POST['confirm_password']);
-                $userId = $_SESSION['reset_user_id'];
+                $userId = $_SESSION['reset_user_id'] ?? null;
+
+                if ($userId === null || !isset($_SESSION['reset_otp'])
+                    || time() > ($_SESSION['reset_expiry'] ?? 0)) {
+                    $_SESSION['error'] = "OTP expired. Please request a new one.";
+                    header('Location: ' . ROOT . 'forgot-password');
+                    exit();
+                }
 
                 if ($newPassword !== $confirmPassword) {
                     $_SESSION['error'] = "Passwords do not match.";
@@ -29,11 +36,24 @@ class VerifyOTP extends \Controller
                 }
 
                 // Verify OTP from session
-                if ($otp === $_SESSION['reset_otp']) {
-                    // Update password using SHA256
-                    $hashedPassword = hash('sha256', $newPassword);
-                    $stmt = $this->connect()->prepare("UPDATE user_account SET pass = ? WHERE id = ?");
-                    $stmt->execute([$hashedPassword, $userId]);
+                if (hash_equals((string)$_SESSION['reset_otp'], $otp)) {
+                    // Same hashing as login (SHA2-256 in MySQL)
+                    try {
+                        $stmt = $this->connect()->prepare("UPDATE user_account SET pass = SHA2(?, 256) WHERE id = ?");
+                        $stmt->execute([$newPassword, $userId]);
+                        $verify = $this->connect()->prepare("SELECT COUNT(*) FROM user_account WHERE id = ? AND pass = SHA2(?, 256)");
+                        $verify->execute([$userId, $newPassword]);
+                        $saved = (int)$verify->fetchColumn() > 0;
+                    } catch (\PDOException $e) {
+                        error_log("Password reset error: " . $e->getMessage());
+                        $saved = false;
+                    }
+
+                    if (!$saved) {
+                        $_SESSION['error'] = "Failed to update password. Please try again.";
+                        header('Location: ' . $_SERVER['REQUEST_URI']);
+                        exit();
+                    }
 
                     // Clear session
                     unset($_SESSION['reset_otp']);

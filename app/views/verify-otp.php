@@ -105,8 +105,9 @@ require "../app/core/imageConfig.php";
                         required 
                         minlength="8"
                         placeholder="Enter new password"
-                        class="w-full h-12 md:h-14 pl-11 pr-4 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#a31d1d] focus:ring-2 focus:ring-[#a31d1d] transition-all duration-200"
+                        class="w-full h-12 md:h-14 pl-11 pr-16 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#a31d1d] focus:ring-2 focus:ring-[#a31d1d] transition-all duration-200"
                     />
+                    <button type="button" onclick="togglePassword(this)" aria-label="Show password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 text-sm font-semibold">Show</button>
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -118,8 +119,9 @@ require "../app/core/imageConfig.php";
                         required 
                         minlength="8"
                         placeholder="Confirm new password"
-                        class="w-full h-12 md:h-14 pl-11 pr-4 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#a31d1d] focus:ring-2 focus:ring-[#a31d1d] transition-all duration-200"
+                        class="w-full h-12 md:h-14 pl-11 pr-16 bg-white rounded-xl shadow-[0px_4px_0px_1px_rgba(0,0,0,1)] outline outline-1 outline-black text-base md:text-lg font-normal text-neutral-600 focus:outline-[#a31d1d] focus:ring-2 focus:ring-[#a31d1d] transition-all duration-200"
                     />
+                    <button type="button" onclick="togglePassword(this)" aria-label="Show password" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 text-sm font-semibold">Show</button>
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -164,6 +166,14 @@ require "../app/core/imageConfig.php";
                 toast.remove();
             }, 500);
         }
+    }
+
+    function togglePassword(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.textContent = show ? 'Hide' : 'Show';
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
     }
 
     // Password validation
