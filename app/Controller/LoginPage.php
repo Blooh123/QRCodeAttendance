@@ -57,7 +57,7 @@ class LoginPage extends Controller
             // Proceed with login validation
             $validate = $this->validateLogIn(trim($_POST['username']), trim($_POST['password']));
             $stmt = $this->connect()->prepare("SELECT COUNT(*) FROM user_sessions WHERE user_id = ?");
-            $stmt->execute([$validate['id']]);
+            $stmt->execute([$validate['id'] ?? null]);
             $activeSession = $stmt->fetchColumn();
 
             // if ($activeSession > 0) {
